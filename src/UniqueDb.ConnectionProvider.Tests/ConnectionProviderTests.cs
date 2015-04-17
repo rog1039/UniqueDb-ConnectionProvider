@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 using Xbehave;
 
 namespace UniqueDb.ConnectionProvider.Tests
@@ -34,10 +35,26 @@ namespace UniqueDb.ConnectionProvider.Tests
             var options = new UniqueDbConnectionProviderOptions("server", "database");
             var connectionProvider = new UniqueDbConnectionProvider(options);
 
+            CreateDatabase(connectionProvider);
+
             using (var lifecycle = connectionProvider.ToDispopsable())
             {
                 
             }
+        }
+
+        private void CreateDatabase(UniqueDbConnectionProvider connectionProvider)
+        {
+            var connectionStringBuilder = connectionProvider.GetSqlConnectionStringBuilder();
+            connectionStringBuilder.InitialCatalog = "master";
+            var connectionString = connectionStringBuilder.ConnectionString;
+            var connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            var createDbText = string.Format("CREATE DATABASE [{0}];", connectionProvider.DbName);
+            Console.WriteLine(createDbText);
+            var command = new SqlCommand(createDbText, connection);
+            command.ExecuteNonQuery();
         }
     }
 }
