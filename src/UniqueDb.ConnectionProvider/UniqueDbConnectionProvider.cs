@@ -6,7 +6,7 @@ namespace UniqueDb.ConnectionProvider
     /// <summary>
     /// A class that provides a connection string to a brand-new database.
     /// </summary>
-    public class UniqueDbConnectionCreator
+    public class UniqueDbConnectionProvider
     {
         private readonly UniqueDbConnectionProviderOptions _options;
 
@@ -15,7 +15,7 @@ namespace UniqueDb.ConnectionProvider
         /// </summary>
         public string DbName { get; private set; }
 
-        public UniqueDbConnectionCreator(UniqueDbConnectionProviderOptions options)
+        public UniqueDbConnectionProvider(UniqueDbConnectionProviderOptions options)
         {
             _options = options;
             DbName = GenerateDbName();
