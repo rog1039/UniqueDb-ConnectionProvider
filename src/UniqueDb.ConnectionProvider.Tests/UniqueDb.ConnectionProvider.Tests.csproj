@@ -11,7 +11,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UniqueDb.ConnectionProvider.Tests</RootNamespace>
     <AssemblyName>UniqueDb.ConnectionProvider.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>68978cf2</NuGetPackageImportStamp>
     <TargetFrameworkProfile />
