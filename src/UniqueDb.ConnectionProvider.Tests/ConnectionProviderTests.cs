@@ -32,29 +32,41 @@ namespace UniqueDb.ConnectionProvider.Tests
         [Scenario]
         public void ShouldDispose()
         {
-            var options = new UniqueDbConnectionProviderOptions("server", "database");
+            var options = new UniqueDbConnectionProviderOptions("ws2012sqlexp1\\sqlexpress", "database");
             var connectionProvider = new UniqueDbConnectionProvider(options);
 
-            CreateDatabase(connectionProvider);
+            "After creating a database"
+                ._(() => CreateDatabase(connectionProvider));
 
-            using (var lifecycle = connectionProvider.ToDispopsable())
-            {
-                
-            }
+            "Disposing of the disposable provided by the ToDisposable extension method should delete the database"
+                ._(() =>
+                {
+                    using (var lifecycle = connectionProvider.ToDispopsable())
+                    {
+                    }
+                });
         }
 
         private void CreateDatabase(UniqueDbConnectionProvider connectionProvider)
+        {
+            var connection = CreateSqlConnectionOnMasterDatabase(connectionProvider);
+
+            var createDbText = string.Format("CREATE DATABASE [{0}];", connectionProvider.DbName);
+            Console.WriteLine(createDbText);
+
+            var command = new SqlCommand(createDbText, connection);
+            command.ExecuteNonQuery();
+            connection.Dispose();
+        }
+
+        private static SqlConnection CreateSqlConnectionOnMasterDatabase(UniqueDbConnectionProvider connectionProvider)
         {
             var connectionStringBuilder = connectionProvider.GetSqlConnectionStringBuilder();
             connectionStringBuilder.InitialCatalog = "master";
             var connectionString = connectionStringBuilder.ConnectionString;
             var connection = new SqlConnection(connectionString);
             connection.Open();
-
-            var createDbText = string.Format("CREATE DATABASE [{0}];", connectionProvider.DbName);
-            Console.WriteLine(createDbText);
-            var command = new SqlCommand(createDbText, connection);
-            command.ExecuteNonQuery();
+            return connection;
         }
     }
 }
