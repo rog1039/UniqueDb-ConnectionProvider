@@ -15,6 +15,6 @@
         <tags>Tag1 Tag2</tags>
     </metadata>
     <files>
-        <file src="bin\Debug\UniqueDb.ConnectionProvider.dll" target="lib\net40\UniqueDb.ConnectionProvider.dll" />
+        <file src="bin\Release\UniqueDb.ConnectionProvider.dll" target="lib\net40\UniqueDb.ConnectionProvider.dll" />
     </files>
 </package>
