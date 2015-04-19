@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ISqlConnectionProvider.cs" />
+    <Compile Include="StaticSqlConnectionProvider.cs" />
     <Compile Include="UniqueDbConnectionProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UniqueDbConnectionProviderOptions.cs" />

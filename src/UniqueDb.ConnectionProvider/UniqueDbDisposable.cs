@@ -9,9 +9,9 @@ namespace UniqueDb.ConnectionProvider
 {
     public class UniqueDbDisposable : IDisposable
     {
-        private readonly UniqueDbConnectionProvider _dbConnectionProvider;
+        private readonly ISqlConnectionProvider _dbConnectionProvider;
 
-        public UniqueDbDisposable(UniqueDbConnectionProvider dbConnectionProvider)
+        public UniqueDbDisposable(ISqlConnectionProvider dbConnectionProvider)
         {
             _dbConnectionProvider = dbConnectionProvider;
         }
@@ -36,7 +36,7 @@ namespace UniqueDb.ConnectionProvider
             String sqlCommandText = string.Format(
                 "ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; " +
                 "DROP DATABASE [{0}];",
-                _dbConnectionProvider.DbName);
+                _dbConnectionProvider.DatabaseName);
             return sqlCommandText;
         }
 
@@ -65,7 +65,7 @@ namespace UniqueDb.ConnectionProvider
 
     public static class UniqueDbDisposableExtensionMethods
     {
-        public static UniqueDbDisposable ToDispopsable(this UniqueDbConnectionProvider dbConnectionProvider)
+        public static UniqueDbDisposable ToDispopsable(this ISqlConnectionProvider dbConnectionProvider)
         {
             var disposable = new UniqueDbDisposable(dbConnectionProvider);
             return disposable;

@@ -6,19 +6,21 @@ namespace UniqueDb.ConnectionProvider
     /// <summary>
     /// A class that provides a connection string to a brand-new database.
     /// </summary>
-    public class UniqueDbConnectionProvider
+    public class UniqueDbConnectionProvider : BaseSqlConnectionProvider
     {
         private readonly UniqueDbConnectionProviderOptions _options;
 
         /// <summary>
-        /// The database name.
+        /// The string format used to created the database name.
         /// </summary>
-        public string DbName { get; private set; }
+        public string DatabaseNameFormatString { get; set; }
 
         public UniqueDbConnectionProvider(UniqueDbConnectionProviderOptions options)
         {
             _options = options;
-            DbName = GenerateDbName();
+            ServerName = _options.SqlServerName;
+            DatabaseNameFormatString = "{0}-({1})-{2:n}";
+            DatabaseName = GenerateDbName();
         }
 
         private string GenerateDbName()
@@ -27,7 +29,7 @@ namespace UniqueDb.ConnectionProvider
             var timestamp = _options.IncludeTimeStamp ? DateTime.Now.ToString(_options.TimeStampFormat) : string.Empty;
             var guid = Guid.NewGuid();
 
-            var generatedName = string.Format("{0}-({1})-{2:n}",
+            var generatedName = string.Format(DatabaseNameFormatString,
                 prefix,
                 timestamp,
                 guid);
@@ -39,11 +41,11 @@ namespace UniqueDb.ConnectionProvider
         /// Returns the SqlConnectionStringBuilder for this unique Db.
         /// </summary>
         /// <returns></returns>
-        public SqlConnectionStringBuilder GetSqlConnectionStringBuilder()
+        public override SqlConnectionStringBuilder GetSqlConnectionStringBuilder()
         {
             var connString = new SqlConnectionStringBuilder();
             connString.DataSource = _options.SqlServerName;
-            connString.InitialCatalog = DbName;
+            connString.InitialCatalog = DatabaseName;
             if (_options.UseIntegratedSecurity)
             {
                 connString.IntegratedSecurity = true;
@@ -54,25 +56,6 @@ namespace UniqueDb.ConnectionProvider
                 connString.Password = _options.Password.ToString();
             }
             return connString;
-        }
-
-        /// <summary>
-        /// Returns a new SqlConnection pointed to this unique Db.
-        /// </summary>
-        /// <returns></returns>
-        public SqlConnection GetSqlConnection()
-        {
-            var connectionString = GetSqlConnectionString();
-            return new SqlConnection(connectionString);
-        }
-
-        /// <summary>
-        /// Returns a new SqlConnection string pointed to this unique Db.
-        /// </summary>
-        /// <returns></returns>
-        public string GetSqlConnectionString()
-        {
-            return GetSqlConnectionStringBuilder().ConnectionString;
         }
     }
 }
