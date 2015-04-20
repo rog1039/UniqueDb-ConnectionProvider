@@ -18,7 +18,7 @@ namespace UniqueDb.ConnectionProvider.Tests
             "Disposing of the disposable provided by the ToDisposable extension method should delete the database"
                 ._(() =>
                 {
-                    using (var lifecycle = connectionProvider.ToDispopsable())
+                    using (var lifecycle = connectionProvider.ToDisposable())
                     {
                     }
                 });

@@ -65,7 +65,7 @@ namespace UniqueDb.ConnectionProvider
 
     public static class UniqueDbDisposableExtensionMethods
     {
-        public static UniqueDbDisposable ToDispopsable(this ISqlConnectionProvider dbConnectionProvider)
+        public static UniqueDbDisposable ToDisposable(this ISqlConnectionProvider dbConnectionProvider)
         {
             var disposable = new UniqueDbDisposable(dbConnectionProvider);
             return disposable;
