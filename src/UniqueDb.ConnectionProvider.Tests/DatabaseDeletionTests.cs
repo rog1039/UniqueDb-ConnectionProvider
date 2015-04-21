@@ -1,5 +1,6 @@
 using System;
 using System.Data.SqlClient;
+using Dapper;
 using Xbehave;
 
 namespace UniqueDb.ConnectionProvider.Tests
@@ -20,11 +21,13 @@ namespace UniqueDb.ConnectionProvider.Tests
                 {
                     using (var lifecycle = connectionProvider.ToDisposable())
                     {
+                        var connection = connectionProvider.GetSqlConnection();
+                        var result = connection.Query<int>(("SELECT 1 "));
                     }
                 });
         }
 
-        private void CreateDatabase(UniqueDbConnectionProvider connectionProvider)
+        public static void CreateDatabase(UniqueDbConnectionProvider connectionProvider)
         {
             var connection = CreateSqlConnectionOnMasterDatabase(connectionProvider);
 

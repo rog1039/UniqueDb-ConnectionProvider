@@ -27,7 +27,7 @@
             SqlServerName = sqlServerName;
             DatabaseNamePrefix = databaseNamePrefix;
             IncludeTimeStamp = true;
-            TimeStampFormat = "yyMMdd.hhmmss.fff";
+            TimeStampFormat = "yyMMdd.HHmmss.fff";
             UseIntegratedSecurity = false;
             UserName = userName;
             Password = password;

@@ -8,7 +8,7 @@ namespace UniqueDb.ConnectionProvider
     /// </summary>
     public class UniqueDbConnectionProvider : BaseSqlConnectionProvider
     {
-        private readonly UniqueDbConnectionProviderOptions _options;
+        public readonly UniqueDbConnectionProviderOptions Options;
 
         /// <summary>
         /// The string format used to created the database name.
@@ -17,16 +17,16 @@ namespace UniqueDb.ConnectionProvider
 
         public UniqueDbConnectionProvider(UniqueDbConnectionProviderOptions options)
         {
-            _options = options;
-            ServerName = _options.SqlServerName;
+            Options = options;
+            ServerName = Options.SqlServerName;
             DatabaseNameFormatString = "{0}-({1})-{2:n}";
             DatabaseName = GenerateDbName();
         }
 
         private string GenerateDbName()
         {
-            var prefix = _options.DatabaseNamePrefix;
-            var timestamp = _options.IncludeTimeStamp ? DateTime.Now.ToString(_options.TimeStampFormat) : string.Empty;
+            var prefix = Options.DatabaseNamePrefix;
+            var timestamp = Options.IncludeTimeStamp ? DateTime.Now.ToString(Options.TimeStampFormat) : string.Empty;
             var guid = Guid.NewGuid();
 
             var generatedName = string.Format(DatabaseNameFormatString,
@@ -44,16 +44,16 @@ namespace UniqueDb.ConnectionProvider
         public override SqlConnectionStringBuilder GetSqlConnectionStringBuilder()
         {
             var connString = new SqlConnectionStringBuilder();
-            connString.DataSource = _options.SqlServerName;
+            connString.DataSource = Options.SqlServerName;
             connString.InitialCatalog = DatabaseName;
-            if (_options.UseIntegratedSecurity)
+            if (Options.UseIntegratedSecurity)
             {
                 connString.IntegratedSecurity = true;
             }
             else
             {
-                connString.UserID = _options.UserName;
-                connString.Password = _options.Password.ToString();
+                connString.UserID = Options.UserName;
+                connString.Password = Options.Password.ToString();
             }
             return connString;
         }
