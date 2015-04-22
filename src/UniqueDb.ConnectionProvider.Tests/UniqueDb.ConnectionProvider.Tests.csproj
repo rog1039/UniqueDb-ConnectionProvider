@@ -78,6 +78,7 @@
     <Compile Include="DatabaseDeletionTests.cs" />
     <Compile Include="OldDatabaseDeleterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlConnectionProviderExtensionMethodsTests.cs" />
     <Compile Include="StaticSqlConnectionProviderTests.cs" />
     <Compile Include="TestingConstants.cs" />
   </ItemGroup>

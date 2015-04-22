@@ -52,13 +52,13 @@ namespace UniqueDb.ConnectionProvider.Tests
                 {
                     uniqueDbProvider1 = new UniqueDbConnectionProvider(new UniqueDbConnectionProviderOptions(
                         TestingConstants.SqlServerInstance, databasePrefix));
-                    DatabaseDeletionTests.CreateDatabase(uniqueDbProvider1);
+                    uniqueDbProvider1.CreateDatabase();
 
                     Thread.Sleep(7000);
 
                     uniqueDbProvider2 = new UniqueDbConnectionProvider(new UniqueDbConnectionProviderOptions(
                         TestingConstants.SqlServerInstance, databasePrefix));
-                    DatabaseDeletionTests.CreateDatabase(uniqueDbProvider2);
+                    uniqueDbProvider2.CreateDatabase();
 
                     OldDatabaseDeleter.GetOldDatabasesFromUniqueDb(uniqueDbProvider1, TimeSpan.FromSeconds(0))
                         .Count.Should()
@@ -78,8 +78,7 @@ namespace UniqueDb.ConnectionProvider.Tests
             "Now let's delete all the datbases to clean up"
                 ._(() =>
                 {
-
-                    OldDatabaseDeleter.DeleteOldDatabases(uniqueDbProvider2, TimeSpan.FromSeconds(0));
+                    uniqueDbProvider2.AndAutoDeleteDbOlderThan(TimeSpan.FromSeconds(0));
                     OldDatabaseDeleter.GetOldDatabasesFromUniqueDb(uniqueDbProvider1, TimeSpan.FromSeconds(0))
                         .Count.Should()
                         .Be(0);

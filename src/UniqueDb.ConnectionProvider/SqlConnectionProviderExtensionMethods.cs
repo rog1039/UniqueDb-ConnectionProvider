@@ -29,5 +29,46 @@ namespace UniqueDb.ConnectionProvider
             OldDatabaseDeleter.DeleteOldDatabases(uniqueDbConnectionProvider, olderThan);
             return uniqueDbConnectionProvider;
         }
+
+        public static void CreateDatabase(this ISqlConnectionProvider connectionProvider)
+        {
+            var connection = CreateSqlConnectionOnMasterDatabase(connectionProvider);
+
+            var createDbText = string.Format("CREATE DATABASE [{0}];", connectionProvider.DatabaseName);
+            Console.WriteLine(createDbText);
+
+            var command = new SqlCommand(createDbText, connection);
+            command.ExecuteNonQuery();
+            connection.Dispose();
+        }
+
+        private static SqlConnection CreateSqlConnectionOnMasterDatabase(ISqlConnectionProvider connectionProvider)
+        {
+            var connectionStringBuilder = connectionProvider.GetSqlConnectionStringBuilder();
+            connectionStringBuilder.InitialCatalog = "master";
+            var connectionString = connectionStringBuilder.ConnectionString;
+            var connection = new SqlConnection(connectionString);
+            connection.Open();
+            return connection;
+        }
+
+        public static void Execute(this ISqlConnectionProvider connectionProvider, string sqlCommand)
+        {
+            var connection = connectionProvider.GetSqlConnection();
+            connection.Open();
+            var command = new SqlCommand(sqlCommand, connection);
+            command.ExecuteNonQuery();
+            connection.Dispose();
+        }
+
+        public static T ExecuteScalar<T>(this ISqlConnectionProvider connectionProvider, string sqlCommand)
+        {
+            var connection = connectionProvider.GetSqlConnection();
+            connection.Open();
+            var command = new SqlCommand(sqlCommand, connection);
+            var result = (T)command.ExecuteScalar();
+            connection.Dispose();
+            return result;
+        }
     }
 }
