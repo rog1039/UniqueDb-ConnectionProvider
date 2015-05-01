@@ -48,6 +48,10 @@
       <HintPath>..\packages\FluentAssertions.3.3.0\lib\net45\FluentAssertions.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -76,6 +80,31 @@
     <Compile Include="BddStringExtensions.cs" />
     <Compile Include="ConnectionProviderTests.cs" />
     <Compile Include="DatabaseDeletionTests.cs" />
+    <Compile Include="DataGeneration\AdventureWorks\GeneratedClasses.cs" />
+    <Compile Include="DataGeneration\ClrAccessModifier.cs" />
+    <Compile Include="DataGeneration\ConversionWorkspace.cs" />
+    <Compile Include="DataGeneration\CSharpClassGenerator.cs" />
+    <Compile Include="DataGeneration\CSharpProperty.cs" />
+    <Compile Include="DataGeneration\InformationSchemaColumn.cs" />
+    <Compile Include="DataGeneration\InformationSchemaMetadataExplorer.cs" />
+    <Compile Include="DataGeneration\InformationSchemaMetadataExplorerTests.cs" />
+    <Compile Include="DataGeneration\InformationSchemaMetadataQueryGenerator.cs" />
+    <Compile Include="DataGeneration\InformationSchemaTableDefinitionFromJson.cs" />
+    <Compile Include="DataGeneration\InformationSchema_SqlDmlGeneratorTests.cs" />
+    <Compile Include="DataGeneration\LiveDbTestingSqlProvider.cs" />
+    <Compile Include="DataGeneration\ListExtensionMethods.cs" />
+    <Compile Include="DataGeneration\Option.cs" />
+    <Compile Include="DataGeneration\CSharpClassCreationTests.cs" />
+    <Compile Include="DataGeneration\OptionExtensions.cs" />
+    <Compile Include="DataGeneration\RandomTableSelector.cs" />
+    <Compile Include="DataGeneration\SqlColumnToCSharpPropertyGenerator.cs" />
+    <Compile Include="DataGeneration\SqlDmlGenerator.cs" />
+    <Compile Include="DataGeneration\SqlRowVersion.cs" />
+    <Compile Include="DataGeneration\SqlTableColumnOverride.cs" />
+    <Compile Include="DataGeneration\SqlTableReference.cs" />
+    <Compile Include="DataGeneration\SqlTableReferenceSearch.cs" />
+    <Compile Include="DataGeneration\SqlTypeConversion.cs" />
+    <Compile Include="DataGeneration\TableParserExtensions.cs" />
     <Compile Include="OldDatabaseDeleterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlConnectionProviderExtensionMethodsTests.cs" />
@@ -90,6 +119,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SampleTable_InformationSchemaTableDefinition_Json.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
