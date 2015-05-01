@@ -48,12 +48,36 @@
       <HintPath>..\packages\FluentAssertions.3.3.0\lib\net45\FluentAssertions.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.1.0.0-rc2\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.1.0.0-rc2\lib\net45\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp.Desktop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.1.0.0-rc2\lib\net45\Microsoft.CodeAnalysis.CSharp.Desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.Desktop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.1.0.0-rc2\lib\net45\Microsoft.CodeAnalysis.Desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.1.33.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.1.33-beta\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Reflection.Metadata, Version=1.0.18.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.Metadata.1.0.18-beta\lib\portable-net45+win8\System.Reflection.Metadata.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -81,7 +105,9 @@
     <Compile Include="ConnectionProviderTests.cs" />
     <Compile Include="DatabaseDeletionTests.cs" />
     <Compile Include="DataGeneration\AdventureWorks\GeneratedClasses.cs" />
+    <Compile Include="DataGeneration\AutomaticPropertyNameRewrites.cs" />
     <Compile Include="DataGeneration\ClrAccessModifier.cs" />
+    <Compile Include="DataGeneration\CompileResults.cs" />
     <Compile Include="DataGeneration\ConversionWorkspace.cs" />
     <Compile Include="DataGeneration\CSharpClassGenerator.cs" />
     <Compile Include="DataGeneration\CSharpProperty.cs" />
@@ -89,22 +115,39 @@
     <Compile Include="DataGeneration\InformationSchemaMetadataExplorer.cs" />
     <Compile Include="DataGeneration\InformationSchemaMetadataExplorerTests.cs" />
     <Compile Include="DataGeneration\InformationSchemaMetadataQueryGenerator.cs" />
+    <Compile Include="DataGeneration\InformationSchemaTable.cs" />
+    <Compile Include="DataGeneration\InformationSchemaTableDefinition.cs" />
     <Compile Include="DataGeneration\InformationSchemaTableDefinitionFromJson.cs" />
     <Compile Include="DataGeneration\InformationSchema_SqlDmlGeneratorTests.cs" />
+    <Compile Include="DataGeneration\ISqlConnectionProviderDapperOperations.cs" />
     <Compile Include="DataGeneration\LiveDbTestingSqlProvider.cs" />
     <Compile Include="DataGeneration\ListExtensionMethods.cs" />
     <Compile Include="DataGeneration\Option.cs" />
     <Compile Include="DataGeneration\CSharpClassCreationTests.cs" />
     <Compile Include="DataGeneration\OptionExtensions.cs" />
+    <Compile Include="DataGeneration\PropertyNameRewrite.cs" />
     <Compile Include="DataGeneration\RandomTableSelector.cs" />
+    <Compile Include="DataGeneration\RewriteMultiWordName.cs" />
+    <Compile Include="DataGeneration\RewriteNumericalName.cs" />
+    <Compile Include="DataGeneration\RewriteTests.cs" />
+    <Compile Include="DataGeneration\RoslynApiExploration.cs" />
+    <Compile Include="DataGeneration\RoslynHelper.cs" />
+    <Compile Include="DataGeneration\SqlColumn.cs" />
+    <Compile Include="DataGeneration\SqlColumnFactory.cs" />
     <Compile Include="DataGeneration\SqlColumnToCSharpPropertyGenerator.cs" />
-    <Compile Include="DataGeneration\SqlDmlGenerator.cs" />
+    <Compile Include="DataGeneration\SqlDmlGeneratorFromInformationSchema.cs" />
     <Compile Include="DataGeneration\SqlRowVersion.cs" />
+    <Compile Include="DataGeneration\SqlTable.cs" />
     <Compile Include="DataGeneration\SqlTableColumnOverride.cs" />
+    <Compile Include="DataGeneration\SqlTableFactory.cs" />
     <Compile Include="DataGeneration\SqlTableReference.cs" />
     <Compile Include="DataGeneration\SqlTableReferenceSearch.cs" />
     <Compile Include="DataGeneration\SqlTypeConversion.cs" />
+    <Compile Include="DataGeneration\StringExtensions.cs" />
+    <Compile Include="DataGeneration\TableManipulation.cs" />
     <Compile Include="DataGeneration\TableParserExtensions.cs" />
+    <Compile Include="DataGeneration\Table_Types.cs" />
+    <Compile Include="DataGeneration\TimeoutAttribute.cs" />
     <Compile Include="OldDatabaseDeleterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlConnectionProviderExtensionMethodsTests.cs" />

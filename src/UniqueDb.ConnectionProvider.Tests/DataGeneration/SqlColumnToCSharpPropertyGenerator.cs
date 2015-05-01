@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 {
@@ -8,10 +9,22 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         public static CSharpProperty ToCSharpProperty(SqlColumn tableColumnDto)
         {
             var cSharpProperty = new CSharpProperty();
-            cSharpProperty.Name = tableColumnDto.Name;
+
+            var propertyName = GetNameWithRewriting(tableColumnDto.Name);
+            cSharpProperty.Name = propertyName;
             cSharpProperty.ClrAccessModifier = ClrAccessModifier.Public;
             cSharpProperty.DataType = GetClrDataType(tableColumnDto);
             return cSharpProperty;
+        }
+
+        private static string GetNameWithRewriting(string name)
+        {
+            var rewriters = AutomaticPropertyNameRewrites.Rewriters.Where(x => x.ShouldRewrite(name)).FirstOrDefault();
+            if (rewriters != null)
+            {
+                return rewriters.Rewrite(name);
+            }
+            return name;
         }
 
         private static string GetClrDataType(SqlColumn column)

@@ -10,6 +10,10 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 {
     public static class TableParserExtensions
     {
+        public static void PrintStringTable<T>(this IEnumerable<T> values)
+        {
+            Console.WriteLine(values.ToStringTable());
+        }
         public static string ToStringTable<T>(this IEnumerable<T> values)
         {
             var objectProperties = typeof(T).GetProperties();

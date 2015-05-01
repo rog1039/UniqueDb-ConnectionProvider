@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Security.AccessControl;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
@@ -28,19 +27,5 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         public string DOMAIN_CATALOG { get; set; }
         public string DOMAIN_SCHEMA { get; set; }
         public string DOMAIN_NAME { get; set; }
-    }
-
-    public class InformationSchemaTable
-    {
-        public string TABLE_CATALOG { get; set; }
-        public string TABLE_SCHEMA { get; set; }
-        public string TABLE_NAME { get; set; }
-        public string TABLE_TYPE { get; set; }
-    }
-
-    public class InformationSchemaTableDefinition
-    {
-        public InformationSchemaTable InformationSchemaTable { get; set; }
-        public IList<InformationSchemaColumn> InformationSchemaColumns { get; set; }
     }
 }
