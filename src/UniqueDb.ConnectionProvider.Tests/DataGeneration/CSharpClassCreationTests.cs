@@ -1,10 +1,12 @@
 ﻿using System;
 using System.CodeDom.Compiler;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Dapper;
 using FluentAssertions;
 using Microsoft.CodeAnalysis.Diagnostics;
+using UniqueDb.ConnectionProvider.DataGeneration;
 using Xunit;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
@@ -21,6 +23,65 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             var sqlTable = SqlTableFactory.Create(sqlTableReference);
             var cSharpClass = CSharpClassGenerator.GenerateClass(sqlTable);
             Console.WriteLine(cSharpClass);
+        }
+
+        [Fact()]
+        [Trait("Category", "Integration")]
+        public void CreateClassFromSqlQuery()
+        {
+            var query = "select * from sys.types";
+            var columns = SqlQueryToCSharpPropertyGenerator.FromQuery(LiveDbTestingSqlProvider.AdventureWorksDb, query);
+            var cSharpClass = CSharpClassGenerator.GenerateClassText("SysTypes", columns);
+            Console.WriteLine(cSharpClass);
+        }
+
+
+        [Fact()]
+        [Trait("Category", "Integration")]
+        public void EnsureCreateClass_FromSqlTableReference_AndFromQuery_ProduceEquivalentResults()
+        {
+            string classFromQuery = string.Empty, classFromTable = string.Empty;
+            
+            "Given a C# class generated from a query"
+                ._(() =>
+                {
+                    var query = string.Format("select * from {0}", _tableName);
+                    var columns = SqlQueryToCSharpPropertyGenerator.FromQuery(LiveDbTestingSqlProvider.AdventureWorksDb, query);
+                    classFromQuery = CSharpClassGenerator.GenerateClassText("Employee", columns);
+                    var compileResults = RoslynHelper.TryCompile(classFromQuery);
+                    compileResults.IsValid().Should().BeTrue();
+                });
+            "Given a C# class generated from SQL InformationSchema metadata"
+                ._(() =>
+                {
+                    var sqlTableReference = new SqlTableReference(LiveDbTestingSqlProvider.AdventureWorksDb, _tableName);
+                    var sqlTable = SqlTableFactory.Create(sqlTableReference);
+                    classFromTable = CSharpClassGenerator.GenerateClass(sqlTable);
+                    var compileResults = RoslynHelper.TryCompile(classFromTable);
+                    compileResults.IsValid().Should().BeTrue();
+                });
+            "They should produce identical output"
+                ._(() =>
+                {
+                    Console.WriteLine("From Table:\r\n" + classFromTable);
+                    Console.WriteLine("From Query:\r\n" + classFromQuery);
+                    classFromTable.Should().BeEquivalentTo(classFromQuery);
+                });
+        }
+
+        [Fact()]
+        [Trait("Category", "Instant")]
+        public void GetSchemaTableInformation()
+        {
+            var query = "SELECT * FROM sys.types";
+            var dataColumns = DataColumnGenerator.RetrieveDataColumnsFromQuery(LiveDbTestingSqlProvider.AdventureWorksDb, query);
+            var cSharpProperties = dataColumns.Select(DataColumnToCSharpPropertyGenerator.ToCSharpProperty).ToList();
+            var cSharpClass = CSharpClassGenerator.GenerateClassText("SysTypes", cSharpProperties);
+            var compileResult = RoslynHelper.TryCompile(cSharpClass);
+            compileResult.IsValid().Should().BeTrue();
+            Console.WriteLine(cSharpClass);
+            dataColumns.PrintStringTable();
+            cSharpProperties.PrintStringTable();
         }
 
         [Fact()]

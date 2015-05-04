@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using UniqueDb.ConnectionProvider.DataGeneration;
 using Xunit;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
@@ -30,7 +31,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         public void TestSampleCreateTableScript()
         {
             var tableDefinition = InformationSchemaTableDefinitionFromJson.SampleTable();
-            var script = SqlDmlGeneratorFromInformationSchema.GenerateCreateTableScript(tableDefinition);
+            var script = SqlDmlCreateTableGeneratorFromInformationSchema.GenerateCreateTableScript(tableDefinition);
             Console.WriteLine(script);
         }
     }

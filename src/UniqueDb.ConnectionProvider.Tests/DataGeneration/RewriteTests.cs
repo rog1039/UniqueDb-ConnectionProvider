@@ -1,5 +1,6 @@
 using System;
 using FluentAssertions;
+using UniqueDb.ConnectionProvider.DataGeneration;
 using Xunit;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
