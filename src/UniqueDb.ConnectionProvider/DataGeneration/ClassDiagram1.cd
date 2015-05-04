@@ -10,7 +10,7 @@
   <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpProperty">
     <Position X="4.25" Y="7.25" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAIAAAAEAAAAAAQACAAAAAQAAAAABAAAIAA=</HashCode>
+      <HashCode>AAAAAAAAAAIAAAAEAAAAAAQACAAAAAQAAQAABAAAIAA=</HashCode>
       <FileName>DataGeneration\CSharpProperty.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -46,13 +46,6 @@
     <Position X="3" Y="3" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
-      <FileName>DataGeneration\InformationSchemaTableDefinition.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.InformationSchemaTableExtensions">
-    <Position X="17.75" Y="9.75" Width="2.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DataGeneration\InformationSchemaTableDefinition.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -122,7 +115,7 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAIIAAAEAAAA=</HashCode>
+      <HashCode>AAAAAAACAAACAAAAAAAAAAAAAAAAAAAAAIIAAAEAAAA=</HashCode>
       <FileName>DataGeneration\SqlColumnToCSharpPropertyGenerator.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -130,13 +123,6 @@
     <Position X="9.25" Y="2.5" Width="3.75" />
     <TypeIdentifier>
       <HashCode>AAAAIAAAAAAEAAAACIgAABAAAAAAAAAQAAAAAAgAAgA=</HashCode>
-      <FileName>DataGeneration\SqlDmlCreateTableGeneratorFromInformationSchema.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.SqlDmlDropTableGeneratorFromInformationSchema">
-    <Position X="7" Y="10.25" Width="3.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DataGeneration\SqlDmlCreateTableGeneratorFromInformationSchema.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -201,6 +187,20 @@
     <TypeIdentifier>
       <HashCode>AAAAAAACAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DataGeneration\TableManipulation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.InformationSchemaTableExtensions">
+    <Position X="17.75" Y="9.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\InformationSchemaTableExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.SqlDmlDropTableGeneratorFromInformationSchema">
+    <Position X="7" Y="10.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\SqlDmlDropTableGeneratorFromInformationSchema.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Enum Name="UniqueDb.ConnectionProvider.DataGeneration.ClrAccessModifier">

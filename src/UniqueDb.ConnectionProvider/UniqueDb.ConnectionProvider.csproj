@@ -60,8 +60,10 @@
     <Compile Include="DatabaseDeleter.cs" />
     <Compile Include="DataGeneration\AutomaticPropertyNameRewrites.cs" />
     <Compile Include="DataGeneration\ClrAccessModifier.cs" />
+    <Compile Include="DataGeneration\ColumnInfo.cs" />
     <Compile Include="DataGeneration\CSharpClassGenerator.cs" />
     <Compile Include="DataGeneration\CSharpProperty.cs" />
+    <Compile Include="DataGeneration\DataColumnGenerator.cs" />
     <Compile Include="DataGeneration\DataColumnToCSharpPropertyGenerator.cs" />
     <Compile Include="DataGeneration\InformationSchemaColumn.cs" />
     <Compile Include="DataGeneration\InformationSchemaMetadataExplorer.cs" />
@@ -69,6 +71,7 @@
     <Compile Include="DataGeneration\InformationSchemaTable.cs" />
     <Compile Include="DataGeneration\InformationSchemaTableDefinition.cs" />
     <Compile Include="DataGeneration\InformationSchemaTableDefinitionFromJson.cs" />
+    <Compile Include="DataGeneration\InformationSchemaTableExtensions.cs" />
     <Compile Include="DataGeneration\ISqlConnectionProviderDapperOperations.cs" />
     <Compile Include="DataGeneration\ListExtensionMethods.cs" />
     <Compile Include="DataGeneration\Option.cs" />
@@ -81,6 +84,8 @@
     <Compile Include="DataGeneration\SqlColumnFactory.cs" />
     <Compile Include="DataGeneration\SqlColumnToCSharpPropertyGenerator.cs" />
     <Compile Include="DataGeneration\SqlDmlCreateTableGeneratorFromInformationSchema.cs" />
+    <Compile Include="DataGeneration\SqlDmlDropTableGeneratorFromInformationSchema.cs" />
+    <Compile Include="DataGeneration\SqlQueryToCSharpPropertyGenerator.cs" />
     <Compile Include="DataGeneration\SqlRowVersion.cs" />
     <Compile Include="DataGeneration\SqlTable.cs" />
     <Compile Include="DataGeneration\SqlTableColumnOverride.cs" />

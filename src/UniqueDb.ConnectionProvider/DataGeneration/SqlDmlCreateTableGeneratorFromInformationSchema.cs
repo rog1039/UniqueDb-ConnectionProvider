@@ -118,13 +118,4 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             return column.IS_NULLABLE.Equals("YES", StringComparison.CurrentCultureIgnoreCase) ? "NULL" : "NOT NULL";
         }
     }
-
-    public static class SqlDmlDropTableGeneratorFromInformationSchema
-    {
-        public static string GenerateDropTableScript(SqlTableReference tableReference)
-        {
-            var sqlCommand = string.Format("DROP TABLE {0}.{1}", tableReference.SchemaName, tableReference.TableName);
-            return sqlCommand;
-        }
-    }
 }
