@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace UniqueDb.ConnectionProvider.Tests
 {
@@ -7,6 +8,14 @@ namespace UniqueDb.ConnectionProvider.Tests
         public static void _(this string s, Action action)
         {
             action();
+        }
+
+        public static void _foreach<T>(this string s, IList<T> collection, Action<T> action)
+        {
+            foreach (var item in collection)
+            {
+                action(item);
+            }
         }
     }
 }

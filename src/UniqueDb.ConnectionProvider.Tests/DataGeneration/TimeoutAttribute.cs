@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 {
-    public class TimeoutAttribute : System.Attribute
+    public class TimeoutAttribute : Attribute
     {
         private IDictionary _properties;
 

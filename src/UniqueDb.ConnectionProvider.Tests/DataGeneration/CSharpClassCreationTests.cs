@@ -1,13 +1,6 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
-using Dapper;
 using FluentAssertions;
-using Microsoft.CodeAnalysis.Diagnostics;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using Xunit;
 
@@ -32,8 +25,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         public void CreateClassFromSqlQuery()
         {
             var query = "select * from sys.types";
-            var columns = SqlQueryToCSharpPropertyGenerator.FromQuery(LiveDbTestingSqlProvider.AdventureWorksDb, query);
-            var cSharpClass = CSharpClassGenerator.GenerateClassText("SysTypes", columns);
+            var cSharpClass = CSharpClassGenerator.GenerateClass(LiveDbTestingSqlProvider.AdventureWorksDb, query, "SysType");
             Console.WriteLine(cSharpClass);
         }
         
@@ -92,26 +84,38 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         {
             int errorCount = 0;
             int successCount = 0;
-            var randomSqlTableReferences = RandomTableSelector.GetRandomSqlTableReferences(LiveDbTestingSqlProvider.AdventureWorksDb, 400);
-            foreach (var sqlTableReference in randomSqlTableReferences)
-            {
-                var sqlTable = SqlTableFactory.Create(sqlTableReference);
-                var cSharpClass = CSharpClassGenerator.GenerateClass(sqlTable);
-                var compileResult = RoslynHelper.TryCompile(cSharpClass);
-                if (!compileResult.IsValid())
+            IList<SqlTableReference> randomSqlTableReferences = null;
+
+            "Given a list of SqlTableReferences"
+                ._(() =>
                 {
-                    errorCount++;
-                    Console.WriteLine("Error found in the following:\r\n"+cSharpClass);
-                }
-                else
+                    randomSqlTableReferences =
+                        RandomTableSelector.GetRandomSqlTableReferences(LiveDbTestingSqlProvider.AdventureWorksDb, 400);
+                });
+
+            "Convert each table reference to a C# class and check for syntax errors using Roslyn"
+                ._foreach(randomSqlTableReferences, sqlTableReference =>
                 {
-                    successCount++;
-                }
-            }
-            Console.WriteLine("Successes: {0}", successCount);
-            Console.WriteLine("Failures:  {0}", errorCount);
-            
-            errorCount.Should().Be(0);
+                    var sqlTable = SqlTableFactory.Create(sqlTableReference);
+                    var cSharpClass = CSharpClassGenerator.GenerateClass(sqlTable);
+                    var compileResult = RoslynHelper.TryCompile(cSharpClass);
+
+                    if (compileResult.IsValid())
+                        successCount++;
+                    else
+                    {
+                        errorCount++;
+                        Console.WriteLine("Error found in the following:\r\n" + cSharpClass);
+                    }
+                });
+
+            "Then print out testing results"
+                ._(() =>
+                {
+                    Console.WriteLine("Successes: {0}", successCount);
+                    Console.WriteLine("Failures:  {0}", errorCount);
+                    errorCount.Should().Be(0);
+                });
         }
     }
 }

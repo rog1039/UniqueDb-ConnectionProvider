@@ -13,6 +13,13 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             return cSharpClass;
         }
 
+        public static string GenerateClass(ISqlConnectionProvider sqlConnectionProvider, string sqlQuery, string className)
+        {
+            var properties = SqlQueryToCSharpPropertyGenerator.FromQuery(sqlConnectionProvider, sqlQuery);
+            var cSharpClass = GenerateClassText(className, properties);
+            return cSharpClass;
+        }
+
         public static string GenerateClassText(string className, IEnumerable<CSharpProperty> cSharpProperties)
         {
             var sb = new StringBuilder();

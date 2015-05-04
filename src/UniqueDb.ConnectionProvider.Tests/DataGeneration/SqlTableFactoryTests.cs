@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UniqueDb.ConnectionProvider.DataGeneration;
-using Xunit;
+﻿using Xunit;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 {

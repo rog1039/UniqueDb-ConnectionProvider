@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
+﻿namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 {
     public static class LiveDbTestingSqlProvider
     {
