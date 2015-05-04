@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
-    public static class DataColumnGenerator
+    public static class AdoSchemaTableHelper
     {
-        public static IList<DataColumn> RetrieveDataColumnsFromQuery(ISqlConnectionProvider sqlConnectionProvider, string sqlQuery)
+        public static IList<DataColumn> GetAdoSchemaTableColumns(ISqlConnectionProvider sqlConnectionProvider, string sqlQuery)
         {
             var sqlDataReader = GetDataReaderFromQuery(sqlConnectionProvider, sqlQuery);
             var columns = ExtractColumnsFromDataReader(sqlDataReader);
@@ -23,19 +24,11 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         private static List<DataColumn> ExtractColumnsFromDataReader(SqlDataReader sqlDataReader)
         {
-            var columns = new List<DataColumn>();
-            var schemaTable = sqlDataReader.GetSchemaTable();
-            foreach (var row in schemaTable.Rows)
-            {
-                var column = new ColumnInfo();
-            }
-            
-
-            
-            foreach (var column in schemaTable.Columns)
-            {
-                columns.Add((DataColumn) column);
-            }
+            var columns = sqlDataReader
+                .GetSchemaTable()
+                .Columns
+                .Cast<DataColumn>()
+                .ToList();
             return columns;
         }
     }

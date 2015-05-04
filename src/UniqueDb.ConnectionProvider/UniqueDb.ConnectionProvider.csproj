@@ -63,7 +63,7 @@
     <Compile Include="DataGeneration\ColumnInfo.cs" />
     <Compile Include="DataGeneration\CSharpClassGenerator.cs" />
     <Compile Include="DataGeneration\CSharpProperty.cs" />
-    <Compile Include="DataGeneration\DataColumnGenerator.cs" />
+    <Compile Include="DataGeneration\AdoSchemaTableHelper.cs" />
     <Compile Include="DataGeneration\DataColumnToCSharpPropertyGenerator.cs" />
     <Compile Include="DataGeneration\InformationSchemaColumn.cs" />
     <Compile Include="DataGeneration\InformationSchemaMetadataExplorer.cs" />
@@ -86,7 +86,6 @@
     <Compile Include="DataGeneration\SqlDmlCreateTableGeneratorFromInformationSchema.cs" />
     <Compile Include="DataGeneration\SqlDmlDropTableGeneratorFromInformationSchema.cs" />
     <Compile Include="DataGeneration\SqlQueryToCSharpPropertyGenerator.cs" />
-    <Compile Include="DataGeneration\SqlRowVersion.cs" />
     <Compile Include="DataGeneration\SqlTable.cs" />
     <Compile Include="DataGeneration\SqlTableColumnOverride.cs" />
     <Compile Include="DataGeneration\SqlTableFactory.cs" />

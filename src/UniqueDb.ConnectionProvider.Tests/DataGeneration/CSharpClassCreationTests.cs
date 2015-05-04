@@ -1,5 +1,7 @@
 ﻿using System;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -34,8 +36,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             var cSharpClass = CSharpClassGenerator.GenerateClassText("SysTypes", columns);
             Console.WriteLine(cSharpClass);
         }
-
-
+        
         [Fact()]
         [Trait("Category", "Integration")]
         public void EnsureCreateClass_FromSqlTableReference_AndFromQuery_ProduceEquivalentResults()
@@ -67,21 +68,6 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
                     Console.WriteLine("From Query:\r\n" + classFromQuery);
                     classFromTable.Should().BeEquivalentTo(classFromQuery);
                 });
-        }
-
-        [Fact()]
-        [Trait("Category", "Instant")]
-        public void GetSchemaTableInformation()
-        {
-            var query = "SELECT * FROM sys.types";
-            var dataColumns = DataColumnGenerator.RetrieveDataColumnsFromQuery(LiveDbTestingSqlProvider.AdventureWorksDb, query);
-            var cSharpProperties = dataColumns.Select(DataColumnToCSharpPropertyGenerator.ToCSharpProperty).ToList();
-            var cSharpClass = CSharpClassGenerator.GenerateClassText("SysTypes", cSharpProperties);
-            var compileResult = RoslynHelper.TryCompile(cSharpClass);
-            compileResult.IsValid().Should().BeTrue();
-            Console.WriteLine(cSharpClass);
-            dataColumns.PrintStringTable();
-            cSharpProperties.PrintStringTable();
         }
 
         [Fact()]

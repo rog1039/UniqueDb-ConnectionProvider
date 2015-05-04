@@ -104,6 +104,7 @@
     <Compile Include="BddStringExtensions.cs" />
     <Compile Include="ConnectionProviderTests.cs" />
     <Compile Include="DatabaseDeletionTests.cs" />
+    <Compile Include="DataGeneration\AdoSchemaTableHelperTests.cs" />
     <Compile Include="DataGeneration\AdventureWorks\GeneratedClasses.cs" />
     <Compile Include="DataGeneration\CompileResults.cs" />
     <Compile Include="DataGeneration\ConversionWorkspace.cs" />

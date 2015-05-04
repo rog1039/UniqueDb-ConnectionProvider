@@ -126,13 +126,6 @@
       <FileName>DataGeneration\SqlDmlCreateTableGeneratorFromInformationSchema.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.SqlRowVersion">
-    <Position X="6.5" Y="8" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
-      <FileName>DataGeneration\SqlRowVersion.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="UniqueDb.ConnectionProvider.DataGeneration.SqlTable">
     <Position X="11.25" Y="8" Width="1.5" />
     <TypeIdentifier>
