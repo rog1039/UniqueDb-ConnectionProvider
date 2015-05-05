@@ -8,13 +8,13 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 {
     public class CSharpClassCreationTests
     {
-        private string _tableName = "HumanResources.Employee";
+        private const string TableName = "HumanResources.Employee";
 
         [Fact()]
         [Trait("Category", "Integration")]
         public void CreateClassFromSqlTable()
         {
-            var sqlTableReference = new SqlTableReference(LiveDbTestingSqlProvider.AdventureWorksDb, _tableName);
+            var sqlTableReference = new SqlTableReference(LiveDbTestingSqlProvider.AdventureWorksDb, TableName);
             var sqlTable = SqlTableFactory.Create(sqlTableReference);
             var cSharpClass = CSharpClassGenerator.GenerateClass(sqlTable);
             Console.WriteLine(cSharpClass);
@@ -25,7 +25,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         public void CreateClassFromSqlQuery()
         {
             var query = "select * from sys.types";
-            var cSharpClass = CSharpClassGenerator.GenerateClass(LiveDbTestingSqlProvider.AdventureWorksDb, query, "SysType");
+            var cSharpClass = LiveDbTestingSqlProvider.AdventureWorksDb.GenerateClass(query, "SysType");
             Console.WriteLine(cSharpClass);
         }
         
@@ -38,7 +38,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             "Given a C# class generated from a query"
                 ._(() =>
                 {
-                    var query = string.Format("select * from {0}", _tableName);
+                    var query = string.Format("select * from {0}", TableName);
                     var columns = SqlQueryToCSharpPropertyGenerator.FromQuery(LiveDbTestingSqlProvider.AdventureWorksDb, query);
                     classFromQuery = CSharpClassGenerator.GenerateClassText("Employee", columns);
                     var compileResults = RoslynHelper.TryCompile(classFromQuery);
@@ -47,7 +47,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             "Given a C# class generated from SQL InformationSchema metadata"
                 ._(() =>
                 {
-                    var sqlTableReference = new SqlTableReference(LiveDbTestingSqlProvider.AdventureWorksDb, _tableName);
+                    var sqlTableReference = new SqlTableReference(LiveDbTestingSqlProvider.AdventureWorksDb, TableName);
                     var sqlTable = SqlTableFactory.Create(sqlTableReference);
                     classFromTable = CSharpClassGenerator.GenerateClass(sqlTable);
                     var compileResults = RoslynHelper.TryCompile(classFromTable);

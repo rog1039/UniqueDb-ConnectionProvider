@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
+using UniqueDb.ConnectionProvider.DataGeneration;
 
 namespace UniqueDb.ConnectionProvider
 {
@@ -69,6 +70,12 @@ namespace UniqueDb.ConnectionProvider
             var result = (T)command.ExecuteScalar();
             connection.Dispose();
             return result;
+        }
+
+        public static string GenerateClass(this ISqlConnectionProvider sqlConnectionProvider, string sqlQuery,
+            string className)
+        {
+            return CSharpClassGeneratorHelpers.GenerateClass(sqlConnectionProvider, sqlQuery, className);
         }
     }
 }

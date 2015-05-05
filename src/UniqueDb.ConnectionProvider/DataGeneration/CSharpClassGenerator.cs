@@ -12,14 +12,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             var cSharpClass = GenerateClassText(table.Name, cSharpColumns);
             return cSharpClass;
         }
-
-        public static string GenerateClass(ISqlConnectionProvider sqlConnectionProvider, string sqlQuery, string className)
-        {
-            var properties = SqlQueryToCSharpPropertyGenerator.FromQuery(sqlConnectionProvider, sqlQuery);
-            var cSharpClass = GenerateClassText(className, properties);
-            return cSharpClass;
-        }
-
+        
         public static string GenerateClassText(string className, IEnumerable<CSharpProperty> cSharpProperties)
         {
             var sb = new StringBuilder();
@@ -31,6 +24,16 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             }
             sb.AppendLine("}");
             return sb.ToString();
+        }
+    }
+
+    public static class CSharpClassGeneratorHelpers
+    {
+        public static string GenerateClass(ISqlConnectionProvider sqlConnectionProvider, string sqlQuery, string className)
+        {
+            var properties = SqlQueryToCSharpPropertyGenerator.FromQuery(sqlConnectionProvider, sqlQuery);
+            var cSharpClass = CSharpClassGenerator.GenerateClassText(className, properties);
+            return cSharpClass;
         }
     }
 }
