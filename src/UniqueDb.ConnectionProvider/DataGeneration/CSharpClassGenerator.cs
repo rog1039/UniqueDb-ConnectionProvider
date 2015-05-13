@@ -12,6 +12,12 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             var cSharpClass = GenerateClassText(table.Name, cSharpColumns);
             return cSharpClass;
         }
+        public static string GenerateClass(SqlTable table, string className)
+        {
+            var cSharpColumns = table.SqlColumns.Select(SqlColumnToCSharpPropertyGenerator.ToCSharpProperty).ToList();
+            var cSharpClass = GenerateClassText(className, cSharpColumns);
+            return cSharpClass;
+        }
         
         public static string GenerateClassText(string className, IEnumerable<CSharpProperty> cSharpProperties)
         {

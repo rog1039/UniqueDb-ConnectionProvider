@@ -72,10 +72,19 @@ namespace UniqueDb.ConnectionProvider
             return result;
         }
 
-        public static string GenerateClass(this ISqlConnectionProvider sqlConnectionProvider, string sqlQuery,
+        public static string GenerateClassFromQuery(this ISqlConnectionProvider sqlConnectionProvider, string sqlQuery,
             string className)
         {
             return CSharpClassGeneratorHelpers.GenerateClass(sqlConnectionProvider, sqlQuery, className);
+        }
+        
+        public static string GenerateClassFromTable(this ISqlConnectionProvider sqlConnectionProvider, string schemaname, string tableName,
+            string className = null)
+        {
+            className = className ?? tableName;
+            var sqlTableReference = new SqlTableReference(sqlConnectionProvider, schemaname, tableName);
+            var sqlTable = SqlTableFactory.Create(sqlTableReference);
+            return CSharpClassGenerator.GenerateClass(sqlTable, className);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         public void CreateClassFromSqlQuery()
         {
             var query = "select * from sys.types";
-            var cSharpClass = LiveDbTestingSqlProvider.AdventureWorksDb.GenerateClass(query, "SysType");
+            var cSharpClass = LiveDbTestingSqlProvider.AdventureWorksDb.GenerateClassFromQuery(query, "SysType");
             Console.WriteLine(cSharpClass);
         }
         
