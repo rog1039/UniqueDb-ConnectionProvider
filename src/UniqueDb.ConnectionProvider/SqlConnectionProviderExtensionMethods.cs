@@ -84,7 +84,7 @@ namespace UniqueDb.ConnectionProvider
             className = className ?? tableName;
             var sqlTableReference = new SqlTableReference(sqlConnectionProvider, schemaname, tableName);
             var sqlTable = SqlTableFactory.Create(sqlTableReference);
-            return CSharpClassGenerator.GenerateClass(sqlTable, className);
+            return CSharpClassGeneratorFromSqlTable.GenerateClass(sqlTable, className);
         }
     }
 }

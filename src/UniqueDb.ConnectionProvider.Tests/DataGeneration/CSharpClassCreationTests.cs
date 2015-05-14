@@ -6,6 +6,22 @@ using Xunit;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 {
+
+    public class CSharpClassCreationUsingInformationSchemaTests
+    {
+        private const string TableName = "HumanResources.Employee";
+
+        [Fact()]
+        [Trait("Category", "Integration")]
+        public void CreateClassFromSqlTableReference()
+        {
+            var sqlTableReference = new SqlTableReference(LiveDbTestingSqlProvider.AdventureWorksDb, TableName);
+            var cSharpClass = CSharpClassGeneratorFromInformationSchema.CreateCSharpClass(sqlTableReference);
+            var compileResult = RoslynHelper.TryCompile(cSharpClass);
+            compileResult.IsValid().Should().BeTrue();
+            Console.WriteLine(cSharpClass);
+        }
+    }
     public class CSharpClassCreationTests
     {
         private const string TableName = "HumanResources.Employee";
@@ -16,7 +32,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         {
             var sqlTableReference = new SqlTableReference(LiveDbTestingSqlProvider.AdventureWorksDb, TableName);
             var sqlTable = SqlTableFactory.Create(sqlTableReference);
-            var cSharpClass = CSharpClassGenerator.GenerateClass(sqlTable);
+            var cSharpClass = CSharpClassGeneratorFromSqlTable.GenerateClass(sqlTable);
             Console.WriteLine(cSharpClass);
         }
 
@@ -48,8 +64,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
                 ._(() =>
                 {
                     var sqlTableReference = new SqlTableReference(LiveDbTestingSqlProvider.AdventureWorksDb, TableName);
-                    var sqlTable = SqlTableFactory.Create(sqlTableReference);
-                    classFromTable = CSharpClassGenerator.GenerateClass(sqlTable);
+                    classFromTable = CSharpClassGeneratorFromInformationSchema.CreateCSharpClass(sqlTableReference);
                     var compileResults = RoslynHelper.TryCompile(classFromTable);
                     compileResults.IsValid().Should().BeTrue();
                 });
@@ -71,7 +86,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             foreach (var sqlTableReference in randomSqlTableReferences)
             {
                 var sqlTable = SqlTableFactory.Create(sqlTableReference);
-                var cSharpClass = CSharpClassGenerator.GenerateClass(sqlTable);
+                var cSharpClass = CSharpClassGeneratorFromSqlTable.GenerateClass(sqlTable);
                 outputText += cSharpClass;
             }
             Console.WriteLine(outputText);
@@ -97,7 +112,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
                 ._foreach(randomSqlTableReferences, sqlTableReference =>
                 {
                     var sqlTable = SqlTableFactory.Create(sqlTableReference);
-                    var cSharpClass = CSharpClassGenerator.GenerateClass(sqlTable);
+                    var cSharpClass = CSharpClassGeneratorFromSqlTable.GenerateClass(sqlTable);
                     var compileResult = RoslynHelper.TryCompile(cSharpClass);
 
                     if (compileResult.IsValid())

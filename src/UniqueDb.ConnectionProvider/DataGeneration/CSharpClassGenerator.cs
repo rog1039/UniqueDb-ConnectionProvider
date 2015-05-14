@@ -1,24 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Generic;
 using System.Text;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
     public static class CSharpClassGenerator
     {
-        public static string GenerateClass(SqlTable table)
-        {
-            var cSharpColumns = table.SqlColumns.Select(SqlColumnToCSharpPropertyGenerator.ToCSharpProperty).ToList();
-            var cSharpClass = GenerateClassText(table.Name, cSharpColumns);
-            return cSharpClass;
-        }
-        public static string GenerateClass(SqlTable table, string className)
-        {
-            var cSharpColumns = table.SqlColumns.Select(SqlColumnToCSharpPropertyGenerator.ToCSharpProperty).ToList();
-            var cSharpClass = GenerateClassText(className, cSharpColumns);
-            return cSharpClass;
-        }
-        
         public static string GenerateClassText(string className, IEnumerable<CSharpProperty> cSharpProperties)
         {
             var sb = new StringBuilder();
@@ -30,16 +16,6 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             }
             sb.AppendLine("}");
             return sb.ToString();
-        }
-    }
-
-    public static class CSharpClassGeneratorHelpers
-    {
-        public static string GenerateClass(ISqlConnectionProvider sqlConnectionProvider, string sqlQuery, string className)
-        {
-            var properties = SqlQueryToCSharpPropertyGenerator.FromQuery(sqlConnectionProvider, sqlQuery);
-            var cSharpClass = CSharpClassGenerator.GenerateClassText(className, properties);
-            return cSharpClass;
         }
     }
 }

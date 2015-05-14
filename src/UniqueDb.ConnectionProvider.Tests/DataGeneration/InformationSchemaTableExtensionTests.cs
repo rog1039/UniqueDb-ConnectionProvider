@@ -56,10 +56,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
                     foreach (var sqlType in sqlDataTypeList)
                     {
                         var clrType =
-                            SqlColumnToCSharpPropertyGenerator.ConvertSqlTypeNameToClrTypeName(new SqlColumn()
-                            {
-                                SqlDataType = sqlType
-                            });
+                            SqlTypeStringToClrTypeStringConverter.ConvertSqlTypeNameToClrTypeName(sqlType);
 
                     }
                 });

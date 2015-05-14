@@ -62,8 +62,14 @@
     <Compile Include="DataGeneration\ClrAccessModifier.cs" />
     <Compile Include="DataGeneration\ColumnInfo.cs" />
     <Compile Include="DataGeneration\CSharpClassGenerator.cs" />
+    <Compile Include="DataGeneration\CSharpClassGeneratorFromInformationSchema.cs" />
+    <Compile Include="DataGeneration\CSharpClassGeneratorFromSqlTable.cs" />
+    <Compile Include="DataGeneration\CSharpClassGeneratorHelpers.cs" />
     <Compile Include="DataGeneration\CSharpProperty.cs" />
     <Compile Include="DataGeneration\AdoSchemaTableHelper.cs" />
+    <Compile Include="DataGeneration\CSharpPropertyTextGenerator.cs" />
+    <Compile Include="DataGeneration\DataAnnotationDefinitionBase.cs" />
+    <Compile Include="DataGeneration\DataAnnotationDefinitionString.cs" />
     <Compile Include="DataGeneration\DataColumnToCSharpPropertyGenerator.cs" />
     <Compile Include="DataGeneration\InformationSchemaColumn.cs" />
     <Compile Include="DataGeneration\InformationSchemaMetadataExplorer.cs" />
@@ -92,6 +98,7 @@
     <Compile Include="DataGeneration\SqlTableReference.cs" />
     <Compile Include="DataGeneration\SqlTableReferenceSearch.cs" />
     <Compile Include="DataGeneration\SqlTypeConversion.cs" />
+    <Compile Include="DataGeneration\SqlTypeStringToClrTypeStringConverter.cs" />
     <Compile Include="DataGeneration\StringExtensions.cs" />
     <Compile Include="DataGeneration\TableManipulation.cs" />
     <Compile Include="DataGeneration\TableParserExtensions.cs" />
