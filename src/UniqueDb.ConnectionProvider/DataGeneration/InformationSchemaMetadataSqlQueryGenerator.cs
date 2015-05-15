@@ -1,6 +1,6 @@
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
-    public static class InformationSchemaMetadataQueryGenerator
+    public static class InformationSchemaMetadataSqlQueryGenerator
     {
         private static string _sqlInformationSchemaColumn = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'{0}' AND TABLE_CATALOG = '{1}'";
         private static string _sqlInformationSchemaTable = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'{0}' AND TABLE_CATALOG = '{1}'";

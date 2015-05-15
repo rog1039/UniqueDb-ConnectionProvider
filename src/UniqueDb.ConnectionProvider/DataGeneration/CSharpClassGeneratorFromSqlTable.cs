@@ -8,9 +8,9 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
     {
         public static string GenerateClass(SqlTable table, string className = null)
         {
-            var cSharpColumns = table.SqlColumns.Select(SqlColumnToCSharpPropertyGenerator.ToCSharpProperty).ToList();
+            var cSharpColumns = table.SqlColumns.Select(CSharpPropertyFactoryFromSqlColumn.ToCSharpProperty).ToList();
             className = className ?? table.Name;
-            var cSharpClass = CSharpClassGenerator.GenerateClassText(className, cSharpColumns);
+            var cSharpClass = CSharpClassTextGenerator.GenerateClassText(className, cSharpColumns);
             return cSharpClass;
         }
     }

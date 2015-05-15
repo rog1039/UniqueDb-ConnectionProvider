@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
@@ -25,7 +26,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         public static InformationSchemaTable GetInformationSchemaTable(SqlTableReference sqlTableReference)
         {
-            var sqlQuery = InformationSchemaMetadataQueryGenerator.GetInformationSchemaTableSqlQuery(sqlTableReference);
+            var sqlQuery = InformationSchemaMetadataSqlQueryGenerator.GetInformationSchemaTableSqlQuery(sqlTableReference);
             var tables = sqlTableReference.SqlConnectionProvider.Query<InformationSchemaTable>(sqlQuery).ToList();
             
             CheckOnlyOneTableWasReturned(tables);
@@ -43,7 +44,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         public static IList<InformationSchemaColumn> GetInformationSchemaColumns(SqlTableReference sqlTableReference)
         {
-            var sqlQuery = InformationSchemaMetadataQueryGenerator.GetInformationSchemaColumnsSqlQuery(sqlTableReference);
+            var sqlQuery = InformationSchemaMetadataSqlQueryGenerator.GetInformationSchemaColumnsSqlQuery(sqlTableReference);
             var tableColumns = sqlTableReference.SqlConnectionProvider.Query<InformationSchemaColumn>(sqlQuery).ToList();
             return tableColumns;
         }

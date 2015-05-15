@@ -3,7 +3,7 @@ using Dapper;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
-    public static class ISqlConnectionProviderDapperOperations
+    public static class ISqlConnectionProviderDapperOperationExtensionMethods
     {
         public static void Execute(this ISqlConnectionProvider sqlConnectionProvider, string script)
         {

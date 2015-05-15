@@ -2,17 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
+using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
-    public static class SqlQueryToCSharpPropertyGenerator
+    public static class CSharpPropertyFactoryFromFromSqlQuery
     {
         public static IList<CSharpProperty> FromQuery(ISqlConnectionProvider sqlConnectionProvider, string sqlQuery)
         {
-            var sqlDataReader = GetDataReaderFromQuery(sqlConnectionProvider, sqlQuery);
-            var columns = ExtractColumnsFromDataReader(sqlDataReader);
-            return columns;
-            
+            var reader = GetDataReaderFromQuery(sqlConnectionProvider, sqlQuery);
+            var properties = ExtractColumnsFromDataReader(reader);
+            return properties;
         }
 
         private static SqlDataReader GetDataReaderFromQuery(ISqlConnectionProvider sqlConnectionProvider, string sqlQuery)
@@ -34,9 +35,20 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
                 property.DataType = ConvertDataColumnClrTypeNameToString(((Type) row["DataType"]).Name);
                 property.Name = row["ColumnName"].ToString();
                 property.IsNullable = (bool) row["AllowDBNull"];
+                property.DataAnnotationDefinitionBases.AddRange(CreateDataAnnotations(row, property.DataType));
                 columns.Add(property);
             }
             return columns;
+        }
+
+        private static IEnumerable<DataAnnotationDefinitionBase> CreateDataAnnotations(DataRow row, string clrDataType)
+        {
+            if (clrDataType == "string" && row["ColumnSize"] is int)
+            {
+                var stringLengthDataAnnotation = new DataAnnotationDefinitionMaxCharacterLength(
+                    (int) row["ColumnSize"]);
+                yield return stringLengthDataAnnotation;
+            }
         }
 
         private static string ConvertDataColumnClrTypeNameToString(string typeName)

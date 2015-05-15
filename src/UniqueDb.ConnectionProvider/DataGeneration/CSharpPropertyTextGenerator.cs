@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
@@ -17,11 +18,11 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         public string Generate()
         {
             return
-                $"{AttributeText} {AccessModifier} {DataTypeString} {PropertyName} {{{GetterAccessModifier} get;{SetterAccessModifier} set; }}";
+                $"{AttributeText}    {AccessModifier} {DataTypeString} {PropertyName} {{{GetterAccessModifier} get;{SetterAccessModifier} set; }}";
         }
 
 
-        private string AttributeText => string.Empty;
+        private string AttributeText => Property.DataAnnotationDefinitionBases.Aggregate(string.Empty, (s, @base) => s+"    "+@base.ToAttributeString()+"\r\n" );
 
         private string AccessModifier => Property.ClrAccessModifier.ToString().ToLower();
 

@@ -22,6 +22,24 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             Console.WriteLine(cSharpClass);
         }
     }
+
+    public class CSharpClassCreationUsingSqlDescribeResultSetTests
+    {
+        private const string TableName = "HumanResources.Employee";
+
+        [Fact()]
+        [Trait("Category", "Integration")]
+        public void CreateClassFromQueryTest()
+        {
+            var cSharpClass = CSharpClassGeneratorFromQueryViaSqlDescribeResultSet.GenerateClass(
+                LiveDbTestingSqlProvider.AdventureWorksDb,
+                $"SELECT * from {TableName}", "Employee");
+            var compileResult = RoslynHelper.TryCompile(cSharpClass);
+            compileResult.IsValid().Should().BeTrue();
+            Console.WriteLine(cSharpClass);
+        }
+    }
+
     public class CSharpClassCreationTests
     {
         private const string TableName = "HumanResources.Employee";
@@ -44,6 +62,15 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             var cSharpClass = LiveDbTestingSqlProvider.AdventureWorksDb.GenerateClassFromQuery(query, "SysType");
             Console.WriteLine(cSharpClass);
         }
+
+        [Fact()]
+        [Trait("Category", "Integration")]
+        public void CreateClassFromSqlQuery2()
+        {
+            var query = $"select * from {TableName}";
+            var cSharpClass = LiveDbTestingSqlProvider.AdventureWorksDb.GenerateClassFromQuery(query, "SysType");
+            Console.WriteLine(cSharpClass);
+        }
         
         [Fact()]
         [Trait("Category", "Integration")]
@@ -55,8 +82,8 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
                 ._(() =>
                 {
                     var query = string.Format("select * from {0}", TableName);
-                    var columns = SqlQueryToCSharpPropertyGenerator.FromQuery(LiveDbTestingSqlProvider.AdventureWorksDb, query);
-                    classFromQuery = CSharpClassGenerator.GenerateClassText("Employee", columns);
+                    var columns = CSharpPropertyFactoryFromFromSqlQuery.FromQuery(LiveDbTestingSqlProvider.AdventureWorksDb, query);
+                    classFromQuery = CSharpClassTextGenerator.GenerateClassText("Employee", columns);
                     var compileResults = RoslynHelper.TryCompile(classFromQuery);
                     compileResults.IsValid().Should().BeTrue();
                 });

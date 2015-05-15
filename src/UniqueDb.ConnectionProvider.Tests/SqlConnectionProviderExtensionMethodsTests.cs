@@ -12,7 +12,7 @@ namespace UniqueDb.ConnectionProvider.Tests
             using (connectionProvider.ToDisposable())
             {
                 connectionProvider.CreateDatabase();
-                connectionProvider.Execute("Use [" + connectionProvider.DatabaseName + "]");
+                connectionProvider.ExecuteNonDapper("Use [" + connectionProvider.DatabaseName + "]");
             }
         }
 

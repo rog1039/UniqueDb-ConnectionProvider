@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 using UniqueDb.ConnectionProvider.Tests;
 using UniqueDb.ConnectionProvider.Tests.DataGeneration;
 using Xunit;
@@ -56,7 +57,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
                     foreach (var sqlType in sqlDataTypeList)
                     {
                         var clrType =
-                            SqlTypeStringToClrTypeStringConverter.ConvertSqlTypeNameToClrTypeName(sqlType);
+                            SqlTypeStringToClrTypeStringConverter.GetClrDataType(sqlType);
 
                     }
                 });

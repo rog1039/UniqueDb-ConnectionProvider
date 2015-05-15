@@ -1,18 +1,47 @@
+using System;
+using System.Data;
+using System.Diagnostics;
+using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
+
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
+
     public static class SqlColumnFactory
     {
-        public static SqlColumn Create(InformationSchemaColumn infSchColumn)
+        public static SqlColumn FromSqlServerMetadata(object columnMetadata)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static SqlColumn FromAdoDataColumn(DataColumn column)
         {
             var sqlColumn = new SqlColumn()
             {
-                Name = infSchColumn.COLUMN_NAME,
-                SqlDataType = infSchColumn.DATA_TYPE,
-                IsNullable = infSchColumn.IS_NULLABLE == "YES",
-                OrdinalPosition = infSchColumn.ORDINAL_POSITION,
-                Default = infSchColumn.COLUMN_DEFAULT
+                Name = column.ColumnName,
+                IsNullable = column.AllowDBNull,
+                OrdinalPosition = column.Ordinal,
+                CharacterMaxLength = column.MaxLength
             };
             return sqlColumn;
+        }
+
+        public static SqlColumn FromInformationSchemaColumn(InformationSchemaColumn column)
+        {
+            var sqlColumn = new SqlColumn()
+            {
+                Name = column.COLUMN_NAME,
+                SqlDataType = column.DATA_TYPE,
+                IsNullable = column.IS_NULLABLE == "YES",
+                OrdinalPosition = column.ORDINAL_POSITION,
+                Default = column.COLUMN_DEFAULT,
+                CharacterMaxLength = column.CHARACTER_MAXIMUM_LENGTH
+            };
+            return sqlColumn;
+        }
+
+        public static SqlColumn FromAdoSchemaTable(DataRow row)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -3,11 +3,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 
-namespace UniqueDb.ConnectionProvider.DataGeneration
+namespace UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata
 {
     public static class AdoSchemaTableHelper
     {
-        public static IList<DataColumn> GetAdoSchemaTableColumns(ISqlConnectionProvider sqlConnectionProvider, string sqlQuery)
+        public static IList<DataColumn> GetAdoSchemaDataColumns(ISqlConnectionProvider sqlConnectionProvider, string sqlQuery)
         {
             var sqlDataReader = GetDataReaderFromQuery(sqlConnectionProvider, sqlQuery);
             var columns = ExtractColumnsFromDataReader(sqlDataReader);
@@ -22,7 +22,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             return query.ExecuteReader();
         }
 
-        private static List<DataColumn> ExtractColumnsFromDataReader(SqlDataReader sqlDataReader)
+        public static List<DataColumn> ExtractColumnsFromDataReader(SqlDataReader sqlDataReader)
         {
             var columns = sqlDataReader
                 .GetSchemaTable()

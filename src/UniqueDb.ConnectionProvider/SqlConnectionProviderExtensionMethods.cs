@@ -53,7 +53,7 @@ namespace UniqueDb.ConnectionProvider
             return connection;
         }
 
-        public static void Execute(this ISqlConnectionProvider connectionProvider, string sqlCommand)
+        public static void ExecuteNonDapper(this ISqlConnectionProvider connectionProvider, string sqlCommand)
         {
             var connection = connectionProvider.GetSqlConnection();
             connection.Open();
@@ -75,7 +75,7 @@ namespace UniqueDb.ConnectionProvider
         public static string GenerateClassFromQuery(this ISqlConnectionProvider sqlConnectionProvider, string sqlQuery,
             string className)
         {
-            return CSharpClassGeneratorHelpers.GenerateClass(sqlConnectionProvider, sqlQuery, className);
+            return CSharpClassGeneratorFromQueryViaAdo.GenerateClass(sqlConnectionProvider, sqlQuery, className);
         }
         
         public static string GenerateClassFromTable(this ISqlConnectionProvider sqlConnectionProvider, string schemaname, string tableName,

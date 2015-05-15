@@ -1,16 +1,28 @@
+using System.Collections.Generic;
 using System.Data;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
-    public static class DataColumnToCSharpPropertyGenerator
+    public static class CSharpPropertyFactoryFromAdoSchemaTableDataColumn
     {
         public static CSharpProperty ToCSharpProperty(DataColumn column)
         {
             var cSharpProperty = new CSharpProperty();
             cSharpProperty.Name = column.ColumnName;
+            cSharpProperty.IsNullable = column.AllowDBNull;
             cSharpProperty.ClrAccessModifier = ClrAccessModifier.Public;
             cSharpProperty.DataType = ConvertDataColumnClrTypeNameToString(column);
+
+            cSharpProperty.DataAnnotationDefinitionBases.AddRange(CreateDataAnnotations(column));
             return cSharpProperty;
+        }
+
+        private static IEnumerable<DataAnnotationDefinitionBase> CreateDataAnnotations(DataColumn column)
+        {
+            if (column.MaxLength > 0)
+            {
+                yield return new DataAnnotationDefinitionMaxCharacterLength(column.MaxLength);
+            }
         }
 
         private static string ConvertDataColumnClrTypeNameToString(DataColumn column)
@@ -32,6 +44,16 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
                 return "short";
             }
             return column.DataType.Name;
+        }
+    }
+
+    public static class SqlTypes
+    {
+        public static IList<string> SqlCharTypes = new List<string> {"char", "nchar", "varchar", "nvarchar"};
+
+        public static bool IsCharType(string sqlTypeName)
+        {
+            return SqlCharTypes.Contains(sqlTypeName);
         }
     }
 }

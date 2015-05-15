@@ -3,7 +3,7 @@ using System.Text;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
-    public static class CSharpClassGenerator
+    public static class CSharpClassTextGenerator
     {
         public static string GenerateClassText(string className, IEnumerable<CSharpProperty> cSharpProperties)
         {
@@ -12,7 +12,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             sb.AppendLine("{");
             foreach (var cSharpProperty in cSharpProperties)
             {
-                sb.AppendLine("    " + cSharpProperty.ToString());
+                sb.AppendLine(cSharpProperty.ToString());
             }
             sb.AppendLine("}");
             return sb.ToString();

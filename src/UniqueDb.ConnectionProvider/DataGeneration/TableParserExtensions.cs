@@ -122,6 +122,10 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             var selectors = valueSelectors.Select(exp => exp.Compile()).ToArray();
             return ToStringTable(values, headers, selectors);
         }
+        public static void PrintStringTable<T>(this IEnumerable<T> values, params Expression<Func<T, object>>[] valueSelectors)
+        {
+            Console.WriteLine(values.ToStringTable(valueSelectors));
+        }
 
         private static PropertyInfo GetProperty<T>(Expression<Func<T, object>> expresstion)
         {

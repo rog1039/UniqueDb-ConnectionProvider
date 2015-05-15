@@ -54,31 +54,40 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="YamlDotNet, Version=3.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\YamlDotNet.3.5.1\lib\net35\YamlDotNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseSqlConnectionProvider.cs" />
+    <Compile Include="CollectionExtensions.cs" />
     <Compile Include="DatabaseDeleter.cs" />
     <Compile Include="DataGeneration\AutomaticPropertyNameRewrites.cs" />
     <Compile Include="DataGeneration\ClrAccessModifier.cs" />
     <Compile Include="DataGeneration\ColumnInfo.cs" />
-    <Compile Include="DataGeneration\CSharpClassGenerator.cs" />
+    <Compile Include="DataGeneration\CSharpClassGeneratorFromQueryViaSqlDescribeResultSet.cs" />
+    <Compile Include="DataGeneration\CSharpClassTextGenerator.cs" />
     <Compile Include="DataGeneration\CSharpClassGeneratorFromInformationSchema.cs" />
     <Compile Include="DataGeneration\CSharpClassGeneratorFromSqlTable.cs" />
-    <Compile Include="DataGeneration\CSharpClassGeneratorHelpers.cs" />
+    <Compile Include="DataGeneration\CSharpClassGeneratorFromQueryViaAdo.cs" />
     <Compile Include="DataGeneration\CSharpProperty.cs" />
-    <Compile Include="DataGeneration\AdoSchemaTableHelper.cs" />
+    <Compile Include="DataGeneration\CSharpPropertyFactoryFromDescribeResultSetRow.cs" />
+    <Compile Include="DataGeneration\SqlMetadata\AdoSchemaTableHelper.cs" />
+    <Compile Include="DataGeneration\CSharpPropertyFactoryFromInformationSchemaColumn.cs" />
     <Compile Include="DataGeneration\CSharpPropertyTextGenerator.cs" />
     <Compile Include="DataGeneration\DataAnnotationDefinitionBase.cs" />
-    <Compile Include="DataGeneration\DataAnnotationDefinitionString.cs" />
-    <Compile Include="DataGeneration\DataColumnToCSharpPropertyGenerator.cs" />
-    <Compile Include="DataGeneration\InformationSchemaColumn.cs" />
+    <Compile Include="DataGeneration\DataAnnotationDefinitionMaxCharacterLength.cs" />
+    <Compile Include="DataGeneration\CSharpPropertyFactoryFromDataColumn.cs" />
+    <Compile Include="DataGeneration\SqlMetadata\DescribeResultSetRow.cs" />
+    <Compile Include="DataGeneration\SqlMetadata\InformationSchemaColumn.cs" />
     <Compile Include="DataGeneration\InformationSchemaMetadataExplorer.cs" />
-    <Compile Include="DataGeneration\InformationSchemaMetadataQueryGenerator.cs" />
-    <Compile Include="DataGeneration\InformationSchemaTable.cs" />
+    <Compile Include="DataGeneration\InformationSchemaMetadataSqlQueryGenerator.cs" />
+    <Compile Include="DataGeneration\SqlMetadata\InformationSchemaTable.cs" />
     <Compile Include="DataGeneration\InformationSchemaTableDefinition.cs" />
     <Compile Include="DataGeneration\InformationSchemaTableDefinitionFromJson.cs" />
     <Compile Include="DataGeneration\InformationSchemaTableExtensions.cs" />
-    <Compile Include="DataGeneration\ISqlConnectionProviderDapperOperations.cs" />
+    <Compile Include="DataGeneration\ISqlConnectionProviderDapperOperationExtensionMethods.cs" />
     <Compile Include="DataGeneration\ListExtensionMethods.cs" />
     <Compile Include="DataGeneration\Option.cs" />
     <Compile Include="DataGeneration\OptionExtensions.cs" />
@@ -88,10 +97,10 @@
     <Compile Include="DataGeneration\RewriteNumericalName.cs" />
     <Compile Include="DataGeneration\SqlColumn.cs" />
     <Compile Include="DataGeneration\SqlColumnFactory.cs" />
-    <Compile Include="DataGeneration\SqlColumnToCSharpPropertyGenerator.cs" />
+    <Compile Include="DataGeneration\CSharpPropertyFactoryFromSqlColumn.cs" />
     <Compile Include="DataGeneration\SqlDmlCreateTableGeneratorFromInformationSchema.cs" />
     <Compile Include="DataGeneration\SqlDmlDropTableGeneratorFromInformationSchema.cs" />
-    <Compile Include="DataGeneration\SqlQueryToCSharpPropertyGenerator.cs" />
+    <Compile Include="DataGeneration\CSharpPropertyFactoryFromFromSqlQuery.cs" />
     <Compile Include="DataGeneration\SqlTable.cs" />
     <Compile Include="DataGeneration\SqlTableColumnOverride.cs" />
     <Compile Include="DataGeneration\SqlTableFactory.cs" />
@@ -105,6 +114,7 @@
     <Compile Include="DataGeneration\Table_Types.cs" />
     <Compile Include="ISqlConnectionProvider.cs" />
     <Compile Include="OldDatabaseDeleter.cs" />
+    <Compile Include="RegexExtensions.cs" />
     <Compile Include="SqlConnectionProviderExtensionMethods.cs" />
     <Compile Include="StaticSqlConnectionProvider.cs" />
     <Compile Include="UniqueDbConnectionProvider.cs" />

@@ -6,14 +6,13 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
     {
         public static bool UseNativeSqlTypes = true;
 
-        public static string GetClrDataType(string sqlDataType, bool isNullable)
+        public static string GetClrDataType(string sqlDataType)
         {
             string dataTypeName = ConvertSqlTypeNameToClrTypeName(sqlDataType);
-            var clrDataTypeConversionResult = new SqlToClrDataTypeConversionResult(isNullable, dataTypeName);
-            return clrDataTypeConversionResult.ToString();
+            return dataTypeName;
         }
 
-        public static string ConvertSqlTypeNameToClrTypeName(string sqlDataType)
+        private static string ConvertSqlTypeNameToClrTypeName(string sqlDataType)
         {
             if (sqlDataType == "int")
             {
@@ -168,26 +167,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             }
             
             throw new NotImplementedException(
-                string.Format("SQL column type {0} cannot be translated to a C# property type", sqlDataType));
-        }
-
-        private class SqlToClrDataTypeConversionResult
-        {
-            public bool Nullable { get; set; }
-            public string ClrDataType { get; set; }
-
-            public SqlToClrDataTypeConversionResult(bool nullable, string clrDataType)
-            {
-                Nullable = nullable;
-                ClrDataType = clrDataType;
-            }
-
-            public override string ToString()
-            {
-                return !Nullable || !CSharpPropertyTextGenerator.typesThatCanBeNullable.Contains(ClrDataType)
-                    ? ClrDataType
-                    : ClrDataType + "?";
-            }
+                $"SQL column type {sqlDataType} cannot be translated to a C# property type");
         }
     }
 }

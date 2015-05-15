@@ -7,7 +7,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         public static SqlTable Create(SqlTableReference sqlTableReference)
         {
             var columns = InformationSchemaMetadataExplorer.GetInformationSchemaColumns(sqlTableReference);
-            var sqlColumns = columns.Select(SqlColumnFactory.Create).ToList();
+            var sqlColumns = columns.Select(SqlColumnFactory.FromInformationSchemaColumn).ToList();
             var sqlTable = new SqlTable()
             {
                 Name = sqlTableReference.TableName,
