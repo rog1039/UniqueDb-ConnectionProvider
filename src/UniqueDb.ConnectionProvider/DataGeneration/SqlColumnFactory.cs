@@ -17,7 +17,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             var sqlColumn = new SqlColumn()
             {
                 Name = column.COLUMN_NAME,
-                SqlDataType = column.DATA_TYPE,
+                SqlDataType = SqlTypeNameParser.Parse(column.DATA_TYPE),
                 IsNullable = column.IS_NULLABLE == "YES",
                 OrdinalPosition = column.ORDINAL_POSITION,
                 Default = column.COLUMN_DEFAULT,

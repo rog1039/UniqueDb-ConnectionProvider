@@ -13,7 +13,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             var propertyName = GetNameWithRewriting(tableColumnDto.Name);
             cSharpProperty.Name = propertyName;
             cSharpProperty.ClrAccessModifier = ClrAccessModifier.Public;
-            cSharpProperty.DataType = SqlTypeStringToClrTypeStringConverter.GetClrDataType(tableColumnDto.SqlDataType);
+            cSharpProperty.DataType = SqlTypeStringToClrTypeStringConverter.GetClrDataType(tableColumnDto.SqlDataType.TypeName);
             cSharpProperty.IsNullable = tableColumnDto.IsNullable;
             
            cSharpProperty.DataAnnotationDefinitionBases.AddRange(GetDataAnnotations(tableColumnDto));
@@ -25,7 +25,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         {
             if (sqlColumn.CharacterMaxLength.HasValue 
                 && sqlColumn.CharacterMaxLength > 0 
-                && SqlTypes.IsCharType(sqlColumn.SqlDataType))
+                && SqlTypes.IsCharType(sqlColumn.SqlDataType.TypeName))
             {
                 yield return new DataAnnotationDefinitionMaxCharacterLength(sqlColumn.CharacterMaxLength.Value);
             }

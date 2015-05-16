@@ -108,6 +108,7 @@
     <Compile Include="DataGeneration\SqlTableReference.cs" />
     <Compile Include="DataGeneration\SqlTableReferenceSearch.cs" />
     <Compile Include="DataGeneration\SqlTypeConversion.cs" />
+    <Compile Include="DataGeneration\SqlTypeNameParser.cs" />
     <Compile Include="DataGeneration\SqlTypes.cs" />
     <Compile Include="DataGeneration\SqlTypeStringToClrTypeStringConverter.cs" />
     <Compile Include="DataGeneration\StringExtensions.cs" />

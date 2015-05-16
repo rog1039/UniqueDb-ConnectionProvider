@@ -13,9 +13,14 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
                 return new SqlResultSetColumnTypeParseResult() {SqlType = row.user_type_name, IsSystemDefined = false};
             }
 
-            return Precision2Match.Parse(row.system_type_name) 
-                   ?? Precision1Match.Parse(row.system_type_name) 
-                   ?? NoPrecisionMatch.Parse(row.system_type_name);
+            return ParseSystemType(row.system_type_name);
+        }
+
+        public static SqlResultSetColumnTypeParseResult ParseSystemType(string sqlType)
+        {
+            return Precision2Match.Parse(sqlType)
+                   ?? Precision1Match.Parse(sqlType)
+                   ?? NoPrecisionMatch.Parse(sqlType);
         }
 
         private const string Precision2MatchRegex =
