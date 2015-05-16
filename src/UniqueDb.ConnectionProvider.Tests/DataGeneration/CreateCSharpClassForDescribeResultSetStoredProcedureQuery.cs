@@ -12,8 +12,8 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         {
             var query = "sp_describe_first_result_set @tsql = N'SELECT object_id, name, type_desc FROM sys.indexes'";
             var cSharpClass =
-                CSharpClassGeneratorFromQueryViaAdo.GenerateClass(LiveDbTestingSqlProvider.AdventureWorksDb,
-                    query, "DescribeResutlSet");
+                CSharpClassGeneratorFromAdoDataReader.GenerateClass(LiveDbTestingSqlProvider.AdventureWorksDb,
+                    query, "DescribeResultSet");
             Console.WriteLine(cSharpClass);
         }
     }

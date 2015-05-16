@@ -12,5 +12,4 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         public string Default { get; set; }
         public int? CharacterMaxLength { get; set; }
     }
-
 }

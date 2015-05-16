@@ -18,25 +18,17 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         private static List<CSharpProperty> GetCSharpProperties(ISqlConnectionProvider sqlConnectionProvider, string sqlQuery)
         {
-            var resultSetColumns = GetDescribeResultSetRows(sqlConnectionProvider, sqlQuery);
-            resultSetColumns.PrintStringTable();
-            var cSharpProperties = resultSetColumns
+            var resultColumns = GetQueryResultColumns(sqlConnectionProvider, sqlQuery);
+            var cSharpProperties = resultColumns
                 .Select(CSharpPropertyFactoryFromDescribeResultSetRow.ToCSharpProperty)
                 .ToList();
-            cSharpProperties.PrintStringTable();
             return cSharpProperties;
         }
 
-        private static IEnumerable<DescribeResultSetRow> GetDescribeResultSetRows(ISqlConnectionProvider sqlConnectionProvider, string sqlQuery)
+        private static IEnumerable<DescribeResultSetRow> GetQueryResultColumns(ISqlConnectionProvider sqlConnectionProvider, string sqlQuery)
         {
-            var storedProcQuery = $"sp_describe_first_result_set @tsql = N'{sqlQuery}'";
             var parameter = new DynamicParameters();
             parameter.Add("@tsql", sqlQuery);
-            Console.WriteLine(sqlQuery);
-            Console.WriteLine(storedProcQuery);
-
-
-            
 
             var resultSetColumns = sqlConnectionProvider
                 .GetSqlConnection()

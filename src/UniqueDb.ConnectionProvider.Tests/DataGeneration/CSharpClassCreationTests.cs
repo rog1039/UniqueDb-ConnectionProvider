@@ -59,7 +59,8 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         public void CreateClassFromSqlQuery()
         {
             var query = "select * from sys.types";
-            var cSharpClass = LiveDbTestingSqlProvider.AdventureWorksDb.GenerateClassFromQuery(query, "SysType");
+            var cSharpClass = CSharpClassGeneratorFromAdoDataReader
+                .GenerateClass(LiveDbTestingSqlProvider.AdventureWorksDb, query, "SysType");
             Console.WriteLine(cSharpClass);
         }
 
@@ -68,7 +69,8 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         public void CreateClassFromSqlQuery2()
         {
             var query = $"select * from {TableName}";
-            var cSharpClass = LiveDbTestingSqlProvider.AdventureWorksDb.GenerateClassFromQuery(query, "SysType");
+            var cSharpClass = CSharpClassGeneratorFromAdoDataReader
+                .GenerateClass(LiveDbTestingSqlProvider.AdventureWorksDb, query, "SysType");
             Console.WriteLine(cSharpClass);
         }
         
@@ -82,7 +84,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
                 ._(() =>
                 {
                     var query = string.Format("select * from {0}", TableName);
-                    var columns = CSharpPropertyFactoryFromFromSqlQuery.FromQuery(LiveDbTestingSqlProvider.AdventureWorksDb, query);
+                    var columns = CSharpPropertyFactoryFromAdoDataReader.FromQuery(LiveDbTestingSqlProvider.AdventureWorksDb, query);
                     classFromQuery = CSharpClassTextGenerator.GenerateClassText("Employee", columns);
                     var compileResults = RoslynHelper.TryCompile(classFromQuery);
                     compileResults.IsValid().Should().BeTrue();

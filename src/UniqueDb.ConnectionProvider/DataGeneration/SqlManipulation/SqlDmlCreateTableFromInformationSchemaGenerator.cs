@@ -5,7 +5,7 @@ using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
-    public static class SqlDmlCreateTableGeneratorFromInformationSchema
+    public static class SqlDmlCreateTableFromInformationSchemaGenerator
     {
         public static string GenerateCreateTableScript(InformationSchemaTableDefinition tableDefinition)
         {

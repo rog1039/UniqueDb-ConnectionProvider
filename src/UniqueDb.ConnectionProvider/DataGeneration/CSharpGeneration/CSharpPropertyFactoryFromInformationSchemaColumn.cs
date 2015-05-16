@@ -30,7 +30,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         private static string GetNameWithRewriting(string name)
         {
-            var rewriters = AutomaticPropertyNameRewrites.Rewriters.Where(x => x.ShouldRewrite(name)).FirstOrDefault();
+            var rewriters = AutomaticPropertyNameRewrites.Rewriters.FirstOrDefault(x => x.ShouldRewrite(name));
             if (rewriters != null)
             {
                 return rewriters.Rewrite(name);

@@ -5,24 +5,11 @@ using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
-
     public static class SqlColumnFactory
     {
         public static SqlColumn FromSqlServerMetadata(object columnMetadata)
         {
             throw new NotImplementedException();
-        }
-
-        public static SqlColumn FromAdoDataColumn(DataColumn column)
-        {
-            var sqlColumn = new SqlColumn()
-            {
-                Name = column.ColumnName,
-                IsNullable = column.AllowDBNull,
-                OrdinalPosition = column.Ordinal,
-                CharacterMaxLength = column.MaxLength
-            };
-            return sqlColumn;
         }
 
         public static SqlColumn FromInformationSchemaColumn(InformationSchemaColumn column)

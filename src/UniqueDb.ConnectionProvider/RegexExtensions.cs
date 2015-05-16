@@ -36,23 +36,55 @@ namespace UniqueDb.ConnectionProvider
             }
         }
 
-        private static Serializer serializer = new Serializer();
-        public static IEnumerable<T> MatchRegex<T>(this IEnumerable<string> inputStrings, string regexPattern,
-            T groupStructure)
+        public static IEnumerable<T> MatchRegex<T>(this string inputString, string regexPattern,
+            T regexResultDataStructure)
         {
-            var anonymousObjectProperties = groupStructure.GetType().GetProperties();
-            anonymousObjectProperties.PrintStringTable(x => x.Name);
+            return inputString.MakeList().MatchRegex(regexPattern, regexResultDataStructure);
+        }
+
+        public static IEnumerable<T> MatchRegex<T>(this IEnumerable<string> inputStrings, string regexPattern,
+            T regexResultDataStructure)
+        {
+            var resultProperties = regexResultDataStructure.GetType().GetProperties();
             var regex = new Regex(regexPattern);
             var results = inputStrings
-                .Select(x => regex.Match(x))
-                .Where(m => m.Success)
-                .Select(x => PopulateNewAnonymousObjectWithMatchGroups<T>(x, anonymousObjectProperties))
+                .Select(input => regex.Match(input))
+                .Where(regexMatch => regexMatch.Success)
+                .Select(regexMatch => CreateResultDataStructure<T>(regexMatch, resultProperties))
                 .ToList();
             
             return results;
         }
 
-        private static T PopulateNewAnonymousObjectWithMatchGroups<T>(Match match, PropertyInfo[] anonymousObjectProperties)
+        private static T CreateResultDataStructure<T>(Match match, PropertyInfo[] anonymousObjectProperties)
+        {
+            var regexGroupValues = ExtractValuesFromRegexMatch<T>(match, anonymousObjectProperties);
+
+            try
+            {
+                //If the type parameter, T, is an anonymous type, then it will have a constructor
+                //which will accept all the values so the below code will succeed.
+                //** Possible the passed in type is not anonymous and also accepts all the group 
+                //values as parameters as well so this would succeed then too.  Pretty unlikely though.
+                var newTObject = (T)Activator.CreateInstance(typeof (T), regexGroupValues);
+                return newTObject;
+            }
+            catch (Exception e)
+            {
+                //If we get here, then we can assume the type is not anonymous or there is no constructor
+                //which accepts all the match group results as parameters, so we must use PropertyInfo
+                //to set the values of the object's properties.
+                var newTObject = (T) Activator.CreateInstance(typeof (T));
+                for (int index = 0; index < anonymousObjectProperties.Length; index++)
+                {
+                    var anonymousObjectProperty = anonymousObjectProperties[index];
+                    anonymousObjectProperty.SetValue(newTObject, regexGroupValues[index], null);
+                }
+                return newTObject;
+            }
+        }
+
+        private static string[] ExtractValuesFromRegexMatch<T>(Match match, PropertyInfo[] anonymousObjectProperties)
         {
             var matchGroupValues = new string[anonymousObjectProperties.Length];
             for (int index = 0; index < anonymousObjectProperties.Length; index++)
@@ -61,40 +93,7 @@ namespace UniqueDb.ConnectionProvider
                 var value = match.Groups[anonymousObjectProperty.Name].Value;
                 matchGroupValues[index] = value;
             }
-
-            try
-            {
-                var newTObject = (T)Activator.CreateInstance(typeof (T), matchGroupValues);
-                return newTObject;
-            }
-            catch (Exception e)
-            {
-                var newTObject = (T) Activator.CreateInstance(typeof (T));
-                for (int index = 0; index < anonymousObjectProperties.Length; index++)
-                {
-                    var anonymousObjectProperty = anonymousObjectProperties[index];
-                    anonymousObjectProperty.SetValue(newTObject, matchGroupValues[index], null);
-                }
-                return newTObject;
-            }
-        }
-    }
-
-    public static class YamlExtensionMethods
-    {
-        public static void PrintYamlList<T>(this IList<T> list)
-        {
-            foreach (var item in list)
-            {
-                item.PrintYaml();
-            }
-        }
-        public static void PrintYaml<T>(this T o)
-        {
-            var stringWriter = new StringWriter();
-            new Serializer().Serialize(stringWriter, o);
-            var output = stringWriter.ToString();
-            Console.WriteLine(output);
+            return matchGroupValues;
         }
     }
 }

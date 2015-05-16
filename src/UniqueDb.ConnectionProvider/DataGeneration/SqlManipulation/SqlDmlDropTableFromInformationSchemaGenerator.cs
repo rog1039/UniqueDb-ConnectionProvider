@@ -1,6 +1,6 @@
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
-    public static class SqlDmlDropTableGeneratorFromInformationSchema
+    public static class SqlDmlDropTableFromInformationSchemaGenerator
     {
         public static string GenerateDropTableScript(SqlTableReference tableReference)
         {
