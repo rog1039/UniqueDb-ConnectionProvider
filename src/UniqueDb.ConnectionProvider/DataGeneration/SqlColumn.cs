@@ -10,7 +10,6 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         public SqlType SqlDataType { get; set; }
         public bool IsNullable { get; set; }
         public string Default { get; set; }
-        public int? CharacterMaxLength { get; set; }
     }
 
     public class SqlType

@@ -12,7 +12,10 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         public static string CreateCSharpClass(SqlTableReference sqlTableReference, string className = default(string))
         {
             var schemaColumns = InformationSchemaMetadataExplorer.GetInformationSchemaColumns(sqlTableReference);
-            var cSharpProperties = schemaColumns.Select(CSharpPropertyFactoryFromInformationSchemaColumn.ToCSharpProperty).ToList();
+            var cSharpProperties = schemaColumns
+                .Select(SqlColumnFactory.FromInformationSchemaColumn)
+                .Select(CSharpPropertyFactoryFromSqlColumn.ToCSharpProperty)
+                .ToList();
             var tableName = className ?? sqlTableReference.TableName;
             var classText = CSharpClassTextGenerator.GenerateClassText(tableName, cSharpProperties);
             return classText;

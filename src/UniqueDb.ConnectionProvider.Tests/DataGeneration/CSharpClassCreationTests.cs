@@ -96,7 +96,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         {
             var query = $"select * from {TableName}";
             var cSharpClass = CSharpClassGeneratorFromAdoDataReader
-                .GenerateClass(LiveDbTestingSqlProvider.AdventureWorksDb, query, "SysType");
+                .GenerateClass(LiveDbTestingSqlProvider.AdventureWorksDb, query, "Employee");
             Console.WriteLine(cSharpClass);
         }
         
@@ -110,8 +110,9 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
                 ._(() =>
                 {
                     var query = string.Format("select * from {0}", TableName);
-                    var columns = CSharpPropertyFactoryFromAdoDataReader.FromQuery(LiveDbTestingSqlProvider.AdventureWorksDb, query);
-                    classFromQuery = CSharpClassTextGenerator.GenerateClassText("Employee", columns);
+                    classFromQuery = CSharpClassGeneratorFromAdoDataReader
+                        .GenerateClass(LiveDbTestingSqlProvider.AdventureWorksDb, query, "Employee");
+
                     var compileResults = RoslynHelper.TryCompile(classFromQuery);
                     compileResults.IsValid().Should().BeTrue();
                 });

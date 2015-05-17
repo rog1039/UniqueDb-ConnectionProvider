@@ -9,13 +9,18 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
     {
         public static CSharpProperty ToCSharpProperty(DescribeResultSetRow resultSetColumn)
         {
+            var sqlColumn = CreateSqlColumn(resultSetColumn);
+            var cSharpProperty = CSharpPropertyFactoryFromSqlColumn.ToCSharpProperty(sqlColumn);
+            return cSharpProperty;
+        }
+
+        private static SqlColumn CreateSqlColumn(DescribeResultSetRow resultSetColumn)
+        {
             var sqlColumn = new SqlColumn();
             sqlColumn.Name = resultSetColumn.name;
             sqlColumn.IsNullable = resultSetColumn.is_nullable;
             sqlColumn.SqlDataType = SqlTypeParser.Parse(GetTypeName(resultSetColumn));
-
-            var cSharpProperty = CSharpPropertyFactoryFromSqlColumn.ToCSharpProperty(sqlColumn);
-            return cSharpProperty;
+            return sqlColumn;
         }
 
         private static string GetTypeName(DescribeResultSetRow resultSetColumn)

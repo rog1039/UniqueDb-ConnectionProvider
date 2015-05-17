@@ -10,7 +10,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         {
             var cSharpProperty = new CSharpProperty();
 
-            var propertyName = GetNameWithRewriting(sqlColumn.Name);
+            var propertyName = AutomaticPropertyNameRewrites.GetNameWithRewriting(sqlColumn.Name);
             cSharpProperty.Name = propertyName;
             cSharpProperty.ClrAccessModifier = ClrAccessModifier.Public;
             cSharpProperty.IsNullable = sqlColumn.IsNullable;
@@ -32,15 +32,6 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             {
                 yield return new DataAnnotationDefinitionMaxCharacterLength(sqlColumn.SqlDataType.MaximumCharLength.Value);
             }
-        }
-
-        private static string GetNameWithRewriting(string name)
-        {
-            var rewriters = AutomaticPropertyNameRewrites.Rewriters.FirstOrDefault(x => x.ShouldRewrite(name));
-            
-            return rewriters != null 
-                ? rewriters.Rewrite(name) 
-                : name;
         }
     }
 }

@@ -23,20 +23,14 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
                    ?? NoPrecisionMatch.Parse(sqlType);
         }
 
-        private const string Precision2MatchRegex =
-            @"(?<TypeName>\w+)\((?<Precision1>\d+),(?<Precision2>\d+)\)";
-
-        private const string Precision1MatchRegex =
-            @"(?<TypeName>\w+)\((?<Precision1>\d+)\)";
-
-        private const string NoPrecisionMatchRegex =
-            @"(?<TypeName>\w+)";
-
         private class NoPrecisionMatch
         {
             public string Input { get; set; }
             public string TypeName { get; set; }
-            
+
+            private const string NoPrecisionMatchRegex =
+                @"(?<TypeName>\w+)";
+
             public static SyntaxParseResult Parse(string sqlSystemTypeName)
             {
                 var sqlTypeParseResult = sqlSystemTypeName
@@ -50,6 +44,10 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         private class Precision1Match : NoPrecisionMatch
         {
             public string Precision1 { get; set; }
+
+            private const string Precision1MatchRegex =
+                @"(?<TypeName>\w+)\((?<Precision1>\d+)\)";
+
             public static SyntaxParseResult Parse(string sqlSystemTypeName)
             {
                 var sqlTypeParseResult = sqlSystemTypeName
@@ -63,6 +61,11 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         private class Precision2Match : Precision1Match
         {
             public string Precision2 { get; set; }
+
+            private const string Precision2MatchRegex =
+                @"(?<TypeName>\w+)\((?<Precision1>\d+),(?<Precision2>\d+)\)";
+
+
             public static SyntaxParseResult Parse(string sqlSystemTypeName)
             {
                 var sqlTypeParseResult = sqlSystemTypeName
@@ -73,13 +76,6 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             }
         }
 
-        //public class SqlResultSetColumnTypeParseResult
-        //{
-        //    public string SqlType { get; set; }
-        //    public int? Precision1 { get; set; }
-        //    public int? Precision2 { get; set; }
-        //}
-        
         private static SyntaxParseResult Create(Precision2Match match)
         {
             return new SyntaxParseResult(
