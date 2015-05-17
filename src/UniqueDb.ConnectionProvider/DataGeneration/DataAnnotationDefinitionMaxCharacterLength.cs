@@ -6,8 +6,8 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         {
             MaxLength = maxLength;
         }
-
+        
         public int MaxLength { get; set; }
-        public override string ToAttributeString() => string.Format("[MaxLength({0})]", MaxLength);
+        public override string ToAttributeString() => string.Format("[StringLength({0})]", MaxLength);
     }
 }
