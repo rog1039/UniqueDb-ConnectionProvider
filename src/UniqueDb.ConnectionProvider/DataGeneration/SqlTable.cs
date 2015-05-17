@@ -11,13 +11,26 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
     }
 
 
-    internal class SyntaxParseResult
+    public class SyntaxParseResult
     {
         public SyntaxParseResult(string sqlTypeName, int? precision1, int? precision2, string input)
         {
             SqlTypeName = sqlTypeName;
             Precision1 = precision1;
             Precision2 = precision2;
+            Input = input;
+        }
+
+        public SyntaxParseResult(string sqlTypeName, int? precision1, string input)
+        {
+            SqlTypeName = sqlTypeName;
+            Precision1 = precision1;
+            Input = input;
+        }
+
+        public SyntaxParseResult(string sqlTypeName, string input)
+        {
+            SqlTypeName = sqlTypeName;
             Input = input;
         }
 

@@ -1,6 +1,6 @@
 ﻿namespace UniqueDb.ConnectionProvider.DataGeneration
 {
-    public static class SqlTypeNameParser
+    public static class SqlTypeParser
     {
         public static SqlType Parse(string input)
         {
@@ -9,13 +9,11 @@
             var sqlType = CreateSqlTypeFromSyntaxParseResult(syntaxParseResult);
 
             return sqlType;
-
         }
 
         private static SyntaxParseResult ParseSyntax(string input)
         {
-            var result = SqlResultSetColumnTypeParser.ParseSystemType(input);
-            var syntaxParseResult = new SyntaxParseResult(result.SqlType, result.Precision1, result.Precision2, input);
+            var syntaxParseResult = SqlTypeSyntaxParser.ParseType(input);
             return syntaxParseResult;
         }
 

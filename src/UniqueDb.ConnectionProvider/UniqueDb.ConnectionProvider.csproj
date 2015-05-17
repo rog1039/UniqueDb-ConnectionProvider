@@ -101,14 +101,14 @@
     <Compile Include="DataGeneration\SqlManipulation\SqlDmlCreateTableFromInformationSchemaGenerator.cs" />
     <Compile Include="DataGeneration\SqlManipulation\SqlDmlDropTableFromInformationSchemaGenerator.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\CSharpPropertyFactoryFromAdoDataReader.cs" />
-    <Compile Include="DataGeneration\SqlResultSetColumnTypeParser.cs" />
+    <Compile Include="DataGeneration\SqlTypeSyntaxParser.cs" />
     <Compile Include="DataGeneration\SqlTable.cs" />
     <Compile Include="DataGeneration\SqlTableColumnOverride.cs" />
     <Compile Include="DataGeneration\SqlTableFactory.cs" />
     <Compile Include="DataGeneration\SqlTableReference.cs" />
     <Compile Include="DataGeneration\SqlTableReferenceSearch.cs" />
     <Compile Include="DataGeneration\SqlTypeConversion.cs" />
-    <Compile Include="DataGeneration\SqlTypeNameParser.cs" />
+    <Compile Include="DataGeneration\SqlTypeParser.cs" />
     <Compile Include="DataGeneration\SqlTypes.cs" />
     <Compile Include="DataGeneration\SqlTypeStringToClrTypeStringConverter.cs" />
     <Compile Include="DataGeneration\StringExtensions.cs" />

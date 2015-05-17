@@ -37,6 +37,32 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             var compileResult = RoslynHelper.TryCompile(cSharpClass);
             compileResult.IsValid().Should().BeTrue();
             Console.WriteLine(cSharpClass);
+            cSharpClass.Should().Be(
+@"public class Employee
+{
+    public int BusinessEntityID { get; set; }
+    [MaxLength(15)]
+    public string NationalIDNumber { get; set; }
+    [MaxLength(256)]
+    public string LoginID { get; set; }
+    public SqlHierarchyId OrganizationNode { get; set; }
+    public Int16? OrganizationLevel { get; set; }
+    [MaxLength(50)]
+    public string JobTitle { get; set; }
+    public DateTime BirthDate { get; set; }
+    [MaxLength(1)]
+    public string MaritalStatus { get; set; }
+    [MaxLength(1)]
+    public string Gender { get; set; }
+    public DateTime HireDate { get; set; }
+    public Flag SalariedFlag { get; set; }
+    public Int16 VacationHours { get; set; }
+    public Int16 SickLeaveHours { get; set; }
+    public Flag CurrentFlag { get; set; }
+    public Guid rowguid { get; set; }
+    public DateTime ModifiedDate { get; set; }
+}
+");
         }
     }
 

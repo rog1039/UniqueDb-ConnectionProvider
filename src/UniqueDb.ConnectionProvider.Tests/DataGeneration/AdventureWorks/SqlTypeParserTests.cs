@@ -15,7 +15,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration.AdventureWorks
         [Trait("Category", "Instant")]
         public void SimpleName_Test()
         {
-            var result = SqlTypeNameParser.Parse("int");
+            var result = SqlTypeParser.Parse("int");
             result.TypeName.Should().Be("int");
         }
 
@@ -23,7 +23,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration.AdventureWorks
         [Trait("Category", "Instant")]
         public void DoublePrecisionNumber_Test()
         {
-            var result = SqlTypeNameParser.Parse("decimal(18,8)");
+            var result = SqlTypeParser.Parse("decimal(18,8)");
             result.TypeName.Should().Be("decimal");
             result.NumericPrecision.Should().Be(18);
             result.NumericScale.Should().Be(8);
@@ -33,7 +33,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration.AdventureWorks
         [Trait("Category", "Instant")]
         public void DoublePrecisionNumberWithSinglePrecision_Test()
         {
-            var result = SqlTypeNameParser.Parse("float(18)");
+            var result = SqlTypeParser.Parse("float(18)");
             result.TypeName.Should().Be("float");
             result.NumericPrecision.Should().Be(18);
         }
@@ -47,7 +47,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration.AdventureWorks
         public void DateTests(string input, string typeName, int? numericPrecision,
             int? numericScale, int? dateTimePrecision, int? charLength)
         {
-            var result = SqlTypeNameParser.Parse(input);
+            var result = SqlTypeParser.Parse(input);
 
             Assert.Equal(result.TypeName, typeName);
             Assert.Equal(result.NumericPrecision, numericPrecision);
@@ -71,7 +71,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration.AdventureWorks
         public void TextTests(string input, string typeName, int? numericPrecision,
             int? numericScale, int? dateTimePrecision, int? charLength)
         {
-            var result = SqlTypeNameParser.Parse(input);
+            var result = SqlTypeParser.Parse(input);
 
             Assert.Equal(result.TypeName, typeName);
             Assert.Equal(result.NumericPrecision, numericPrecision);
@@ -91,7 +91,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration.AdventureWorks
 
             foreach (var otherBuiltInType in otherBuiltInTypes)
             {
-                var result = SqlTypeNameParser.Parse(otherBuiltInType);
+                var result = SqlTypeParser.Parse(otherBuiltInType);
 
                 Assert.Equal(result.TypeName, otherBuiltInType);
                 Assert.Equal(result.NumericPrecision, null);

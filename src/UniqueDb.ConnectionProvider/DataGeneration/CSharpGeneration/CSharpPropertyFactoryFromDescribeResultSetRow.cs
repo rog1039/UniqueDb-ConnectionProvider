@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
@@ -8,39 +9,30 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
     {
         public static CSharpProperty ToCSharpProperty(DescribeResultSetRow resultSetColumn)
         {
-            var property = new CSharpProperty();
-            property.Name = resultSetColumn.name;
-            property.ClrAccessModifier = ClrAccessModifier.Public;
-            property.IsNullable = resultSetColumn.is_nullable;
+            var sqlColumn = new SqlColumn();
+            sqlColumn.Name = resultSetColumn.name;
+            sqlColumn.IsNullable = resultSetColumn.is_nullable;
+            sqlColumn.SqlDataType = SqlTypeParser.Parse(GetTypeName(resultSetColumn));
 
-            var sqlTypeParseResult = SqlResultSetColumnTypeParser.ParseSqlSystemType(resultSetColumn);
-            SetCSharpPropertyType(property, sqlTypeParseResult);
-
-            property.DataAnnotationDefinitionBases.AddRange(GetDataAnnotations(resultSetColumn, sqlTypeParseResult));
-
-            return property;
-        }
-        
-        private static void SetCSharpPropertyType(CSharpProperty property, SqlResultSetColumnTypeParser.SqlResultSetColumnTypeParseResult sqlResultSetColumnTypeParseResult)
-        {
-            if (sqlResultSetColumnTypeParseResult.IsSystemDefined)
-            {
-                property.DataType = SqlTypeStringToClrTypeStringConverter.GetClrDataType(sqlResultSetColumnTypeParseResult.SqlType);
-            }
-            else
-            {
-                property.DataType = sqlResultSetColumnTypeParseResult.SqlType;
-            }
+            var cSharpProperty = CSharpPropertyFactoryFromSqlColumn.ToCSharpProperty(sqlColumn);
+            return cSharpProperty;
         }
 
-        private static IEnumerable<DataAnnotationDefinitionBase> GetDataAnnotations(DescribeResultSetRow resultSetColumn, SqlResultSetColumnTypeParser.SqlResultSetColumnTypeParseResult sqlResultSetColumnTypeParseResult)
+        private static string GetTypeName(DescribeResultSetRow resultSetColumn)
         {
-            if (sqlResultSetColumnTypeParseResult.Precision1.HasValue
-                && sqlResultSetColumnTypeParseResult.Precision1.Value > 0 
-                && SqlTypes.IsCharType(sqlResultSetColumnTypeParseResult.SqlType))
-            {
-                yield return new DataAnnotationDefinitionMaxCharacterLength(sqlResultSetColumnTypeParseResult.Precision1.Value);
-            }
+            var hasSystemType =  resultSetColumn.system_type_name?.Length > 0;
+            var hasUserType = resultSetColumn.user_type_name?.Length > 0;
+            var noTypeSpecified = !hasSystemType && !hasUserType;
+            var bothTypesSpecified = hasSystemType && hasUserType;
+            var bothTypesEqual = string.Equals(resultSetColumn.system_type_name, resultSetColumn.user_type_name);
+
+            if (noTypeSpecified || (bothTypesSpecified && !bothTypesEqual))
+                throw new InvalidOperationException("Invalid SQL type specification.");
+
+            var typeName = hasSystemType
+                ? resultSetColumn.system_type_name
+                : resultSetColumn.user_type_name;
+            return typeName;
         }
     }
 }
