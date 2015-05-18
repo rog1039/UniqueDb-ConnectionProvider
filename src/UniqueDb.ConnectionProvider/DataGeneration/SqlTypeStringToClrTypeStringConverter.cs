@@ -20,7 +20,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             }
             if (sqlDataType == "tinyint")
             {
-                return "int";
+                return "byte";
             }
             if (sqlDataType == "varchar")
             {

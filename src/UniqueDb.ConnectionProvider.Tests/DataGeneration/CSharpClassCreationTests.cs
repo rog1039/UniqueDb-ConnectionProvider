@@ -41,18 +41,18 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 @"public class Employee
 {
     public int BusinessEntityID { get; set; }
-    [MaxLength(15)]
+    [StringLength(15)]
     public string NationalIDNumber { get; set; }
-    [MaxLength(256)]
+    [StringLength(256)]
     public string LoginID { get; set; }
     public SqlHierarchyId OrganizationNode { get; set; }
     public Int16? OrganizationLevel { get; set; }
-    [MaxLength(50)]
+    [StringLength(50)]
     public string JobTitle { get; set; }
     public DateTime BirthDate { get; set; }
-    [MaxLength(1)]
+    [StringLength(1)]
     public string MaritalStatus { get; set; }
-    [MaxLength(1)]
+    [StringLength(1)]
     public string Gender { get; set; }
     public DateTime HireDate { get; set; }
     public Flag SalariedFlag { get; set; }
