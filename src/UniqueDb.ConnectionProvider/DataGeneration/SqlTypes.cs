@@ -5,6 +5,13 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
     public static class SqlTypes
     {
         public static IList<string> SqlCharTypes = new List<string> {"char", "nchar", "varchar", "nvarchar"};
+        
+        public static IList<string> SqlNumericTypes = new List<string>
+        {
+            "bigint", "bit", "decimal", "int", "money", "numeric", "smallint", "smallmoney", "tinyint",
+            "float", "real",
+        };
+
         public static IList<string> SqlSystemTypes = new List<string>
         {
             "bigint", "bit", "decimal", "int", "money", "numeric", "smallint", "smallmoney", "tinyint",
@@ -24,6 +31,11 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         public static bool IsSystemType(string sqlTypeName)
         {
             return SqlSystemTypes.Contains(sqlTypeName.ToLower());
+        }
+
+        public static bool IsNumeric(string sqlTypeName)
+        {
+            return SqlNumericTypes.Contains(sqlTypeName.ToLower());
         }
     }
 }

@@ -110,7 +110,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
                 ._(() =>
                 {
                     var query = string.Format("select * from {0}", TableName);
-                    classFromQuery = CSharpClassGeneratorFromAdoDataReader
+                    classFromQuery = CSharpClassGeneratorFromQueryViaSqlDescribeResultSet
                         .GenerateClass(LiveDbTestingSqlProvider.AdventureWorksDb, query, "Employee");
 
                     var compileResults = RoslynHelper.TryCompile(classFromQuery);
@@ -127,8 +127,8 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             "They should produce identical output"
                 ._(() =>
                 {
-                    Console.WriteLine("From Table:\r\n" + classFromTable);
                     Console.WriteLine("From Query:\r\n" + classFromQuery);
+                    Console.WriteLine("From Table:\r\n" + classFromTable);
                     classFromTable.Should().BeEquivalentTo(classFromQuery);
                 });
         }

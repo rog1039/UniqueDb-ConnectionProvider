@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
@@ -27,6 +28,12 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         private static IEnumerable<DataAnnotationDefinitionBase> GetDataAnnotations(SqlColumn sqlColumn)
         {
+            if (SqlTypes.IsNumeric(sqlColumn.SqlDataType.TypeName) && sqlColumn.SqlDataType.NumericScale.HasValue)
+            {
+                yield return new DataAnnotationDefinitionNumericRange(
+                    sqlColumn.SqlDataType.NumericPrecision.Value,
+                    sqlColumn.SqlDataType.NumericScale);
+            }
             if (sqlColumn.SqlDataType.MaximumCharLength > 0
                 && SqlTypes.IsCharType(sqlColumn.SqlDataType.TypeName))
             {
@@ -34,4 +41,45 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             }
         }
     }
+
+    public class DataAnnotationDefinitionNumericRange : DataAnnotationDefinitionBase
+    {
+        private readonly int _numericPrecision;
+        private readonly int _numericScale;
+        
+        public decimal UpperBound { get; private set; }
+        public decimal LowerBound { get; private set; }
+
+        public DataAnnotationDefinitionNumericRange(int numericPrecision, int? numericScale)
+        {
+            _numericPrecision = numericPrecision;
+            _numericScale = numericScale ?? 0;
+
+            CalculateRange();
+        }
+
+        private void CalculateRange()
+        {
+            try
+            {
+                var size = _numericPrecision - _numericScale;
+                var upperBoundString = "9".Repeat(size) + "." + "9".Repeat(_numericScale);
+                UpperBound = decimal.Parse(upperBoundString);
+                LowerBound = -UpperBound;
+            }
+            catch (OverflowException e)
+            {
+                UpperBound = Decimal.MaxValue;
+                LowerBound = Decimal.MinusOne*Decimal.MaxValue;
+                Console.WriteLine(e);
+                Debugger.Break();
+            }
+        }
+
+        public override string ToAttributeString()
+        {
+            return $"[Range({LowerBound}, {UpperBound})]";
+        }
+    }
+    
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using UniqueDb.ConnectionProvider.DataGeneration;
@@ -22,7 +23,7 @@ namespace UniqueDb.ConnectionProvider
         public static IEnumerable<string> MatchRegex(this IEnumerable<string> inputStrings, string regex, string groupName)
         {
             return inputStrings.Select(input => GetMatches(input, regex)[groupName]).WhereMatchSuccessful();
-        } 
+        }
 
         public static IEnumerable<string> WhereMatchSuccessful(this IEnumerable<Group> groups)
         {
@@ -52,7 +53,7 @@ namespace UniqueDb.ConnectionProvider
                 .Where(regexMatch => regexMatch.Success)
                 .Select(regexMatch => CreateResultDataStructure<T>(regexMatch, resultProperties))
                 .ToList();
-            
+
             return results;
         }
 
@@ -60,28 +61,31 @@ namespace UniqueDb.ConnectionProvider
         {
             var regexGroupValues = ExtractValuesFromRegexMatch<T>(match, anonymousObjectProperties);
 
-            try
+            if (typeof(T).IsAnonymousType())
             {
-                //If the type parameter, T, is an anonymous type, then it will have a constructor
-                //which will accept all the values so the below code will succeed.
-                //** Possible the passed in type is not anonymous and also accepts all the group 
-                //values as parameters as well so this would succeed then too.  Pretty unlikely though.
-                var newTObject = (T)Activator.CreateInstance(typeof (T), regexGroupValues);
-                return newTObject;
-            }
-            catch (Exception e)
-            {
-                //If we get here, then we can assume the type is not anonymous or there is no constructor
-                //which accepts all the match group results as parameters, so we must use PropertyInfo
-                //to set the values of the object's properties.
-                var newTObject = (T) Activator.CreateInstance(typeof (T));
-                for (int index = 0; index < anonymousObjectProperties.Length; index++)
+                try
                 {
-                    var anonymousObjectProperty = anonymousObjectProperties[index];
-                    anonymousObjectProperty.SetValue(newTObject, regexGroupValues[index], null);
+                    //If the type parameter, T, is an anonymous type, then it will have a constructor
+                    //which will accept all the values so the below code will succeed.
+                    var newTObjectAnonymous = (T)Activator.CreateInstance(typeof(T), regexGroupValues);
+                    return newTObjectAnonymous;
                 }
-                return newTObject;
+                catch (Exception e)
+                {
+
+                }
             }
+
+            //If we get here, then the type is not anonymous so we wil use PropertyInfo's
+            //to set the values of the object's properties.
+            var newTObject = (T)Activator.CreateInstance(typeof(T));
+            for (int index = 0; index < anonymousObjectProperties.Length; index++)
+            {
+                var anonymousObjectProperty = anonymousObjectProperties[index];
+                anonymousObjectProperty.SetValue(newTObject, regexGroupValues[index], null);
+            }
+            return newTObject;
+
         }
 
         private static string[] ExtractValuesFromRegexMatch<T>(Match match, PropertyInfo[] anonymousObjectProperties)
@@ -94,6 +98,17 @@ namespace UniqueDb.ConnectionProvider
                 matchGroupValues[index] = value;
             }
             return matchGroupValues;
+        }
+    }
+    public static class TypeExtension
+    {
+        public static Boolean IsAnonymousType(this Type type)
+        {
+            Boolean hasCompilerGeneratedAttribute = type.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Any();
+            Boolean nameContainsAnonymousType = type.FullName.Contains("AnonymousType");
+            Boolean isAnonymousType = hasCompilerGeneratedAttribute && nameContainsAnonymousType;
+
+            return isAnonymousType;
         }
     }
 }

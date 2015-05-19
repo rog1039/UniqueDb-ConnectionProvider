@@ -5,9 +5,7 @@
         public static SqlType Parse(string input)
         {
             var syntaxParseResult = ParseSyntax(input);
-
             var sqlType = CreateSqlTypeFromSyntaxParseResult(syntaxParseResult);
-
             return sqlType;
         }
 
@@ -24,14 +22,11 @@
             {
                 return CreateSqlTypeWithPrecision(syntaxParseResult);
             }
-            else
+            return new SqlType()
             {
-                return new SqlType()
-                {
-                    TypeName = syntaxParseResult.SqlTypeName,
-                    IsSystemDefined = SqlTypes.IsSystemType(syntaxParseResult.SqlTypeName)
-                };
-            }
+                TypeName = syntaxParseResult.SqlTypeName,
+                IsSystemDefined = SqlTypes.IsSystemType(syntaxParseResult.SqlTypeName)
+            };
         }
 
         private static SqlType CreateSqlTypeWithPrecision(SyntaxParseResult syntaxParseResult)
