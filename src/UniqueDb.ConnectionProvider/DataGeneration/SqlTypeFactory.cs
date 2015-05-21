@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.Contracts;
 using FluentAssertions;
+using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
@@ -118,6 +119,17 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
     public class SqlTextualDataTypeOptionsFactory
     {
+        public static SqlTextualDataTypeOptions FromAmbigiousSqlType(AmbigiousSqlType ambigiousSqlType)
+        {
+            return new SqlTextualDataTypeOptions(ambigiousSqlType.MaxCharacterText.InsensitiveEquals("max")
+                ? int.MaxValue
+                : ambigiousSqlType.MaxCharacterLength.Value);
+        }
+        public static SqlTextualDataTypeOptions FromInformationSchemaColumn(InformationSchemaColumn column)
+        {
+            return new SqlTextualDataTypeOptions(column.CHARACTER_OCTET_LENGTH.Value);
+        }
+
         public static SqlTextualDataTypeOptions Create(SyntaxParseResult syntaxParseResult)
         {
             var textType = DetermineTextType(syntaxParseResult);

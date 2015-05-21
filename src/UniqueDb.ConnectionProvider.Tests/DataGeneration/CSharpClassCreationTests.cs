@@ -57,16 +57,15 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
     [StringLength(1)]
     public string Gender { get; set; }
     public DateTime HireDate { get; set; }
-    public Flag SalariedFlag { get; set; }
+    public bool SalariedFlag { get; set; }
     [Range(-32768, 32767)]
     public Int16 VacationHours { get; set; }
     [Range(-32768, 32767)]
     public Int16 SickLeaveHours { get; set; }
-    public Flag CurrentFlag { get; set; }
+    public bool CurrentFlag { get; set; }
     public Guid rowguid { get; set; }
     public DateTime ModifiedDate { get; set; }
-}
-");
+}");
         }
     }
 

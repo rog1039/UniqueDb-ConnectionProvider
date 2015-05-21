@@ -44,7 +44,4 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata
         public int? tds_collation_id { get; set; }
         public Byte tds_collation_sort_id { get; set; }
     }
-
-
-
 }

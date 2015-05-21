@@ -46,7 +46,11 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
             if (NeedsCharRange(sqlColumn))
             {
-                yield return new DataAnnotationDefinitionMaxCharacterLength(sqlColumn.SqlDataType.MaximumCharLength.Value);
+                var maximumCharLength = sqlColumn.SqlDataType.TypeName.StartsWith("n")
+                    ? sqlColumn.SqlDataType.MaximumCharLength.Value/2
+                    : sqlColumn.SqlDataType.MaximumCharLength.Value;
+
+                yield return new DataAnnotationDefinitionMaxCharacterLength(maximumCharLength);
             }
         }
 
@@ -98,6 +102,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             {
                 var size = numericPrecision - numericScaleNotNull;
                 var upperBoundString = "9".Repeat(size) + "." + "9".Repeat(numericScaleNotNull);
+                
                 var upperBound = decimal.Parse(upperBoundString);
                 var lowerBound = -upperBound;
                 return new NumericRange(lowerBound, upperBound);

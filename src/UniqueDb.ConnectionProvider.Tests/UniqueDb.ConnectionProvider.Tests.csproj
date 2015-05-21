@@ -125,6 +125,7 @@
     <Compile Include="DataGeneration\RewriteTests.cs" />
     <Compile Include="DataGeneration\RoslynApiExploration.cs" />
     <Compile Include="DataGeneration\RoslynHelper.cs" />
+    <Compile Include="DataGeneration\SqlGeneration.cs" />
     <Compile Include="DataGeneration\SqlTableFactoryTests.cs" />
     <Compile Include="DataGeneration\SqlTypeFactoryTests.cs" />
     <Compile Include="DataGeneration\TableManipulationTests.cs" />

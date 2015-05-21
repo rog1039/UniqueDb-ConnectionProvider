@@ -23,6 +23,12 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             //Not sure if we should include spatial types here or not...
         };
 
+        public static IList<string> SqlSpecialTypes = new List<string>
+        {
+            "hierarchyid", "geometry", "geography", "sysname"
+            //Not sure if we should include spatial types here or not...
+        };
+
         public static bool IsCharType(string sqlTypeName)
         {
             return SqlCharTypes.Contains(sqlTypeName.ToLower());
@@ -36,6 +42,11 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         public static bool IsNumeric(string sqlTypeName)
         {
             return SqlNumericTypes.Contains(sqlTypeName.ToLower());
+        }
+
+        public static bool IsSpecialSystemType(string sqlTypeName)
+        {
+            return SqlSpecialTypes.Contains(sqlTypeName.ToLower());
         }
     }
 }
