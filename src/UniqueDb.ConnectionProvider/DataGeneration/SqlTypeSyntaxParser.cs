@@ -18,9 +18,30 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         public static SyntaxParseResult ParseType(string sqlType)
         {
-            return Precision2Match.Parse(sqlType)
+            return MaxCharMatch.Parse(sqlType)
+                   ?? Precision2Match.Parse(sqlType)
                    ?? Precision1Match.Parse(sqlType)
                    ?? NoPrecisionMatch.Parse(sqlType);
+        }
+
+        private class MaxCharMatch
+        {
+            public string Input { get; set; }
+            public string TypeName { get; set; }
+            public string Text { get; set; }
+
+            private const string MaxCharMatchRegex =
+                @"(?<TypeName>\w+)\s*\(\s*(?<Text>\D+)\s*\)";
+
+            public static SyntaxParseResult Parse(string sqlTypeName)
+            {
+                var sqlTypeParseResult = sqlTypeName
+                    .MatchRegex(MaxCharMatchRegex, new MaxCharMatch())
+                    .Do(match => match.Input = sqlTypeName)
+                    .Select(Create)
+                    .SingleOrDefault();
+                return sqlTypeParseResult;
+            }
         }
 
         private class NoPrecisionMatch
@@ -31,10 +52,11 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             private const string NoPrecisionMatchRegex =
                 @"(?<TypeName>\w+)";
 
-            public static SyntaxParseResult Parse(string sqlSystemTypeName)
+            public static SyntaxParseResult Parse(string sqlTypeName)
             {
-                var sqlTypeParseResult = sqlSystemTypeName
+                var sqlTypeParseResult = sqlTypeName
                     .MatchRegex(NoPrecisionMatchRegex, new NoPrecisionMatch())
+                    .Do(match => match.Input = sqlTypeName)
                     .Select(Create)
                     .SingleOrDefault();
                 return sqlTypeParseResult;
@@ -48,10 +70,11 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             private const string Precision1MatchRegex =
                 @"(?<TypeName>\w+)\((?<Precision1>\d+)\)";
 
-            public static SyntaxParseResult Parse(string sqlSystemTypeName)
+            public static SyntaxParseResult Parse(string sqlTypeName)
             {
-                var sqlTypeParseResult = sqlSystemTypeName
+                var sqlTypeParseResult = sqlTypeName
                     .MatchRegex(Precision1MatchRegex, new Precision1Match())
+                    .Do(match => match.Input = sqlTypeName)
                     .Select(Create)
                     .SingleOrDefault();
                 return sqlTypeParseResult;
@@ -97,6 +120,14 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         {
             return new SyntaxParseResult(
                 match.TypeName,
+                match.Input);
+        }
+
+        private static SyntaxParseResult Create(MaxCharMatch match)
+        {
+            return new SyntaxParseResult(
+                match.TypeName,
+                match.Text,
                 match.Input);
         }
     }

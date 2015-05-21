@@ -40,12 +40,14 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             cSharpClass.Should().Be(
 @"public class Employee
 {
+    [Range(-2147483648, 2147483647)]
     public int BusinessEntityID { get; set; }
     [StringLength(15)]
     public string NationalIDNumber { get; set; }
     [StringLength(256)]
     public string LoginID { get; set; }
     public SqlHierarchyId OrganizationNode { get; set; }
+    [Range(-32768, 32767)]
     public Int16? OrganizationLevel { get; set; }
     [StringLength(50)]
     public string JobTitle { get; set; }
@@ -56,7 +58,9 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
     public string Gender { get; set; }
     public DateTime HireDate { get; set; }
     public Flag SalariedFlag { get; set; }
+    [Range(-32768, 32767)]
     public Int16 VacationHours { get; set; }
+    [Range(-32768, 32767)]
     public Int16 SickLeaveHours { get; set; }
     public Flag CurrentFlag { get; set; }
     public Guid rowguid { get; set; }
@@ -72,7 +76,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 
         [Fact()]
         [Trait("Category", "Integration")]
-        public void CreateClassFromSqlTable()
+        public void CreateClassFromSqlTableReference()
         {
             var sqlTableReference = new SqlTableReference(LiveDbTestingSqlProvider.AdventureWorksDb, TableName);
             var sqlTable = SqlTableFactory.Create(sqlTableReference);
@@ -82,7 +86,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 
         [Fact()]
         [Trait("Category", "Integration")]
-        public void CreateClassFromSqlQuery()
+        public void CreateClassFromSqlQueryUsingAdoDataReader()
         {
             var query = "select * from sys.types";
             var cSharpClass = CSharpClassGeneratorFromAdoDataReader
@@ -92,7 +96,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 
         [Fact()]
         [Trait("Category", "Integration")]
-        public void CreateClassFromSqlQuery2()
+        public void CreateClassFromSqlQueryUsingAdoDataReader2()
         {
             var query = $"select * from {TableName}";
             var cSharpClass = CSharpClassGeneratorFromAdoDataReader

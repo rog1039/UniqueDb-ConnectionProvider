@@ -24,12 +24,44 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         private static SqlType GetSqlTypeFromInformationSchemaColumn(InformationSchemaColumn column)
         {
-            var sqlDataType = SqlTypeParser.Parse(column.DATA_TYPE);
+            var syntaxParseResult = new SyntaxParseResult(column.DATA_TYPE, string.Empty);
+
+            var sqlDataType = SyntaxParseResultToSqlTypeConverter.Parse(column.DATA_TYPE);
             sqlDataType.MaximumCharLength = column.CHARACTER_MAXIMUM_LENGTH;
             sqlDataType.NumericPrecision = column.NUMERIC_PRECISION;
             sqlDataType.NumericScale = column.NUMERIC_SCALE;
-            sqlDataType.DateTimePrecision = column.DATETIME_PRECISION;
+            sqlDataType.FractionalSecondsPrecision = column.DATETIME_PRECISION;
             return sqlDataType;
+        }
+
+        
+
+        public static SqlColumn FromDescribeResultSetRow(DescribeResultSetRow resultSetColumn)
+        {
+            var sqlColumn = new SqlColumn();
+            sqlColumn.Name = resultSetColumn.name;
+            sqlColumn.IsNullable = resultSetColumn.is_nullable;
+
+            var typeName = GetTypeName(resultSetColumn);
+            sqlColumn.SqlDataType = SyntaxParseResultToSqlTypeConverter.Parse(typeName);
+            return sqlColumn;
+        }
+        
+        private static string GetTypeName(DescribeResultSetRow resultSetColumn)
+        {
+            var hasSystemType =  resultSetColumn.system_type_name?.Length > 0;
+            var hasUserType = resultSetColumn.user_type_name?.Length > 0;
+            var noTypeSpecified = !hasSystemType && !hasUserType;
+            var bothTypesSpecified = hasSystemType && hasUserType;
+            var bothTypesEqual = String.Equals(resultSetColumn.system_type_name, resultSetColumn.user_type_name);
+
+            if (noTypeSpecified || (bothTypesSpecified && !bothTypesEqual))
+                throw new InvalidOperationException("Invalid SQL type specification.");
+
+            var typeName = hasSystemType
+                ? resultSetColumn.system_type_name
+                : resultSetColumn.user_type_name;
+            return typeName;
         }
     }
 }

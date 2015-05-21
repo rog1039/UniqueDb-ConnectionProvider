@@ -28,6 +28,13 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             Input = input;
         }
 
+        public SyntaxParseResult(string sqlTypeName, string text, string input)
+        {
+            SqlTypeName = sqlTypeName;
+            Text = text;
+            Input = input;
+        }
+
         public SyntaxParseResult(string sqlTypeName, string input)
         {
             SqlTypeName = sqlTypeName;
@@ -37,6 +44,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         public string SqlTypeName { get; set; }
         public int? Precision1 { get; set; }
         public int? Precision2 { get; set; }
+        public string Text { get; set; }
         public string Input { get; set; }
     }
 }

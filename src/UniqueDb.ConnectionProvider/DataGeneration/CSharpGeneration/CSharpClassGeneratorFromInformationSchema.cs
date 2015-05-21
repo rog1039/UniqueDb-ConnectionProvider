@@ -4,11 +4,6 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 {
     public static class CSharpClassGeneratorFromInformationSchema
     {
-        public static string GenerateClass()
-        {
-            return string.Empty;
-        }
-
         public static string CreateCSharpClass(SqlTableReference sqlTableReference, string className = default(string))
         {
             var schemaColumns = InformationSchemaMetadataExplorer.GetInformationSchemaColumns(sqlTableReference);

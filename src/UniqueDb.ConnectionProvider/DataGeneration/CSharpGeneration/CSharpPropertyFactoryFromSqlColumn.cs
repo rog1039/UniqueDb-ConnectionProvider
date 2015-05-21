@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using FluentAssertions;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
@@ -28,58 +29,112 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         private static IEnumerable<DataAnnotationDefinitionBase> GetDataAnnotations(SqlColumn sqlColumn)
         {
-            if (SqlTypes.IsNumeric(sqlColumn.SqlDataType.TypeName) && sqlColumn.SqlDataType.NumericScale.HasValue)
+            return DataAnnotationFactory.CreateDataAnnotations(sqlColumn);
+        }
+    }
+
+    public class DataAnnotationFactory
+    {
+        public static IEnumerable<DataAnnotationDefinitionBase> CreateDataAnnotations(SqlColumn sqlColumn)
+        {
+            if (NeedsNumericRange(sqlColumn))
             {
-                yield return new DataAnnotationDefinitionNumericRange(
-                    sqlColumn.SqlDataType.NumericPrecision.Value,
-                    sqlColumn.SqlDataType.NumericScale);
+                var numericType = sqlColumn.SqlDataType.As<SqlTypeNumberBase>();
+                yield return
+                    DataAnnotationDefinitionNumericRange.FromRange(numericType.LowerBound, numericType.UpperBound);
             }
-            if (sqlColumn.SqlDataType.MaximumCharLength > 0
-                && SqlTypes.IsCharType(sqlColumn.SqlDataType.TypeName))
+
+            if (NeedsCharRange(sqlColumn))
             {
                 yield return new DataAnnotationDefinitionMaxCharacterLength(sqlColumn.SqlDataType.MaximumCharLength.Value);
             }
         }
+
+        private static bool NeedsNumericRange(SqlColumn sqlColumn)
+        {
+            var numericSqlColumn = sqlColumn.SqlDataType as SqlTypeNumberBase;
+            return numericSqlColumn != null;
+        }
+
+        private static bool NeedsCharRange(SqlColumn sqlColumn)
+        {
+            return sqlColumn.SqlDataType.MaximumCharLength.HasValue;
+        }
+        
     }
 
     public class DataAnnotationDefinitionNumericRange : DataAnnotationDefinitionBase
     {
         private readonly int _numericPrecision;
         private readonly int _numericScale;
-        
-        public decimal UpperBound { get; private set; }
-        public decimal LowerBound { get; private set; }
+        private NumericRange numericRange;
 
-        public DataAnnotationDefinitionNumericRange(int numericPrecision, int? numericScale)
+        public decimal UpperBound => numericRange.UpperBound;
+        public decimal LowerBound => numericRange.LowerBound;
+
+        private DataAnnotationDefinitionNumericRange()
         {
-            _numericPrecision = numericPrecision;
-            _numericScale = numericScale ?? 0;
-
-            CalculateRange();
         }
 
-        private void CalculateRange()
+        public static DataAnnotationDefinitionNumericRange FromRange(decimal lowerBound, decimal upperBound)
         {
-            try
-            {
-                var size = _numericPrecision - _numericScale;
-                var upperBoundString = "9".Repeat(size) + "." + "9".Repeat(_numericScale);
-                UpperBound = decimal.Parse(upperBoundString);
-                LowerBound = -UpperBound;
-            }
-            catch (OverflowException e)
-            {
-                UpperBound = Decimal.MaxValue;
-                LowerBound = Decimal.MinusOne*Decimal.MaxValue;
-                Console.WriteLine(e);
-                Debugger.Break();
-            }
+            return new DataAnnotationDefinitionNumericRange() {numericRange = new NumericRange(lowerBound, upperBound)};
         }
 
         public override string ToAttributeString()
         {
             return $"[Range({LowerBound}, {UpperBound})]";
         }
+
+        
     }
-    
+
+    public static class DecimalTypeRangeCalculator
+    {
+        public static NumericRange CalculateRange(int numericPrecision, int? numericScale)
+        {
+            int numericScaleNotNull = numericScale ?? 0;
+            try
+            {
+                var size = numericPrecision - numericScaleNotNull;
+                var upperBoundString = "9".Repeat(size) + "." + "9".Repeat(numericScaleNotNull);
+                var upperBound = decimal.Parse(upperBoundString);
+                var lowerBound = -upperBound;
+                return new NumericRange(lowerBound, upperBound);
+
+            }
+            catch (OverflowException e)
+            {
+                Console.WriteLine(e);
+                Debugger.Break();
+                return new NumericRange(Decimal.MinusOne*Decimal.MaxValue, Decimal.MaxValue);
+            }
+        }
+    }
+
+    public class GenericRange<T>
+    {
+        public T LowerBound { get; set; }
+        public T UpperBound { get; set; }
+
+        public GenericRange(T lowerBound, T upperBound)
+        {
+            LowerBound = lowerBound;
+            UpperBound = upperBound;
+        } 
+    }
+
+    public class NumericRange : GenericRange<decimal>
+    {
+        public NumericRange(decimal lowerBound, decimal upperBound) : base(lowerBound, upperBound)
+        {
+        }
+    }
+
+    public class DateRange : GenericRange<DateTime>
+    {
+        public DateRange(DateTime lowerBound, DateTime upperBound) : base(lowerBound, upperBound)
+        {
+        }
+    }
 }

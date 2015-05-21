@@ -19,8 +19,7 @@ namespace UniqueDb.ConnectionProvider.Tests
         [Trait("Category", "Instant")]
         public void TestWithDifferentPrecisionsAndScale(int scale, int precision, decimal lowerBound, decimal upperBound)
         {
-            var dataAnnotationDefinitionNumericRange = new DataAnnotationDefinitionNumericRange(scale, precision);
-            Console.WriteLine(dataAnnotationDefinitionNumericRange.ToAttributeString());
+            var dataAnnotationDefinitionNumericRange = DecimalTypeRangeCalculator.CalculateRange(scale, precision);
             dataAnnotationDefinitionNumericRange.LowerBound.Should().Be(lowerBound);
             dataAnnotationDefinitionNumericRange.UpperBound.Should().Be(upperBound);
         }

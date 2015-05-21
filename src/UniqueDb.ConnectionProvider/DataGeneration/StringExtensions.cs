@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
@@ -23,6 +24,18 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
                 sb.Append(input);
             }
             return sb.ToString();
+        }
+        public static bool InsensitiveEquals(this string s1, string s2)
+        {
+            var oneIsNullOtherIsnt = (s1 == null && s2 != null) || (s1 != null && s2 == null);
+            if (oneIsNullOtherIsnt)
+                return false;
+
+            var bothAreNull = s1 == null && s2 == null;
+            if (bothAreNull)
+                return true;
+
+            return s1.Length == s2.Length && s1.IndexOf(s2, StringComparison.InvariantCultureIgnoreCase) == 0;
         }
     }
 }

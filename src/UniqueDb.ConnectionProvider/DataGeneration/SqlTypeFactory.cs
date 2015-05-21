@@ -1,0 +1,207 @@
+using System;
+using System.Diagnostics.Contracts;
+using FluentAssertions;
+
+namespace UniqueDb.ConnectionProvider.DataGeneration
+{
+    public class SqlTypeFactory
+    {
+        private const long bigIntLowerBound = -9223372036854775808;
+        private const long bigIntUpperBound = 9223372036854775807;
+
+        /****   Exact Numerics   ****/
+        public static SqlTypeNumberBase TinyInt()
+        {
+            return SqlTypeNumberBase.FromBounds("tinyint", 0, 255);
+        }
+        public static SqlTypeNumberBase SmallInt()
+        {
+            return SqlTypeNumberBase.FromBounds("smallint", -32768, 32767);
+        }
+        public static SqlTypeNumberBase Int()
+        {
+            return SqlTypeNumberBase.FromBounds("int", int.MinValue, int.MaxValue);
+        }
+        public static SqlTypeNumberBase BigInt()
+        {
+            return SqlTypeNumberBase.FromBounds("bigint", bigIntLowerBound, bigIntUpperBound);
+        }
+        public static SqlTypeNumberBase Decimal(int precision, int? scale)
+        {
+            Contract.Requires(precision >= 1 && precision <= 38);
+            Contract.Requires(!scale.HasValue || (scale >= 0 && scale <= precision));
+
+            return SqlTypeNumberBase.FromPrecisionAndScale("decimal", precision, scale);
+        }
+        public static SqlTypeNumberBase Numeric(int precision, int? scale)
+        {
+            return Decimal(precision, scale);
+        }
+        public static SqlTypeNumberBase Money()
+        {
+            return SqlTypeNumberBase.FromBounds("money", -922337203685477.5808m, 922337203685477.5807m);
+        }
+        public static SqlTypeNumberBase SmallMoney()
+        {
+            return  SqlTypeNumberBase.FromBounds("smallmoney", -214748.3648m, 214748.3647m);
+        }
+
+        
+        /****   Approximate Numerics   ****/
+        public static SqlType Float(int numberOfBits)
+        {
+            Contract.Requires(numberOfBits <= 53 && numberOfBits > 0);
+            return new SqlType("float") {Mantissa = numberOfBits};
+        }
+        public static SqlType Real()
+        {
+            return new SqlType("real", 24) {Mantissa = 24};
+        }
+
+        
+        /****   Date & Time   ****/
+        public static SqlType SmallDateTime()
+        {
+            return new SqlType("smalldatetime");
+        }
+        public static SqlType Date()
+        {
+            return new SqlType("date");
+        }
+        public static SqlType DateTime()
+        {
+            return new SqlType("datetime");
+        }
+        public static SqlType DateTime2(int? fractionalSecondsPrecision)
+        {
+            Contract.Requires(fractionalSecondsPrecision >= 0 && fractionalSecondsPrecision <= 7);
+            return new SqlType("datetime2") {FractionalSecondsPrecision = fractionalSecondsPrecision};
+        }
+        public static SqlType DateTimeOffset()
+        {
+            return new SqlType("datetimeoffset");
+        }
+        public static SqlType Time()
+        {
+            return new SqlType("time");
+        }
+
+        
+        /****   Text   ****/
+        public static SqlType Char(SqlTextualDataTypeOptions options)
+        {
+            return new SqlType("char") {MaximumCharLength = options.CharacterLength};
+        }
+        public static SqlType VarChar(SqlTextualDataTypeOptions options)
+        {
+            return new SqlType("varchar") {MaximumCharLength = options.CharacterLength};
+        }
+        public static SqlType NChar(SqlTextualDataTypeOptions options)
+        {
+            return new SqlType("nchar") {MaximumCharLength = options.CharacterLength};
+        }
+        public static SqlType NVarChar(SqlTextualDataTypeOptions options)
+        {
+            return new SqlType("nvarchar") {MaximumCharLength = options.CharacterLength};
+        }
+    }
+
+    public class SqlTextualDataTypeOptions
+    {
+        public int CharacterLength { get; }
+        
+        public SqlTextualDataTypeOptions(int characterLength)
+        {
+            CharacterLength = characterLength;
+        }
+    }
+
+    public class SqlTextualDataTypeOptionsFactory
+    {
+        public static SqlTextualDataTypeOptions Create(SyntaxParseResult syntaxParseResult)
+        {
+            var textType = DetermineTextType(syntaxParseResult);
+            var textLength = CalculateTextLength(syntaxParseResult, textType);
+            return new SqlTextualDataTypeOptions(textLength);
+        }
+
+        private static TextType DetermineTextType(SyntaxParseResult syntaxParseResult)
+        {
+            if (syntaxParseResult.SqlTypeName.Equals("char") || syntaxParseResult.SqlTypeName.Equals("varchar"))
+            {
+                return TextType.NonUnicode;
+            }
+            if (syntaxParseResult.SqlTypeName.Equals("nchar") || syntaxParseResult.SqlTypeName.Equals("nvarchar"))
+            {
+                return TextType.Unicode;
+            }
+            throw new ArgumentException($"Type, {syntaxParseResult.SqlTypeName}, was non of the expected values " +
+                                        $"of char, varchar, nchar, or nvarchar");
+        }
+
+        private static int CalculateTextLength(SyntaxParseResult syntaxParseResult, TextType nonUnicode)
+        {
+            var textLengthSpecification = DetermineTextLengthSpecification(syntaxParseResult);
+            switch (textLengthSpecification)
+            {
+                case SqlTextLengthSpecification.NotSpecified:
+                    return 1;
+
+                case SqlTextLengthSpecification.Numeric:
+                    ValidateTextLength(nonUnicode, syntaxParseResult.Precision1.Value);
+                    return syntaxParseResult.Precision1.Value;
+
+                case SqlTextLengthSpecification.Max:
+                    ValidateSqlTypeIsVarcharOrNvarchar(syntaxParseResult);
+                    return Int32.MaxValue;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private static SqlTextLengthSpecification DetermineTextLengthSpecification(SyntaxParseResult syntaxParseResult)
+        {
+            if (syntaxParseResult.Precision1.HasValue)
+            {
+                return SqlTextLengthSpecification.Numeric;
+            }
+            if ("max".InsensitiveEquals(syntaxParseResult.Text))
+            {
+                return SqlTextLengthSpecification.Max;
+            }
+            return SqlTextLengthSpecification.NotSpecified;
+        }
+
+        private static void ValidateTextLength(TextType textType, int value)
+        {
+            switch (textType)
+            {
+                case TextType.NonUnicode:
+                    value.Should().BeInRange(1, 8000);
+                    break;
+                case TextType.Unicode:
+                    value.Should().BeInRange(1, 4000);
+                    break;
+            }
+        }
+
+        private static void ValidateSqlTypeIsVarcharOrNvarchar(SyntaxParseResult syntaxParseResult)
+        {
+            syntaxParseResult.SqlTypeName.Should().BeOneOf("varchar", "nvarchar");
+        }
+
+        private enum SqlTextLengthSpecification
+        {
+            NotSpecified,
+            Numeric,
+            Max
+        }
+
+        private enum TextType
+        {
+            NonUnicode,
+            Unicode
+        }
+    }
+}

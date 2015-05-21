@@ -115,6 +115,8 @@
     <Compile Include="DataGeneration\CompileResults.cs" />
     <Compile Include="DataGeneration\ConversionWorkspace.cs" />
     <Compile Include="DataGeneration\CreateCSharpClassForDescribeResultSetStoredProcedureQuery.cs" />
+    <Compile Include="DataGeneration\CSharpPropertyTextTests.cs" />
+    <Compile Include="DataGeneration\DataAnnotationGenerationTests.cs" />
     <Compile Include="DataGeneration\InformationSchemaMetadataExplorerTests.cs" />
     <Compile Include="DataGeneration\InformationSchemaTableExtensionTests.cs" />
     <Compile Include="DataGeneration\InformationSchema_SqlDmlGeneratorTests.cs" />
@@ -124,6 +126,7 @@
     <Compile Include="DataGeneration\RoslynApiExploration.cs" />
     <Compile Include="DataGeneration\RoslynHelper.cs" />
     <Compile Include="DataGeneration\SqlTableFactoryTests.cs" />
+    <Compile Include="DataGeneration\SqlTypeFactoryTests.cs" />
     <Compile Include="DataGeneration\TableManipulationTests.cs" />
     <Compile Include="DataGeneration\TimeoutAttribute.cs" />
     <Compile Include="OldDatabaseDeleterTests.cs" />

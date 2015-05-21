@@ -7,9 +7,20 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
     {
         private readonly CSharpProperty Property;
 
-        public static List<string> typesThatCanBeNullable = new List<string>() { "int", "Int", "Int16", "Int32", "Int64", "DateTime", "bool", "double", "decimal" };
+        public static List<string> typesThatCanBeNullable = new List<string>()
+        {
+            "bool", "byte", "char", "decimal", "double", "enum", "float", "int", "long",
+            "sbyte", "short", "struct",
 
+            "uint", "ulong", "ushort",
 
+            "UInt", "UInt16", "UInt32", "UInt64",
+            "Int", "Int16", "Int32", "Int64",
+
+            "datetime"
+        };
+
+        
         public CSharpPropertyTextGenerator(CSharpProperty property)
         {
             Property = property;
@@ -26,9 +37,9 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         private string AccessModifier => Property.ClrAccessModifier.ToString().ToLower();
 
-        public string DataTypeString => !Property.IsNullable || !typesThatCanBeNullable.Contains(Property.DataType)
-            ? Property.DataType
-            : Property.DataType + "?";
+        public string DataTypeString => Property.IsNullable && typesThatCanBeNullable.Contains(Property.DataType)
+            ? Property.DataType + "?"
+            : Property.DataType;
 
         public string PropertyName => Property.Name;
 

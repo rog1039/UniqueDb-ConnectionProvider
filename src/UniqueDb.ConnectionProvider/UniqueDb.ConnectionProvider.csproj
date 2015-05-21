@@ -65,7 +65,6 @@
     <Compile Include="DatabaseDeleter.cs" />
     <Compile Include="DataGeneration\AutomaticPropertyNameRewrites.cs" />
     <Compile Include="DataGeneration\ClrAccessModifier.cs" />
-    <Compile Include="DataGeneration\ColumnInfo.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\CSharpClassGeneratorFromQueryViaSqlDescribeResultSet.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\CSharpClassTextGenerator.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\CSharpClassGeneratorFromInformationSchema.cs" />
@@ -100,14 +99,15 @@
     <Compile Include="DataGeneration\SqlManipulation\SqlDmlCreateTableFromInformationSchemaGenerator.cs" />
     <Compile Include="DataGeneration\SqlManipulation\SqlDmlDropTableFromInformationSchemaGenerator.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\CSharpPropertyFactoryFromAdoDataReader.cs" />
+    <Compile Include="DataGeneration\SqlType.cs" />
+    <Compile Include="DataGeneration\SqlTypeFactory.cs" />
+    <Compile Include="DataGeneration\SqlTypeNumberBase.cs" />
     <Compile Include="DataGeneration\SqlTypeSyntaxParser.cs" />
     <Compile Include="DataGeneration\SqlTable.cs" />
     <Compile Include="DataGeneration\SqlTableColumnOverride.cs" />
     <Compile Include="DataGeneration\SqlTableFactory.cs" />
     <Compile Include="DataGeneration\SqlTableReference.cs" />
-    <Compile Include="DataGeneration\SqlTableReferenceSearch.cs" />
-    <Compile Include="DataGeneration\SqlTypeConversion.cs" />
-    <Compile Include="DataGeneration\SqlTypeParser.cs" />
+    <Compile Include="DataGeneration\SyntaxParseResultToSqlTypeConverter.cs" />
     <Compile Include="DataGeneration\SqlTypes.cs" />
     <Compile Include="DataGeneration\SqlTypeStringToClrTypeStringConverter.cs" />
     <Compile Include="DataGeneration\StringExtensions.cs" />
@@ -115,6 +115,7 @@
     <Compile Include="DataGeneration\TableParserExtensions.cs" />
     <Compile Include="DataGeneration\Table_Types.cs" />
     <Compile Include="ISqlConnectionProvider.cs" />
+    <Compile Include="ObjectExtensionMethods.cs" />
     <Compile Include="OldDatabaseDeleter.cs" />
     <Compile Include="RegexExtensions.cs" />
     <Compile Include="SqlConnectionProviderExtensionMethods.cs" />
