@@ -8,5 +8,5 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
             var cSharpProperty = CSharpPropertyFactoryFromSqlColumn.ToCSharpProperty(sqlColumn);
             return cSharpProperty;
         }
-    }h
+    }
 }
