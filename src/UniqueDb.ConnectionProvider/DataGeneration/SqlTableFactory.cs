@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
@@ -7,7 +8,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         public static SqlTable Create(SqlTableReference sqlTableReference)
         {
             var columns = InformationSchemaMetadataExplorer.GetInformationSchemaColumns(sqlTableReference);
-            var sqlColumns = columns.Select(InformationSchemaColumnToSqlColumnConverter.FromInformationSchemaColumn).ToList();
+            var sqlColumns = columns.Select(CSharpClassGeneratorFromInformationSchema.InformationSchemaColumnToSqlColumn).ToList();
             var sqlTable = new SqlTable()
             {
                 Name = sqlTableReference.TableName,

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace UniqueDb.ConnectionProvider.DataGeneration
+namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
 {
     public static class CSharpClassTextGenerator
     {

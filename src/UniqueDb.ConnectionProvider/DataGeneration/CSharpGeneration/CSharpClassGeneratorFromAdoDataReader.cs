@@ -1,7 +1,4 @@
-using System;
-using UniqueDb.ConnectionProvider;
-
-namespace UniqueDb.ConnectionProvider.DataGeneration
+namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
 {
     public static class CSharpClassGeneratorFromAdoDataReader
     {

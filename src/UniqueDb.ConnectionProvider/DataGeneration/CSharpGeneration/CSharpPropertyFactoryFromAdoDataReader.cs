@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 
-namespace UniqueDb.ConnectionProvider.DataGeneration
+namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
 {
     public static class CSharpPropertyFactoryFromAdoDataReader
     {

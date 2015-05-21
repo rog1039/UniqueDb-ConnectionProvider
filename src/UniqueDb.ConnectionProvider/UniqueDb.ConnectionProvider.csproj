@@ -73,7 +73,6 @@
     <Compile Include="DataGeneration\CSharpGeneration\CSharpClassGeneratorFromAdoDataReader.cs" />
     <Compile Include="DataGeneration\CSharpProperty.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\CSharpPropertyFactoryFromDescribeResultSetRow.cs" />
-    <Compile Include="DataGeneration\InformationSchemaColumnToSqlColumnConverter.cs" />
     <Compile Include="DataGeneration\SqlMetadata\AdoSchemaTableHelper.cs" />
     <Compile Include="DataGeneration\CSharpPropertyTextGenerator.cs" />
     <Compile Include="DataGeneration\DataAnnotationDefinitionBase.cs" />
@@ -105,12 +104,11 @@
     <Compile Include="DataGeneration\SqlType.cs" />
     <Compile Include="DataGeneration\SqlTypeFactory.cs" />
     <Compile Include="DataGeneration\SqlTypeNumberBase.cs" />
-    <Compile Include="DataGeneration\SqlTypeSyntaxParser.cs" />
     <Compile Include="DataGeneration\SqlTable.cs" />
     <Compile Include="DataGeneration\SqlTableColumnOverride.cs" />
     <Compile Include="DataGeneration\SqlTableFactory.cs" />
     <Compile Include="DataGeneration\SqlTableReference.cs" />
-    <Compile Include="DataGeneration\SyntaxParseResultToSqlTypeConverter.cs" />
+    <Compile Include="DataGeneration\AmbigiousSqlTypeToSqlTypeConverter.cs" />
     <Compile Include="DataGeneration\SqlTypes.cs" />
     <Compile Include="DataGeneration\SqlTypeStringToClrTypeStringConverter.cs" />
     <Compile Include="DataGeneration\StringExtensions.cs" />

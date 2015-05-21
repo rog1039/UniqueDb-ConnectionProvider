@@ -1,3 +1,5 @@
+using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
+
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
     public class SqlTypeNumberBase : SqlType

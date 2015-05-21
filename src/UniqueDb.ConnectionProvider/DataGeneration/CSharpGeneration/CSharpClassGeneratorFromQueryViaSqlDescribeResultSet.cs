@@ -5,7 +5,7 @@ using System.Linq;
 using Dapper;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 
-namespace UniqueDb.ConnectionProvider.DataGeneration
+namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
 {
     public static class CSharpClassGeneratorFromQueryViaSqlDescribeResultSet
     {

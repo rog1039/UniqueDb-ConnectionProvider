@@ -3,13 +3,13 @@ using System.Linq;
 using System.Text;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 
-namespace UniqueDb.ConnectionProvider.DataGeneration
+namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
 {
     public static class SqlDmlCreateTableFromInformationSchemaGenerator
     {
         public static string GenerateCreateTableScript(InformationSchemaTableDefinition tableDefinition)
         {
-            if (tableDefinition.InformationSchemaTable.TABLE_TYPE != Table_Types.BaseTable && tableDefinition.InformationSchemaTable.TABLE_TYPE != Table_Types.View)
+            if (tableDefinition.InformationSchemaTable.TABLE_TYPE != TableTypes.BaseTable && tableDefinition.InformationSchemaTable.TABLE_TYPE != TableTypes.View)
             {
                 throw new NotSupportedException(
                     string.Format("Table is of a type other than 'Base Table' or 'View'.  Table type is {0}",
@@ -18,9 +18,9 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
             string createScript = string.Empty;
 
-            if (tableDefinition.InformationSchemaTable.TABLE_TYPE == Table_Types.BaseTable)
+            if (tableDefinition.InformationSchemaTable.TABLE_TYPE == TableTypes.BaseTable)
                 createScript = CreateTableScript(tableDefinition);
-            if (tableDefinition.InformationSchemaTable.TABLE_TYPE == Table_Types.View)
+            if (tableDefinition.InformationSchemaTable.TABLE_TYPE == TableTypes.View)
                 throw new NotImplementedException("Have not implemented View creation yet.");
 
             return createScript;

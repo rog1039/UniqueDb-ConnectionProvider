@@ -1,3 +1,5 @@
+using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
+
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
     public static class TableManipulation

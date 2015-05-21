@@ -1,9 +1,8 @@
 ﻿using FluentAssertions;
-using UniqueDb.ConnectionProvider.Tests;
-using UniqueDb.ConnectionProvider.Tests.DataGeneration;
+using UniqueDb.ConnectionProvider.DataGeneration;
 using Xunit;
 
-namespace UniqueDb.ConnectionProvider.DataGeneration
+namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 {
     public class TableManipulationTests
     {

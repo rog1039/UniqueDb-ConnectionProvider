@@ -1,4 +1,4 @@
-namespace UniqueDb.ConnectionProvider.DataGeneration
+namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
 {
     public static class SqlDmlDropTableFromInformationSchemaGenerator
     {

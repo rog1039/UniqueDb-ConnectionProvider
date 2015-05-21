@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
-using UniqueDb.ConnectionProvider.Tests;
-using UniqueDb.ConnectionProvider.Tests.DataGeneration;
 using Xunit;
 
-namespace UniqueDb.ConnectionProvider.DataGeneration
+namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 {
     public class InformationSchemaTableExtensionTests
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 using UniqueDb.ConnectionProvider.DataGeneration;
+using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
 using Xunit;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration

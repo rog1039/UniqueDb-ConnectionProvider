@@ -19,14 +19,13 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             "date", "datetime2", "datetime", "datetimeoffset", "smalldatetime", "time",
             "char", "nchar", "varchar", "nvarchar", "text",
             "binary", "image", "varbinary",
-            "cursor", "hierarchyid", "sql_variant", "table", "timestamp", "uniqueidentifier", "xml"
-            //Not sure if we should include spatial types here or not...
+            "cursor", "hierarchyid", "sql_variant", "table", "timestamp", "uniqueidentifier", "xml",
+            "geometry", "geography", "sysname"
         };
 
         public static IList<string> SqlSpecialTypes = new List<string>
         {
             "hierarchyid", "geometry", "geography", "sysname"
-            //Not sure if we should include spatial types here or not...
         };
 
         public static bool IsCharType(string sqlTypeName)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using UniqueDb.ConnectionProvider.DataGeneration;
+using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 
 namespace UniqueDb.ConnectionProvider
 {

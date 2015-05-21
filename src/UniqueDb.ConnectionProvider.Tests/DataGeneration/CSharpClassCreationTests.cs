@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using UniqueDb.ConnectionProvider.DataGeneration;
+using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 using Xunit;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration

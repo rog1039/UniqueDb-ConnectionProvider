@@ -111,7 +111,6 @@
     <Compile Include="DatabaseDeletionTests.cs" />
     <Compile Include="DataGeneration\AdoSchemaTableHelperTests.cs" />
     <Compile Include="DataGeneration\AdventureWorks\GeneratedClasses.cs" />
-    <Compile Include="DataGeneration\AdventureWorks\SqlTypeParserTests.cs" />
     <Compile Include="DataGeneration\CompileResults.cs" />
     <Compile Include="DataGeneration\ConversionWorkspace.cs" />
     <Compile Include="DataGeneration\CreateCSharpClassForDescribeResultSetStoredProcedureQuery.cs" />

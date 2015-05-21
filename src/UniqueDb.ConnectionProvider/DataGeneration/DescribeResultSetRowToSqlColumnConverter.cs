@@ -2,40 +2,13 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
     public static class DescribeResultSetRowToSqlColumnConverter
     {
-        public static SqlColumn Convert(DescribeResultSetRow resultSetColumn)
-        {
-            var sqlColumn = new SqlColumn();
-            sqlColumn.Name = resultSetColumn.name;
-            sqlColumn.IsNullable = resultSetColumn.is_nullable;
-
-            var typeName = GetTypeName(resultSetColumn);
-            sqlColumn.SqlDataType = SyntaxParseResultToSqlTypeConverter.Parse(typeName);
-            return sqlColumn;
-        }
-
-        private static string GetTypeName(DescribeResultSetRow resultSetColumn)
-        {
-            var hasSystemType = resultSetColumn.system_type_name?.Length > 0;
-            var hasUserType = resultSetColumn.user_type_name?.Length > 0;
-            var noTypeSpecified = !hasSystemType && !hasUserType;
-            var bothTypesSpecified = hasSystemType && hasUserType;
-            var bothTypesEqual = String.Equals(resultSetColumn.system_type_name, resultSetColumn.user_type_name);
-
-            if (noTypeSpecified || (bothTypesSpecified && !bothTypesEqual))
-                throw new InvalidOperationException("Invalid SQL type specification.");
-
-            var typeName = hasSystemType
-                ? resultSetColumn.system_type_name
-                : resultSetColumn.user_type_name;
-            return typeName;
-        }
-
         public static SqlColumn Convert(DescribeResultSetContainer resultSetColumn)
         {
             var sqlColumn = new SqlColumn();
@@ -92,7 +65,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
                 NumericPrecision = describeResultSetRow.precision,
                 NumericScale = describeResultSetRow.scale,
                 MaxCharacterLength = describeResultSetRow.max_length,
-                FractionalSecondsPrecision = describeResultSetRow.precision
+                FractionalSecondsPrecision = describeResultSetRow.scale
             };
         }
     }

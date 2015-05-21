@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Data;
 
-namespace UniqueDb.ConnectionProvider.DataGeneration
+namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
 {
     public static class CSharpPropertyFactoryFromAdoSchemaTableDataColumn
     {

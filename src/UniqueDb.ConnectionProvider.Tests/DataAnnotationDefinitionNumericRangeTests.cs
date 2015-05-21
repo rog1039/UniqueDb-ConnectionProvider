@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
 using UniqueDb.ConnectionProvider.DataGeneration;
+using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 using Xunit.Extensions;
 
 namespace UniqueDb.ConnectionProvider.Tests
