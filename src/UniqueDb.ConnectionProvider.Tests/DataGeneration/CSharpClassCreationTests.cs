@@ -139,7 +139,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 
         [Fact()]
         [Trait("Category", "Integration")]
-        public void CreateManyRandomClasses()
+        public void CreateManyRandomClassesFromInformationSchema()
         {
             string outputText = String.Empty;
             var randomSqlTableReferences = RandomTableSelector.GetRandomSqlTableReferences(LiveDbTestingSqlProvider.AdventureWorksDb, 400);
@@ -152,6 +152,22 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             Console.WriteLine(outputText);
         }
         
+        [Fact()]
+        [Trait("Category", "Integration")]
+        public void CreateManyRandomClassesFromDescribeResultSet()
+        {
+            string outputText = String.Empty;
+            var randomSqlTableReferences = RandomTableSelector.GetRandomSqlTableReferences(LiveDbTestingSqlProvider.AdventureWorksDb, 400);
+            foreach (var sqlTableReference in randomSqlTableReferences)
+            {
+                var sqlTable = SqlTableFactory.Create(sqlTableReference);
+                var cSharpClass = CSharpClassGeneratorFromQueryViaSqlDescribeResultSet.GenerateClass(
+                    sqlTableReference.SqlConnectionProvider, $"SELECT * FROM {sqlTable.Schema}.{sqlTable.Name}", sqlTable.Name);
+                outputText += cSharpClass+"\r\n";
+            }
+            Console.WriteLine(outputText);
+        }
+
         [Fact()]
         [Timeout(3000)]
         [Trait("Category", "Integration")]

@@ -14,13 +14,13 @@ namespace UniqueDb.ConnectionProvider.Tests
 {
     public class DataAnnotationDefinitionNumericRangeTests
     {
-        private const decimal _17_3 = 99999999999999.999m;
+        private const double _17_3 = 99999999999999.999;
         [Theory]
         [MemberData("TestCases")]
         [Trait("Category", "Instant")]
-        public void TestWithDifferentPrecisionsAndScale(int scale, int precision, decimal lowerBound, decimal upperBound)
+        public void TestWithDifferentPrecisionsAndScale(int scale, int precision, double lowerBound, double upperBound)
         {
-            var dataAnnotationDefinitionNumericRange = DecimalTypeRangeCalculator.CalculateRange(scale, precision);
+            var dataAnnotationDefinitionNumericRange = DoubleTypeRangeCalculator.CalculateRange(scale, precision);
             dataAnnotationDefinitionNumericRange.LowerBound.Should().Be(lowerBound);
             dataAnnotationDefinitionNumericRange.UpperBound.Should().Be(upperBound);
         }

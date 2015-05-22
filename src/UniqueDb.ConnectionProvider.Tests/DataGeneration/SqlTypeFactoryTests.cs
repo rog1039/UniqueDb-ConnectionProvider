@@ -58,7 +58,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         [Theory]
         [MemberData("DecimalTestCases")]
         [Trait("Category", "Instant")]
-        public void Decimal(int precision, int? scale, decimal lowerBound, decimal upperBound)
+        public void Decimal(int precision, int? scale, double lowerBound, double upperBound)
         {
             var type = SqlTypeFactory.Decimal(precision, scale);
             
@@ -70,7 +70,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         [Theory]
         [MemberData("DecimalTestCases")]
         [Trait("Category", "Instant")]
-        public void Numeric(int precision, int? scale, decimal lowerBound, decimal upperBound)
+        public void Numeric(int precision, int? scale, double lowerBound, double upperBound)
         {
             var type = SqlTypeFactory.Numeric(precision, scale);
             
@@ -93,8 +93,8 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             var type = SqlTypeFactory.Money();
             
             type.TypeName.Should().Be("money");
-            type.LowerBound.Should().Be(-922337203685477.5808m);
-            type.UpperBound.Should().Be(922337203685477.5807m);
+            type.LowerBound.Should().Be(-922337203685477.5808);
+            type.UpperBound.Should().Be(922337203685477.5807);
         }
 
         [Fact()]
@@ -104,8 +104,8 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             var type = SqlTypeFactory.SmallMoney();
             
             type.TypeName.Should().Be("smallmoney");
-            type.LowerBound.Should().Be(-214748.3648m);
-            type.UpperBound.Should().Be(214748.3647m);
+            type.LowerBound.Should().Be(-214748.3648);
+            type.UpperBound.Should().Be(214748.3647);
         }
         
 

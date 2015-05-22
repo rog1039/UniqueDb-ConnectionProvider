@@ -14,6 +14,8 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             var sqlColumn = new SqlColumn();
             sqlColumn.Name = resultSetColumn.DescribeResultSetRow.name;
             sqlColumn.IsNullable = resultSetColumn.DescribeResultSetRow.is_nullable;
+            sqlColumn.IsIdentity = resultSetColumn.DescribeResultSetRow.is_identity_column;
+            sqlColumn.IsComputed = resultSetColumn.DescribeResultSetRow.is_computed_column;
 
             SqlType sqlType = null;
             var isUserDefinedType = resultSetColumn.UserDefinedType != null;
@@ -34,8 +36,8 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
                         FractionalSecondsPrecision = resultSetColumn.DescribeResultSetRow.scale
                     });
             }
-            
             sqlColumn.SqlDataType = sqlType;
+            
             return sqlColumn;
         }
 
@@ -44,22 +46,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             var describeResultSetRow = resultSetContainer.DescribeResultSetRow;
             var userType = resultSetContainer.UserDefinedType;
             var systemType = resultSetContainer.SystemType;
-            if (resultSetContainer.UserDefinedType != null)
-            {
-                return new AmbigiousSqlType()
-                {
-                    TypeName = systemType.name,
-                    NumericPrecision = describeResultSetRow.precision,
-                    NumericScale = describeResultSetRow.scale,
-                    MaxCharacterLength = describeResultSetRow.max_length,
-                    FractionalSecondsPrecision = describeResultSetRow.scale,
-
-                    MaxCharacterText = userType.max_length == -1
-                        ? "max"
-                        : string.Empty
-                };
-            }
-            return new AmbigiousSqlType()
+            var ambigiousType = new AmbigiousSqlType()
             {
                 TypeName = systemType.name,
                 NumericPrecision = describeResultSetRow.precision,
@@ -67,6 +54,16 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
                 MaxCharacterLength = describeResultSetRow.max_length,
                 FractionalSecondsPrecision = describeResultSetRow.scale
             };
+
+            if (resultSetContainer.UserDefinedType != null)
+            {
+                ambigiousType.MaxCharacterText = userType.max_length == -1
+                    ? "max"
+                    : string.Empty;
+
+            }
+
+            return ambigiousType;
         }
     }
 

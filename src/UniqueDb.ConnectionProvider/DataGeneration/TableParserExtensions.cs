@@ -16,7 +16,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         }
         public static string ToStringTable<T>(this IEnumerable<T> values)
         {
-            var objectProperties = typeof(T).GetProperties();
+            var objectProperties = GetObjectProperties<T>(values);
             var columnHeaders = new string[objectProperties.Length];
             var valueSelectors = new Func<T, object>[objectProperties.Length];
 
@@ -32,7 +32,22 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
             return ToStringTable(values, columnHeaders, valueSelectors);
         }
-        
+
+        private static PropertyInfo[] GetObjectProperties<T>(IEnumerable<T> values)
+        {
+            //Can't use the code below since it may very well be that T is object and the list contains subtypes of object
+            //We must use it though if the values array has no elements.
+            if (!values.Any())
+            {
+                var objectProperties = typeof (T).GetProperties();
+                return objectProperties;
+            }
+
+            //So instead, let's check the type of the first element
+            var type = values.First().GetType();
+            return type.GetProperties();
+        }
+
         public static string ToStringTable<T>(this IEnumerable<T> values, string[] columnHeaders, params Func<T, object>[] valueSelectors)
         {
             return ToStringTable(values.ToArray(), columnHeaders, valueSelectors);

@@ -40,11 +40,11 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         }
         public static SqlTypeNumberBase Money()
         {
-            return SqlTypeNumberBase.FromBounds("money", -922337203685477.5808m, 922337203685477.5807m);
+            return SqlTypeNumberBase.FromBounds("money", -922337203685477.5808, 922337203685477.5807);
         }
         public static SqlTypeNumberBase SmallMoney()
         {
-            return  SqlTypeNumberBase.FromBounds("smallmoney", -214748.3648m, 214748.3647m);
+            return  SqlTypeNumberBase.FromBounds("smallmoney", -214748.3648, 214748.3647);
         }
 
         

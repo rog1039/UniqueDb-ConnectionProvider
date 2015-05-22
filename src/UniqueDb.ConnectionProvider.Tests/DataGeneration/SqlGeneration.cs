@@ -93,11 +93,11 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         {
             var testCase = new SqlTypeColumnTestCase()
             {
-                ColumnDeclaration = "decimal(30)",
+                ColumnDeclaration = "decimal(25)",
                 ExpectedSqlType = new SqlType()
                 {
                     TypeName = "decimal",
-                    NumericPrecision = 30,
+                    NumericPrecision = 25,
                     NumericScale = 0
                 }
             };

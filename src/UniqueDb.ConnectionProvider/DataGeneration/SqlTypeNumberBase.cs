@@ -1,3 +1,4 @@
+using System;
 using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
@@ -12,7 +13,30 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         {
             var sqlTypeNumberBase = new SqlTypeNumberBase(typeName);
             var scale2 = scale ?? 0;
-            var range = DecimalTypeRangeCalculator.CalculateRange(precision, scale2);
+            var range = DoubleTypeRangeCalculator.CalculateRange(precision, scale2);
+
+            if (typeName.InsensitiveEquals("decimal"))
+            {
+                try
+                {
+                    range.UpperBound = (double)(decimal)range.UpperBound;
+                }
+                catch (Exception)
+                {
+
+                    range.UpperBound = (double)decimal.MaxValue;
+                }
+                try
+                {
+                    range.LowerBound = (double)(decimal)range.LowerBound;
+                }
+                catch (Exception)
+                {
+
+                    range.LowerBound = (double)decimal.MinValue;
+                }
+            }
+
             sqlTypeNumberBase.UpperBound = range.UpperBound;
             sqlTypeNumberBase.LowerBound = range.LowerBound;
             sqlTypeNumberBase.NumericPrecision = precision;
@@ -20,7 +44,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             return sqlTypeNumberBase;
         }
 
-        public static SqlTypeNumberBase FromBounds(string typeName, decimal lowerBound, decimal upperBound)
+        public static SqlTypeNumberBase FromBounds(string typeName, double lowerBound, double upperBound)
         {
             var sqlTypeNumberBase = new SqlTypeNumberBase(typeName);
             sqlTypeNumberBase.LowerBound = lowerBound;
@@ -28,7 +52,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             return sqlTypeNumberBase;
         }
 
-        public decimal UpperBound { get; set; }
-        public decimal LowerBound { get; set; }
+        public double UpperBound { get; set; }
+        public double LowerBound { get; set; }
     }
 }

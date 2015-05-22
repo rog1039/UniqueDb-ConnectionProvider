@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UniqueDb.ConnectionProvider</RootNamespace>
     <AssemblyName>UniqueDb.ConnectionProvider</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Dapper, Version=1.40.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -41,6 +43,10 @@
     </Reference>
     <Reference Include="FluentAssertions.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentAssertions.3.3.0\lib\net40\FluentAssertions.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SqlServer.Types.11.0.2\lib\net20\Microsoft.SqlServer.Types.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -66,6 +72,10 @@
     <Compile Include="DatabaseDeleter.cs" />
     <Compile Include="DataGeneration\AutomaticPropertyNameRewrites.cs" />
     <Compile Include="DataGeneration\ClrAccessModifier.cs" />
+    <Compile Include="DataGeneration\Crud\SqlConnectionProviderDeleteExtensions.cs" />
+    <Compile Include="DataGeneration\Crud\DeleteSqlStatementGenerator.cs" />
+    <Compile Include="DataGeneration\Crud\InsertSqlStatementGenerator.cs" />
+    <Compile Include="DataGeneration\Crud\SqlValueEncoder.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\CSharpClassGeneratorFromQueryViaSqlDescribeResultSet.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\CSharpClassTextGenerator.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\CSharpClassGeneratorFromInformationSchema.cs" />
@@ -73,6 +83,7 @@
     <Compile Include="DataGeneration\CSharpGeneration\CSharpClassGeneratorFromAdoDataReader.cs" />
     <Compile Include="DataGeneration\CSharpProperty.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\CSharpPropertyFactoryFromDescribeResultSetRow.cs" />
+    <Compile Include="DataGeneration\Crud\SqlConnectionProviderInsertExtensions.cs" />
     <Compile Include="DataGeneration\SqlMetadata\AdoSchemaTableHelper.cs" />
     <Compile Include="DataGeneration\CSharpPropertyTextGenerator.cs" />
     <Compile Include="DataGeneration\DataAnnotationDefinitionBase.cs" />
@@ -116,10 +127,12 @@
     <Compile Include="DataGeneration\TableParserExtensions.cs" />
     <Compile Include="DataGeneration\Table_Types.cs" />
     <Compile Include="ISqlConnectionProvider.cs" />
+    <Compile Include="MemberwiseDeepCopy.cs" />
     <Compile Include="ObjectExtensionMethods.cs" />
     <Compile Include="OldDatabaseDeleter.cs" />
     <Compile Include="RegexExtensions.cs" />
     <Compile Include="SqlConnectionProviderExtensionMethods.cs" />
+    <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="StaticSqlConnectionProvider.cs" />
     <Compile Include="UniqueDbConnectionProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -133,7 +146,25 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="..\packages\Microsoft.SqlServer.Types.11.0.2\nativeBinaries\x64\msvcr100.dll">
+      <Link>SqlServerTypes\x64\msvcr100.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\packages\Microsoft.SqlServer.Types.11.0.2\nativeBinaries\x64\SqlServerSpatial110.dll">
+      <Link>SqlServerTypes\x64\SqlServerSpatial110.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\packages\Microsoft.SqlServer.Types.11.0.2\nativeBinaries\x86\msvcr100.dll">
+      <Link>SqlServerTypes\x86\msvcr100.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\packages\Microsoft.SqlServer.Types.11.0.2\nativeBinaries\x86\SqlServerSpatial110.dll">
+      <Link>SqlServerTypes\x86\SqlServerSpatial110.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\readme.htm" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

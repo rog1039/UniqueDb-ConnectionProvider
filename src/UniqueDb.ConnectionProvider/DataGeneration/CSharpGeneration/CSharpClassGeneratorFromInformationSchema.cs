@@ -24,9 +24,10 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
                 IsNullable = column.IS_NULLABLE == "YES",
                 OrdinalPosition = column.ORDINAL_POSITION,
                 Default = column.COLUMN_DEFAULT,
+                
             };
 
-            var ambigiousSqlType = CSharpClassGeneratorFromInformationSchema.FromInformationSchemaColumn(column);
+            var ambigiousSqlType = FromInformationSchemaColumn(column);
             sqlColumn.SqlDataType = AmbigiousSqlTypeToSqlTypeConverter.Convert(ambigiousSqlType);
             return sqlColumn;
         }
