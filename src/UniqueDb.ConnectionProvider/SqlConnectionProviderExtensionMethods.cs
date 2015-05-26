@@ -76,7 +76,7 @@ namespace UniqueDb.ConnectionProvider
         public static string GenerateClassFromQuery(this ISqlConnectionProvider sqlConnectionProvider, string sqlQuery,
             string className)
         {
-            return CSharpClassGeneratorFromAdoDataReader.GenerateClass(sqlConnectionProvider, sqlQuery, className);
+            return CSharpClassGeneratorFromQueryViaSqlDescribeResultSet.GenerateClass(sqlConnectionProvider, sqlQuery, className);
         }
         
         public static string GenerateClassFromTable(this ISqlConnectionProvider sqlConnectionProvider, string schemaname, string tableName,
