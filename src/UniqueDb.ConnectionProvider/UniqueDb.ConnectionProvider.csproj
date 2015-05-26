@@ -79,6 +79,14 @@
     <Compile Include="DataGeneration\CSharpGeneration\CSharpClassGeneratorFromInformationSchema.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\CSharpClassGeneratorFromSqlTable.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\CSharpClassGeneratorFromAdoDataReader.cs" />
+    <Compile Include="DataGeneration\CSharpGeneration\DataAnnotationDefinitionIsComputed.cs" />
+    <Compile Include="DataGeneration\CSharpGeneration\DataAnnotationDefinitionIsIdentity.cs" />
+    <Compile Include="DataGeneration\CSharpGeneration\DataAnnotationDefinitionNumericRange.cs" />
+    <Compile Include="DataGeneration\CSharpGeneration\DataAnnotationFactory.cs" />
+    <Compile Include="DataGeneration\CSharpGeneration\DateRange.cs" />
+    <Compile Include="DataGeneration\CSharpGeneration\DoubleTypeRangeCalculator.cs" />
+    <Compile Include="DataGeneration\CSharpGeneration\GenericRange.cs" />
+    <Compile Include="DataGeneration\CSharpGeneration\NumericRange.cs" />
     <Compile Include="DataGeneration\CSharpProperty.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\CSharpPropertyFactoryFromDescribeResultSetRow.cs" />
     <Compile Include="DataGeneration\Crud\SqlConnectionProviderInsertExtensions.cs" />

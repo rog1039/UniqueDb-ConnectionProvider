@@ -70,6 +70,19 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
     public DateTime ModifiedDate { get; set; }
 }");
         }
+
+
+        [Fact()]
+        [Trait("Category", "Integration")]
+        public void CreateClassForDocumentTableFromQueryTest()
+        {
+            var cSharpClass = CSharpClassGeneratorFromQueryViaSqlDescribeResultSet.GenerateClass(
+                LiveDbTestingSqlProvider.AdventureWorksDb,
+                $"SELECT * from Production.Document", "Document");
+            var compileResult = RoslynHelper.TryCompile(cSharpClass);
+            compileResult.IsValid().Should().BeTrue();
+            Console.WriteLine(cSharpClass);
+        }
     }
 
     public class CSharpClassCreationTests
