@@ -75,7 +75,11 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             {
                 return SqlTypeFactory.NVarChar(SqlTextualDataTypeOptionsFactory.FromAmbigiousSqlType(ambigiousSqlType));
             }
-            Console.WriteLine($"This is bad mkay: {typeName}");
+            if (typeName == "xml")
+            {
+                return SqlTypeFactory.Xml();
+            }
+            
             return new SqlType(typeName);
         }
     }

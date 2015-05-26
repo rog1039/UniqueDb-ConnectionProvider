@@ -86,10 +86,6 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             {
                 return "string";
             }
-            if (sqlDataType == "xml")
-            {
-                return "string";
-            }
             if (sqlDataType == "image")
             {
                 return "byte[]";
@@ -163,7 +159,11 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             }
             if (sqlDataType == "sysname")
             {
-                return "object";
+                return "string";
+            }
+            if (sqlDataType == "xml")
+            {
+                return "XElement";
             }
             
             throw new NotImplementedException(

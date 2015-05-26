@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
@@ -49,6 +50,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
     public string LoginID { get; set; }
     public SqlHierarchyId OrganizationNode { get; set; }
     [Range(-32768, 32767)]
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     public Int16? OrganizationLevel { get; set; }
     [StringLength(50)]
     public string JobTitle { get; set; }
@@ -157,7 +159,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         public void CreateManyRandomClassesFromDescribeResultSet()
         {
             string outputText = String.Empty;
-            var randomSqlTableReferences = RandomTableSelector.GetRandomSqlTableReferences(LiveDbTestingSqlProvider.AdventureWorksDb, 400);
+            var randomSqlTableReferences = RandomTableSelector.GetRandomSqlTableReferences(LiveDbTestingSqlProvider.AdventureWorksDb, 400).OrderBy(x => x.SchemaName).ThenBy(x => x.TableName);
             foreach (var sqlTableReference in randomSqlTableReferences)
             {
                 var sqlTable = SqlTableFactory.Create(sqlTableReference);

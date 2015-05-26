@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
@@ -27,6 +28,12 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         {
             "hierarchyid", "geometry", "geography", "sysname"
         };
+        
+
+        public static IList<Type> ClrTypesThatAreHaveSqlSystemTypes = new List<Type>
+        {
+            typeof(string), typeof(decimal), typeof(double), typeof(int), typeof(DateTime), typeof(byte)
+        };
 
         public static bool IsCharType(string sqlTypeName)
         {
@@ -46,6 +53,11 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         public static bool IsSpecialSystemType(string sqlTypeName)
         {
             return SqlSpecialTypes.Contains(sqlTypeName.ToLower());
+        }
+
+        public static bool IsClrTypeASqlSystemType(Type propertyType)
+        {
+            return ClrTypesThatAreHaveSqlSystemTypes.Contains(propertyType);
         }
     }
 }

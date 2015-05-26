@@ -105,6 +105,10 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         {
             return new SqlType("nvarchar") {MaximumCharLength = options.CharacterLength};
         }
+        public static SqlType Xml()
+        {
+            return new SqlType("xml") {};
+        }
     }
 
     public class SqlTextualDataTypeOptions

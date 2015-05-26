@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
 {
     public static class SqlConnectionProviderInsertExtensions
     {
-        public static void InsertWithParams(this ISqlConnectionProvider sqlConnectionProvider, object obj, string tableName = null, IEnumerable<string> columnsToIgnore = null, string schemaName = null)
+        public static void InsertWithParams(this ISqlConnectionProvider sqlConnectionProvider, object obj, string tableName = null, string schemaName = null, IEnumerable<string> columnsToIgnore = null)
         {
             tableName = GetTableName(obj, tableName, schemaName);
 
@@ -25,6 +24,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
                     BuildOutMyCommand(obj, tableName, propertyInfos, myCommand);
 
                     myConnection.Open();
+                    Console.WriteLine(myCommand.CommandText);
                     myCommand.ExecuteNonQuery();
                     myConnection.Close();
                 }
@@ -37,6 +37,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
             if (!string.IsNullOrWhiteSpace(schemaName)) tableName = schemaName + "." + tableName;
             return tableName;
         }
+
         private static List<PropertyInfo> GetRelevantPropertyInfos(object obj, IEnumerable<string> columnsToIgnore)
         {
             columnsToIgnore = columnsToIgnore ?? new List<string>();
@@ -50,17 +51,26 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
 
         private static void BuildOutMyCommand(object obj, string tableName, List<PropertyInfo> propertyInfos, SqlCommand myCommand)
         {
-            var columnList = string.Join(", ", propertyInfos.Select(x => x.Name));
-            var sqlParameterNames = string.Join(", ", propertyInfos.Select(x => "@" + x.Name));
-            var sqlParameters = propertyInfos.Select(x => GetParameter(obj, x)).ToList();
+            var columnList = string.Join(", ", propertyInfos.Select(pi => pi.Name.Replace("_", " ").Bracketize()));
+            var sqlParameterNames = string.Join(", ", propertyInfos.Select(pi => GetParameterName(pi.Name)));
+            var sqlParameters = propertyInfos.Select(pi => GetParameter(obj, pi)).ToList();
 
             myCommand.Parameters.AddRange(sqlParameters.ToArray());
             myCommand.CommandText = $"INSERT INTO {tableName} ({columnList}) values ({sqlParameterNames})";
         }
 
-        private static SqlParameter GetParameter(object obj, PropertyInfo x)
+        public static string GetParameterName(string name) => "@" + name;
+        public static string UnRollName(string name) => name.Replace("_", " ");
+
+
+        private static SqlParameter GetParameter(object obj, PropertyInfo pi)
         {
-            var sqlParameter = new SqlParameter("@" + x.Name, x.GetValue(obj, null));
+            var sqlParameter = new SqlParameter(GetParameterName(pi.Name), pi.GetValue(obj, null));
+            if (!SqlTypes.IsClrTypeASqlSystemType(pi.PropertyType))
+            {
+                Console.WriteLine($"*****{obj.GetType()} - {pi} - {pi.Name} ");
+                sqlParameter.UdtTypeName = pi.PropertyType.Name;
+            }
             return sqlParameter;
         }
     }
