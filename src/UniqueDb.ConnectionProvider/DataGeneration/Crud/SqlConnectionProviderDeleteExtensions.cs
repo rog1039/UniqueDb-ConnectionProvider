@@ -1,61 +1,49 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
 {
     public static class SqlConnectionProviderDeleteExtensions
     {
-        public static void Delete<T>(this ISqlConnectionProvider sqlConnectionProvider, T obj,
+        public static void Delete<T>(this ISqlConnectionProvider sqlConnectionProvider, T objToDelete,
             Expression<Func<T, object>> keyProperties = null, string tableName = null, string schemaName = null)
         {
-            var sql = Generate(obj, keyProperties, tableName, schemaName);
-            Console.WriteLine(sql);
-            sqlConnectionProvider.Execute(sql);
+            tableName = SqlTextFunctions.GetTableName(objToDelete, tableName, schemaName);
+            
+            using (var myConnection = sqlConnectionProvider.GetSqlConnection())
+            {
+                using (var myCommand = new SqlCommand() { Connection = myConnection })
+                {
+                    BuildOutMyCommand(objToDelete, keyProperties, tableName, myCommand);
+
+                    myConnection.Open();
+                    myCommand.ExecuteNonQuery();
+                    myConnection.Close();
+                }
+            }
         }
 
-        public static string Generate<T>(T obj, Expression<Func<T, object>> keyProperties, string tableName = null, string schemaName = null)
+        private static void BuildOutMyCommand<T>(T objToDelete, Expression<Func<T, object>> keyProperties, string tableName, SqlCommand myCommand)
         {
-            tableName = GetTableName(obj, tableName, schemaName);
-            var whereClause = GenerateWhereClauseForDeleteStatement(obj, keyProperties);
+            var whereClauseProperties = SqlTextFunctions.GetPropertiesFromObject(objToDelete, keyProperties);
+            var whereClauseColumnNames = whereClauseProperties.Select(SqlTextFunctions.GetColumnNameFromPropertyInfo).ToList();
+            var whereClauseParameterNames = whereClauseProperties.Select(SqlTextFunctions.GetParameterName).ToList();
+            var whereClauseParts = Enumerable
+                .Range(0, whereClauseColumnNames.Count)
+                .Select(index => $"{whereClauseColumnNames[index]} = {whereClauseParameterNames[index]}");
+            var whereClause = string.Join(" AND ", whereClauseParts);
 
-            var sqlStatement = $"DELETE FROM {tableName} WHERE {whereClause};";
-            return sqlStatement;
-        }
-
-        private static string GetTableName(object obj, string tableName, string schemaName)
-        {
-            tableName = tableName ?? obj.GetType().Name;
-            if (!string.IsNullOrWhiteSpace(schemaName)) tableName = schemaName + "." + tableName;
-            return tableName;
-        }
-
-        private static string GenerateWhereClauseForDeleteStatement<T>(T obj, Expression<Func<T, object>> keyProperties)
-        {
-            bool useAllObjectProperties = false;
-            var propertiesOfKey = new List<string>();
-
-            if (keyProperties == null)
-                useAllObjectProperties = true;
-            else
-                propertiesOfKey = keyProperties
-                    .Body.Type
-                    .GetProperties()
-                    .Select(x => x.Name)
-                    .ToList();
-
-            var propertiesFromObject = obj
-                .GetType()
-                .GetProperties()
-                .Where(x => useAllObjectProperties || propertiesOfKey.Contains(x.Name));
-
-            var whereTests = propertiesFromObject
-                .Select(x => $"{SqlConnectionProviderInsertExtensions.UnRollName(x.Name).Bracketize()} = {SqlValueEncoder.ConvertPropertyToSqlString(obj, x)}")
+            var whereClauseParameters = Enumerable
+                .Range(0, whereClauseProperties.Count)
+                .Select(
+                    index => SqlTextFunctions.GetParameter(objToDelete, whereClauseProperties[index], whereClauseParameterNames[index]))
                 .ToList();
-
-            var whereClause = string.Join(" AND ", whereTests);
-            return whereClause;
+            myCommand.Parameters.AddRange(whereClauseParameters.ToArray());
+            myCommand.CommandText = $"DELETE FROM {tableName} WHERE {whereClause}";
         }
     }
 }

@@ -73,6 +73,7 @@
     <Compile Include="DataGeneration\AutomaticPropertyNameRewrites.cs" />
     <Compile Include="DataGeneration\ClrAccessModifier.cs" />
     <Compile Include="DataGeneration\Crud\SqlConnectionProviderDeleteExtensions.cs" />
+    <Compile Include="DataGeneration\Crud\SqlTextFunctions.cs" />
     <Compile Include="DataGeneration\Crud\SqlValueEncoder.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\CSharpClassGeneratorFromQueryViaSqlDescribeResultSet.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\CSharpClassTextGenerator.cs" />

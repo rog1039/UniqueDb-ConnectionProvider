@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Text;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
@@ -36,6 +37,10 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
                 return true;
 
             return s1.Length == s2.Length && s1.IndexOf(s2, StringComparison.InvariantCultureIgnoreCase) == 0;
+        }
+        public static bool InsensitiveContains(this string input, string part)
+        {
+            return CultureInfo.InvariantCulture.CompareInfo.IndexOf(input, part, CompareOptions.IgnoreCase) >= 0;
         }
     }
 }

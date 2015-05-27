@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
+using Microsoft.SqlServer.Types;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
@@ -32,7 +34,15 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         public static IList<Type> ClrTypesThatAreHaveSqlSystemTypes = new List<Type>
         {
-            typeof(string), typeof(decimal), typeof(double), typeof(int), typeof(DateTime), typeof(byte)
+            typeof(bool),
+            typeof(Int16), typeof(Int32), typeof(Int64), typeof(int), typeof(long), typeof(uint), typeof(ushort), typeof(ulong),
+            typeof(decimal), typeof(double),
+            typeof(byte), typeof(byte[]),
+            typeof(DateTime), typeof(TimeSpan),
+            typeof(string), typeof(Guid),
+            typeof(SqlHierarchyId),
+            typeof(XElement),
+
         };
 
         public static bool IsCharType(string sqlTypeName)
