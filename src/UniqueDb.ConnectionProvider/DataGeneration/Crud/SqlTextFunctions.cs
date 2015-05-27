@@ -14,8 +14,14 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
 {
     public static class SqlTextFunctions
     {
+        public static bool UnUnderscoreColumnNames = true;
         public static string GetParameterName(PropertyInfo propertyInfo) => "@" + propertyInfo.Name;
-        public static string GetColumnNameFromPropertyInfo(PropertyInfo propertyInfo) => propertyInfo.Name.Replace("_", " ").Replace("Property",string.Empty).Bracketize();
+        public static string GetColumnNameFromPropertyInfo(PropertyInfo propertyInfo)
+        {
+            return UnUnderscoreColumnNames
+                ? propertyInfo.Name.Replace("_", " ").Replace("Property", string.Empty).Bracketize()
+                : propertyInfo.Name.Replace("Property", string.Empty).Bracketize();
+        }
         public static string GetSetClauseParameterName(PropertyInfo propertyInfo) => ("@sc" + propertyInfo.Name);
         public static string GetWhereClauseParameterName(PropertyInfo propertyInfo) => ("@wc" + propertyInfo.Name);
         public static string UnUnderscoreName(string name) => name.Replace("_", " ");
@@ -26,7 +32,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
             parameterName = parameterName ?? propertyInfo.Name;
             var sqlParameter = new SqlParameter(parameterName, propertyInfo.GetValue(obj, null));
             var typeOfParameter = GetParameterType(propertyInfo);
-            
+
             if (!SqlTypes.IsClrTypeASqlSystemType(typeOfParameter))
             {
                 Console.WriteLine($"*****UDT Type: {obj.GetType()} - {propertyInfo} - {propertyInfo.Name} ");
@@ -35,7 +41,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
             if (propertyInfo.PropertyType == typeof(XElement))
             {
                 sqlParameter.DbType = DbType.Xml;
-                var xElement = (XElement) propertyInfo.GetValue(obj, null);
+                var xElement = (XElement)propertyInfo.GetValue(obj, null);
                 sqlParameter.Value = new SqlXml(xElement.CreateReader());
             }
             if (propertyInfo.PropertyType == typeof(SqlHierarchyId))

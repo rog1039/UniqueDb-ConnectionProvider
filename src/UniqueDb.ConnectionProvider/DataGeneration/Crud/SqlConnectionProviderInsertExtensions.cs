@@ -12,7 +12,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
     public static class SqlConnectionProviderUpdateExtensions
     {
         public static void Update<T>(this ISqlConnectionProvider sqlConnectionProvider, T objectToUpdate,
-            Expression<Func<T, object>> keyProperties = null, string tableName = null, string schemaName = null)
+            Expression<Func<T, object>> keyProperties = null, string tableName = null, string schemaName = null, bool processColumnNames = true)
         {
             tableName = SqlTextFunctions.GetTableName(objectToUpdate, tableName, schemaName);
 
@@ -22,8 +22,9 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
                 {
                     var setClauseProperties = SqlTextFunctions.GetRelevantPropertyInfos(objectToUpdate, null);
                     var whereClauseProperties = SqlTextFunctions.GetPropertiesFromObject(objectToUpdate, keyProperties);
-                    BuildOutUpdateCommand(objectToUpdate, tableName, setClauseProperties, whereClauseProperties, myCommand);
-
+                    SqlTextFunctions.UnUnderscoreColumnNames = processColumnNames;
+                    BuildOutUpdateCommand(objectToUpdate, tableName, setClauseProperties, whereClauseProperties, myCommand, processColumnNames);
+                    SqlTextFunctions.UnUnderscoreColumnNames = true;
                     myConnection.Open();
                     myCommand.ExecuteNonQuery();
                     myConnection.Close();
@@ -31,7 +32,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
             }
         }
 
-        private static void BuildOutUpdateCommand(object objectToUpdate, string tableName, IList<PropertyInfo> setClauseProperties, IList<PropertyInfo> whereClauseProperties, SqlCommand myCommand)
+        private static void BuildOutUpdateCommand(object objectToUpdate, string tableName, IList<PropertyInfo> setClauseProperties, IList<PropertyInfo> whereClauseProperties, SqlCommand myCommand, bool processColumnNames)
         {
             var setClauseColumnNames = setClauseProperties.Select(SqlTextFunctions.GetColumnNameFromPropertyInfo).ToList();
             var setClauseParameterNames = setClauseProperties.Select(SqlTextFunctions.GetSetClauseParameterName).ToList();
