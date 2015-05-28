@@ -12,7 +12,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
         public static void Delete<T>(this ISqlConnectionProvider sqlConnectionProvider, T objToDelete,
             Expression<Func<T, object>> keyProperties = null, string tableName = null, string schemaName = null)
         {
-            tableName = SqlTextFunctions.GetTableName(objToDelete, tableName, schemaName);
+            tableName = SqlTextFunctions.GetTableName(objToDelete.GetType(), tableName, schemaName);
             
             using (var myConnection = sqlConnectionProvider.GetSqlConnection())
             {
@@ -21,6 +21,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
                     BuildOutMyCommand(objToDelete, keyProperties, tableName, myCommand);
 
                     myConnection.Open();
+                    SqlTextFunctions.LogSqlStatement(myCommand.CommandText);
                     myCommand.ExecuteNonQuery();
                     myConnection.Close();
                 }

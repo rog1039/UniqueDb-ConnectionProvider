@@ -204,7 +204,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 
         public string ToSummary()
         {
-            return $"Status: {Status,-10} Table: {SqlTableReference.SchemaName + SqlTableReference.TableName,-45} Exceptions: [{InsertExceptionList.Count}/{UpdateExceptionList.Count}/{DeleteExceptionList.Count}] [Inserts/Updates/Deletes]";
+            return $"Status: {Status,-10} Table: {SqlTableReference.SchemaName + "." + SqlTableReference.TableName,-45} Exceptions: [{InsertExceptionList.Count}/{UpdateExceptionList.Count}/{DeleteExceptionList.Count}] [Inserts/Updates/Deletes]";
         }
 
         public void WrapUp()

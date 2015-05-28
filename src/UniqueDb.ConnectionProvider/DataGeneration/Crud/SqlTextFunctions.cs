@@ -14,6 +14,13 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
 {
     public static class SqlTextFunctions
     {
+        public static void LogSqlStatement(string sqlStatement)
+        {
+            LogSqlStatementAction?.Invoke(sqlStatement);
+        }
+
+        public static Action<string> LogSqlStatementAction { get; set; } = null;
+
         public static bool UnUnderscoreColumnNames = true;
         public static string GetParameterName(PropertyInfo propertyInfo) => "@" + propertyInfo.Name;
         public static string GetColumnNameFromPropertyInfo(PropertyInfo propertyInfo)
@@ -60,9 +67,9 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
             return propertyInfo.PropertyType;
         }
 
-        public static string GetTableName(object obj, string tableName, string schemaName)
+        public static string GetTableName(Type obj, string tableName, string schemaName)
         {
-            tableName = tableName ?? obj.GetType().Name;
+            tableName = tableName ?? obj.Name;
             if (!String.IsNullOrWhiteSpace(schemaName)) tableName = schemaName + "." + tableName;
             return tableName;
         }
@@ -97,6 +104,21 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
                 .GetProperties()
                 .Where(x => useAllObjectProperties || propertiesOfKey.Contains(x.Name));
             return propertiesFromObject.ToList();
+        }
+
+        public static void LogSqlCommand(SqlCommand myCommand)
+        {
+            LogSqlStatement(myCommand.CommandText);
+            LogParameters(myCommand);
+        }
+
+        private static void LogParameters(SqlCommand myCommand)
+        {
+            var parameterTable = myCommand.Parameters
+                .Cast<SqlParameter>()
+                .ToList()
+                .ToStringTable(z => z.ParameterName, z => z.SqlDbType, z => z.Value);
+            LogSqlStatement(parameterTable);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
         public static void Update<T>(this ISqlConnectionProvider sqlConnectionProvider, T objectToUpdate,
             Expression<Func<T, object>> keyProperties = null, string tableName = null, string schemaName = null, bool processColumnNames = true)
         {
-            tableName = SqlTextFunctions.GetTableName(objectToUpdate, tableName, schemaName);
+            tableName = SqlTextFunctions.GetTableName(objectToUpdate.GetType(), tableName, schemaName);
 
             using (var myConnection = sqlConnectionProvider.GetSqlConnection())
             {
@@ -26,6 +26,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
                     BuildOutUpdateCommand(objectToUpdate, tableName, setClauseProperties, whereClauseProperties, myCommand, processColumnNames);
                     SqlTextFunctions.UnUnderscoreColumnNames = true;
                     myConnection.Open();
+                    SqlTextFunctions.LogSqlCommand(myCommand);
                     myCommand.ExecuteNonQuery();
                     myConnection.Close();
                 }
@@ -68,7 +69,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
     {
         public static void Insert(this ISqlConnectionProvider sqlConnectionProvider, object obj, string tableName = null, string schemaName = null, IEnumerable<string> columnsToIgnore = null)
         {
-            tableName = SqlTextFunctions.GetTableName(obj, tableName, schemaName);
+            tableName = SqlTextFunctions.GetTableName(obj.GetType(), tableName, schemaName);
 
             var propertyInfos = SqlTextFunctions.GetRelevantPropertyInfos(obj, columnsToIgnore);
             if (propertyInfos.Count == 0)
@@ -81,6 +82,8 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
                     BuildOutMyCommand(obj, tableName, propertyInfos, myCommand);
 
                     myConnection.Open();
+                    SqlTextFunctions.LogSqlCommand(myCommand);
+                    
                     myCommand.ExecuteNonQuery();
                     myConnection.Close();
                 }
@@ -95,6 +98,30 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
 
             myCommand.Parameters.AddRange(sqlParameters.ToArray());
             myCommand.CommandText = $"INSERT INTO {tableName} ({columnList}) values ({sqlParameterNames})";
+        }
+    }
+
+    public static class SqlConnectionProviderQueryExtensions
+    {
+        public static IEnumerable<T> MyQuery<T>(this ISqlConnectionProvider sqlConnectionProvider, string whereClause = null, string tableName = null, string schemaName = null)
+        {
+            whereClause = whereClause ?? "1 = 1";
+            var selectClause = GenerateSelectClause<T>();
+            tableName = SqlTextFunctions.GetTableName(typeof (T), tableName, schemaName);
+            var sqlStatement = $"SELECT {selectClause} FROM {tableName} WHERE {whereClause}";
+            SqlTextFunctions.LogSqlStatement(sqlStatement);
+            var results = sqlConnectionProvider.Query<T>(sqlStatement).ToList();
+            return results;
+        }
+
+        private static string GenerateSelectClause<T>()
+        {
+            var propertyInfos = typeof (T).GetProperties();
+            var columnNames = propertyInfos.Select(SqlTextFunctions.GetColumnNameFromPropertyInfo).ToList();
+            var selectParts = propertyInfos.Select((info, i) => new {ColumnName = columnNames[i], Alias = info.Name}).ToList();
+            var selectStrings = selectParts.Select(arg => $"{arg.ColumnName} AS {arg.Alias}");
+            var selectClause = string.Join(", ", selectStrings);
+            return selectClause;
         }
     }
 }
