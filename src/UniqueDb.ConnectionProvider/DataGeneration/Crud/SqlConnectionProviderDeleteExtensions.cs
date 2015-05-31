@@ -10,7 +10,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
     public static class SqlConnectionProviderDeleteExtensions
     {
         public static void Delete<T>(this ISqlConnectionProvider sqlConnectionProvider, T objToDelete,
-            Expression<Func<T, object>> keyProperties = null, string tableName = null, string schemaName = null)
+            Expression<Func<T, object>> keyProperties = null, string tableName = null, string schemaName = null, bool processColumnNames = true)
         {
             tableName = SqlTextFunctions.GetTableName(objToDelete.GetType(), tableName, schemaName);
             
@@ -18,7 +18,9 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
             {
                 using (var myCommand = new SqlCommand() { Connection = myConnection })
                 {
+                    SqlTextFunctions.UnUnderscoreColumnNames = processColumnNames;
                     BuildOutMyCommand(objToDelete, keyProperties, tableName, myCommand);
+                    SqlTextFunctions.UnUnderscoreColumnNames = true;
 
                     myConnection.Open();
                     SqlTextFunctions.LogSqlStatement(myCommand.CommandText);

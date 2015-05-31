@@ -67,7 +67,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
 
     public static class SqlConnectionProviderInsertExtensions
     {
-        public static void Insert(this ISqlConnectionProvider sqlConnectionProvider, object obj, string tableName = null, string schemaName = null, IEnumerable<string> columnsToIgnore = null)
+        public static void Insert(this ISqlConnectionProvider sqlConnectionProvider, object obj, string tableName = null, string schemaName = null, IEnumerable<string> columnsToIgnore = null, bool processColumnNames = true)
         {
             tableName = SqlTextFunctions.GetTableName(obj.GetType(), tableName, schemaName);
 
@@ -79,7 +79,9 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
             {
                 using (var myCommand = new SqlCommand() {Connection = myConnection})
                 {
-                    BuildOutMyCommand(obj, tableName, propertyInfos, myCommand);
+                    SqlTextFunctions.UnUnderscoreColumnNames = processColumnNames;
+                    BuildOutMyCommand(obj, tableName, propertyInfos, myCommand, processColumnNames);
+                    SqlTextFunctions.UnUnderscoreColumnNames = true;
 
                     myConnection.Open();
                     SqlTextFunctions.LogSqlCommand(myCommand);
@@ -90,7 +92,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
             }
         }
 
-        private static void BuildOutMyCommand(object obj, string tableName, IList<PropertyInfo> propertyInfos, SqlCommand myCommand)
+        private static void BuildOutMyCommand(object obj, string tableName, IList<PropertyInfo> propertyInfos, SqlCommand myCommand, bool processColumnNames = true)
         {
             var columnList = string.Join(", ", propertyInfos.Select(SqlTextFunctions.GetColumnNameFromPropertyInfo));
             var sqlParameterNames = string.Join(", ", propertyInfos.Select(SqlTextFunctions.GetParameterName));
