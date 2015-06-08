@@ -7,18 +7,10 @@ namespace UniqueDb.ConnectionProvider
         public string DatabaseName { get; protected set; }
         public string ServerName { get; protected set; }
         
+        public virtual string GetSqlConnectionString() => GetSqlConnectionStringBuilder().ConnectionString;
+
         public abstract SqlConnectionStringBuilder GetSqlConnectionStringBuilder();
-
-        public virtual SqlConnection GetSqlConnection()
-        {
-            var sqlConnection = new SqlConnection(GetSqlConnectionString());
-            return sqlConnection;
-        }
-
-        public virtual string GetSqlConnectionString()
-        {
-            var connectionString = GetSqlConnectionStringBuilder().ConnectionString;
-            return connectionString;
-        }
+        
+        public virtual SqlConnection GetSqlConnection() => new SqlConnection(GetSqlConnectionString());
     }
 }
