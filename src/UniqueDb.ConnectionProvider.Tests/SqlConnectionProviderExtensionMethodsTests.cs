@@ -1,4 +1,7 @@
+using FluentAssertions;
+using Ploeh.AutoFixture;
 using Xbehave;
+using Xunit;
 
 namespace UniqueDb.ConnectionProvider.Tests
 {
@@ -26,6 +29,29 @@ namespace UniqueDb.ConnectionProvider.Tests
                 connectionProvider.CreateDatabase();
                 connectionProvider.ExecuteScalar<int>("Select 1");
             }
+        }
+
+        
+        
+
+        [Fact()]
+        [Trait("Category", "Integration")]
+        public void DoesDatabaseExist_Test()
+        {
+            var fixture = new Fixture();
+            var madeUpDatabaseName = fixture.Create<string>();
+            
+            var options = new UniqueDbConnectionProviderOptions("ws2012sqlexp1\\sqlexpress", "autodisposedatabase");
+            var connectionProvider = new UniqueDbConnectionProvider(options);
+
+            var doesMadeUpDatabaseExist = connectionProvider.DoesDatabaseExist(madeUpDatabaseName);
+            doesMadeUpDatabaseExist.Should().BeFalse();
+            
+            var doesConnectionProviderDatabaseExist = connectionProvider.DoesDatabaseExist();
+            doesMadeUpDatabaseExist.Should().BeFalse();
+            
+            var doesActualDatabaseExist = connectionProvider.DoesDatabaseExist("JobMgmt");
+            doesActualDatabaseExist.Should().BeTrue();
         }
     }
 }

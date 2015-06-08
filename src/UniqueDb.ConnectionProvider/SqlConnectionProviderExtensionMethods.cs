@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Linq;
+using Dapper;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 
@@ -52,6 +54,17 @@ namespace UniqueDb.ConnectionProvider
             var connection = new SqlConnection(connectionString);
             connection.Open();
             return connection;
+        }
+
+        public static bool DoesDatabaseExist(this ISqlConnectionProvider connectionProvider, string databaseName = null)
+        {
+            databaseName = databaseName ?? connectionProvider.DatabaseName;
+            var connection = CreateSqlConnectionOnMasterDatabase(connectionProvider);
+            var doesDatabaseExistTextQuery = $"SELECT 1 WHERE db_id('{databaseName}') IS NOT NULL";
+            var doesDatabaseExist = connection
+                .Query<int>(doesDatabaseExistTextQuery)
+                .Any();
+            return doesDatabaseExist;
         }
 
         public static void ExecuteNonDapper(this ISqlConnectionProvider connectionProvider, string sqlCommand)
