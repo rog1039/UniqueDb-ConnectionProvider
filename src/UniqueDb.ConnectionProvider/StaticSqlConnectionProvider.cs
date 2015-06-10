@@ -7,12 +7,19 @@ namespace UniqueDb.ConnectionProvider
     {
         private readonly string _userName;
         private readonly string _password;
-        private bool _useIntegratedSecurity = true;
+        private readonly bool _useIntegratedSecurity = true;
         
         public StaticSqlConnectionProvider(string serverName, string databaseName)
         {
             ServerName = serverName;
             DatabaseName = databaseName;
+        }
+
+        public StaticSqlConnectionProvider(string serverName, string databaseName, string userName)
+        {
+            ServerName = serverName;
+            DatabaseName = databaseName;
+            _userName = userName;
         }
 
         public StaticSqlConnectionProvider(string serverName, string databaseName, string userName, string password)
