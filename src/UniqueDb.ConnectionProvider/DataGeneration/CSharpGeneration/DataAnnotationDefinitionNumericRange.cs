@@ -2,8 +2,6 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
 {
     public class DataAnnotationDefinitionNumericRange : DataAnnotationDefinitionBase
     {
-        private readonly int _numericPrecision;
-        private readonly int _numericScale;
         private NumericRange numericRange;
 
         public double UpperBound => numericRange.UpperBound;

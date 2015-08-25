@@ -8,7 +8,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         [Trait("Category", "Integration")]
         public void CreateFromQueryTests()
         {
-            var query = "SELECT * FROM sys.types";
+            //var query = "SELECT * FROM sys.types";
         }
     }
 }

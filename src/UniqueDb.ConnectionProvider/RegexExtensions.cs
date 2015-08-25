@@ -70,7 +70,7 @@ namespace UniqueDb.ConnectionProvider
                     var newTObjectAnonymous = (T)Activator.CreateInstance(typeof(T), regexGroupValues);
                     return newTObjectAnonymous;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
 
                 }
