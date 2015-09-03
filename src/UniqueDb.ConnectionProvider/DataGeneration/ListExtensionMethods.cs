@@ -20,5 +20,10 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             newList.Add(o);
             return newList;
         }
+
+        public static string StringJoin(this IEnumerable<string> list, string separator)
+        {
+            return string.Join(separator, list);
+        }
     }
 }

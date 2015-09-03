@@ -68,6 +68,7 @@
     <Compile Include="DatabaseDeleter.cs" />
     <Compile Include="DataGeneration\AutomaticPropertyNameRewrites.cs" />
     <Compile Include="DataGeneration\ClrAccessModifier.cs" />
+    <Compile Include="DataGeneration\ClrTypeToSqlTypeConverter.cs" />
     <Compile Include="DataGeneration\Crud\SqlConnectionProviderDeleteExtensions.cs" />
     <Compile Include="DataGeneration\Crud\SqlTextFunctions.cs" />
     <Compile Include="DataGeneration\Crud\SqlValueEncoder.cs" />
@@ -87,6 +88,8 @@
     <Compile Include="DataGeneration\CSharpProperty.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\CSharpPropertyFactoryFromDescribeResultSetRow.cs" />
     <Compile Include="DataGeneration\Crud\SqlConnectionProviderInsertExtensions.cs" />
+    <Compile Include="DataGeneration\PropertyInfoToSqlColumnDeclarationConverter.cs" />
+    <Compile Include="DataGeneration\SqlManipulation\CreateTableScriptProvider.cs" />
     <Compile Include="DataGeneration\SqlMetadata\AdoSchemaTableHelper.cs" />
     <Compile Include="DataGeneration\CSharpPropertyTextGenerator.cs" />
     <Compile Include="DataGeneration\DataAnnotationDefinitionBase.cs" />

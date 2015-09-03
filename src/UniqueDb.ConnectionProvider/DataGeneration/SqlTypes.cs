@@ -15,6 +15,16 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             "float", "real",
         };
 
+        public static IList<string> SqlExactNumericTypes = new List<string>
+        {
+            "bigint", "bit", "decimal", "int", "money", "numeric", "smallint", "smallmoney", "tinyint"
+        };
+
+        public static IList<string> SqlApproximateNumericTypes = new List<string>
+        {
+            "float", "real",
+        };
+
         public static IList<string> SqlSystemTypes = new List<string>
         {
             "bigint", "bit", "decimal", "int", "money", "numeric", "smallint", "smallmoney", "tinyint",
@@ -30,7 +40,17 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         {
             "hierarchyid", "geometry", "geography", "sysname"
         };
-        
+
+        public static IList<string> SqlDateTimeTypes = new List<string>
+        {
+            "date", "datetime", "datetime2", "datetimeoffset", "smalldatetime", "time"
+        };
+
+        public static IList<string> SqlDateTimeTypesWithPrecision = new List<string>
+        {
+            "datetime2", "datetimeoffset", "time"
+        };
+
 
         public static IList<Type> ClrTypesThatAreHaveSqlSystemTypes = new List<Type>
         {
@@ -65,9 +85,29 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             return SqlSpecialTypes.Contains(sqlTypeName.ToLower());
         }
 
+        public static bool IsExactNumeric(string sqlTypeName)
+        {
+            return SqlExactNumericTypes.Contains(sqlTypeName.ToLower());
+        }
+
+        public static bool IsApproximateNumeric(string sqlTypeName)
+        {
+            return SqlApproximateNumericTypes.Contains(sqlTypeName.ToLower());
+        }
+
         public static bool IsClrTypeASqlSystemType(Type propertyType)
         {
             return ClrTypesThatAreHaveSqlSystemTypes.Contains(propertyType);
+        }
+
+        public static bool IsDateTimeWithPrecision(string sqlTypeName)
+        {
+            return SqlDateTimeTypesWithPrecision.Contains(sqlTypeName.ToLower());
+        }
+
+        public static bool IsDateTime(string sqlTypeName)
+        {
+            return SqlDateTimeTypes.Contains(sqlTypeName.ToLower());
         }
     }
 }

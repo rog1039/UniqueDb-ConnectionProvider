@@ -80,7 +80,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
                 return SqlTypeFactory.Xml();
             }
             
-            return new SqlType(typeName);
+            return SqlType.Type(typeName);
         }
     }
 

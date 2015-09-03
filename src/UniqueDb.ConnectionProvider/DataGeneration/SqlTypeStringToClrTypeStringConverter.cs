@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
@@ -137,7 +138,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             {
                 return "decimal";
             }
-            if (sqlDataType == "numeric")
+            if (sqlDataType == "meric")
             {
                 return "decimal";
             }
@@ -168,6 +169,47 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             
             throw new NotImplementedException(
                 $"SQL column type {sqlDataType} cannot be translated to a C# property type");
+        }
+    }
+    
+    public class SqlColumnDeclaration
+    {
+        public SqlColumnDeclaration(string name, NullableSqlType nullableSqlType)
+        {
+            Name = name;
+            NullableSqlType = nullableSqlType;
+        }
+
+        public string Name { get; set; }
+        public NullableSqlType NullableSqlType { get; set; }
+
+        public string ToCreateDeclarationSegment()
+        {
+            return $"{Name} {NullableSqlType}";
+        }
+
+        public override string ToString()
+        {
+            return ToCreateDeclarationSegment();
+        }
+    }
+
+    public class NullableSqlType
+    {
+        public NullableSqlType(SqlType sqlType, bool isNullable)
+        {
+            SqlType = sqlType;
+            IsNullable = isNullable;
+        }
+
+        public bool IsNullable { get; set; }
+        public SqlType SqlType { get; set; }
+
+        public override string ToString()
+        {
+            return IsNullable
+                ? SqlType + " NULL"
+                : SqlType + " NOT NULL";
         }
     }
 }

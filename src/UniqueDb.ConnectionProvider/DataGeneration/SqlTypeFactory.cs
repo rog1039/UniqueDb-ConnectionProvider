@@ -11,6 +11,11 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         private const long bigIntUpperBound = 9223372036854775807;
 
         /****   Exact Numerics   ****/
+
+        public static SqlType Boolean()
+        {
+            return SqlType.Type("boolean");
+        }
         public static SqlTypeNumberBase TinyInt()
         {
             return SqlTypeNumberBase.FromBounds("tinyint", 0, 255);
@@ -27,7 +32,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         {
             return SqlTypeNumberBase.FromBounds("bigint", bigIntLowerBound, bigIntUpperBound);
         }
-        public static SqlTypeNumberBase Decimal(int precision, int? scale)
+        public static SqlTypeNumberBase Decimal(int precision, int? scale = 0)
         {
             Contract.Requires(precision >= 1 && precision <= 38);
             Contract.Requires(!scale.HasValue || (scale >= 0 && scale <= precision));
@@ -49,65 +54,65 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         
         /****   Approximate Numerics   ****/
-        public static SqlType Float(int numberOfBits)
+        public static SqlType Float(int numberOfBits = 53)
         {
             Contract.Requires(numberOfBits <= 53 && numberOfBits > 0);
-            return new SqlType("float") {Mantissa = numberOfBits};
+            return SqlType.ApproximateNumeric("float", numberOfBits);
         }
         public static SqlType Real()
         {
-            return new SqlType("real", 24) {Mantissa = 24};
+            return SqlType.ApproximateNumeric("real", 24);
         }
 
         
         /****   Date & Time   ****/
         public static SqlType SmallDateTime()
         {
-            return new SqlType("smalldatetime");
+            return SqlType.Type("smalldatetime");
         }
         public static SqlType Date()
         {
-            return new SqlType("date");
+            return SqlType.Type("date");
         }
         public static SqlType DateTime()
         {
-            return new SqlType("datetime");
+            return SqlType.Type("datetime");
         }
         public static SqlType DateTime2(int? fractionalSecondsPrecision)
         {
             Contract.Requires(fractionalSecondsPrecision >= 0 && fractionalSecondsPrecision <= 7);
-            return new SqlType("datetime2") {FractionalSecondsPrecision = fractionalSecondsPrecision};
+            return SqlType.DateTime("datetime2", fractionalSecondsPrecision);
         }
         public static SqlType DateTimeOffset()
         {
-            return new SqlType("datetimeoffset");
+            return SqlType.Type("datetimeoffset");
         }
         public static SqlType Time()
         {
-            return new SqlType("time");
+            return SqlType.Type("time");
         }
 
         
         /****   Text   ****/
         public static SqlType Char(SqlTextualDataTypeOptions options)
         {
-            return new SqlType("char") {MaximumCharLength = options.CharacterLength};
+            return SqlType.TextType("char", options.CharacterLength);
         }
         public static SqlType VarChar(SqlTextualDataTypeOptions options)
         {
-            return new SqlType("varchar") {MaximumCharLength = options.CharacterLength};
+            return SqlType.TextType("varchar", options.CharacterLength);
         }
         public static SqlType NChar(SqlTextualDataTypeOptions options)
         {
-            return new SqlType("nchar") {MaximumCharLength = options.CharacterLength};
+            return SqlType.TextType("nchar", options.CharacterLength);
         }
         public static SqlType NVarChar(SqlTextualDataTypeOptions options)
         {
-            return new SqlType("nvarchar") {MaximumCharLength = options.CharacterLength};
+            return SqlType.TextType("nvarchar", options.CharacterLength);
         }
         public static SqlType Xml()
         {
-            return new SqlType("xml") {};
+            return SqlType.Type("xml");
         }
     }
 

@@ -62,10 +62,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             var testCase = new SqlTypeColumnTestCase()
             {
                 ColumnDeclaration = "int",
-                ExpectedSqlType = new SqlType()
-                {
-                    TypeName = "int",
-                }
+                ExpectedSqlType = SqlType.Type("int")
             };
             RunTestCase(testCase);
         }
@@ -77,12 +74,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             var testCase = new SqlTypeColumnTestCase()
             {
                 ColumnDeclaration = "decimal",
-                ExpectedSqlType = new SqlType()
-                {
-                    TypeName = "decimal",
-                    NumericPrecision = 18,
-                    NumericScale = 0
-                }
+                ExpectedSqlType = SqlType.ExactNumericType("decimal", 18,0)
             };
             RunTestCase(testCase);
         }
@@ -94,12 +86,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             var testCase = new SqlTypeColumnTestCase()
             {
                 ColumnDeclaration = "decimal(25)",
-                ExpectedSqlType = new SqlType()
-                {
-                    TypeName = "decimal",
-                    NumericPrecision = 25,
-                    NumericScale = 0
-                }
+                ExpectedSqlType = SqlType.ExactNumericType("decimal", 25,0)
             };
             RunTestCase(testCase);
         }
@@ -111,12 +98,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             var testCase = new SqlTypeColumnTestCase()
             {
                 ColumnDeclaration = "decimal(30,5)",
-                ExpectedSqlType = new SqlType()
-                {
-                    TypeName = "decimal",
-                    NumericPrecision = 30,
-                    NumericScale = 5
-                }
+                ExpectedSqlType = SqlType.ExactNumericType("decimal", 30,5)
             };
             RunTestCase(testCase);
         }
@@ -128,10 +110,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             var testCase = new SqlTypeColumnTestCase()
             {
                 ColumnDeclaration = "datetime",
-                ExpectedSqlType = new SqlType()
-                {
-                    TypeName = "datetime",
-                }
+                ExpectedSqlType = SqlType.Type("datetime")
             };
             RunTestCase(testCase);
         }
@@ -143,11 +122,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             var testCase = new SqlTypeColumnTestCase()
             {
                 ColumnDeclaration = "datetime2",
-                ExpectedSqlType = new SqlType()
-                {
-                    TypeName = "datetime2",
-                    FractionalSecondsPrecision = 7
-                }
+                ExpectedSqlType = SqlType.DateTime("datetime2", 7)
             };
             RunTestCase(testCase);
         }
@@ -159,11 +134,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             var testCase = new SqlTypeColumnTestCase()
             {
                 ColumnDeclaration = "datetime2(4)",
-                ExpectedSqlType = new SqlType()
-                {
-                    TypeName = "datetime2",
-                    FractionalSecondsPrecision = 4
-                }
+                ExpectedSqlType = SqlType.DateTime("datetime2", 4)
             };
             RunTestCase(testCase);
         }
@@ -175,11 +146,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             var testCase = new SqlTypeColumnTestCase()
             {
                 ColumnDeclaration = "mytypespecial",
-                ExpectedSqlType = new SqlType()
-                {
-                    TypeName = "nvarchar",
-                    MaximumCharLength = 20
-                }
+                ExpectedSqlType = SqlType.TextType("nvarchar", 20)
             };
             testCase.PreTestSqlScripts.Add("create type mytypespecial from nvarchar(10);");
             RunTestCase(testCase);
@@ -192,11 +159,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             var testCase = new SqlTypeColumnTestCase()
             {
                 ColumnDeclaration = "nvarchar(10)",
-                ExpectedSqlType = new SqlType()
-                {
-                    TypeName = "nvarchar",
-                    MaximumCharLength = 20
-                }
+                ExpectedSqlType = SqlType.TextType("nvarchar", 20)
             };
             RunTestCase(testCase);
         }
@@ -208,11 +171,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             var testCase = new SqlTypeColumnTestCase()
             {
                 ColumnDeclaration = "varchar(10)",
-                ExpectedSqlType = new SqlType()
-                {
-                    TypeName = "varchar",
-                    MaximumCharLength = 10
-                }
+                ExpectedSqlType = SqlType.TextType("varchar", 10)
             };
             RunTestCase(testCase);
         }
