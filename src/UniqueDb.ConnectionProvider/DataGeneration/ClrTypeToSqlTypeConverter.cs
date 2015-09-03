@@ -46,7 +46,10 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         {
             SqlType sqlType = null;
             var matchFound = DefaultClrToSqlTypeMap.TryGetValue(clrType.Name.ToLower(), out sqlType);
+
+            if(!matchFound && clrType.IsEnum) return SqlTypeFactory.Int();
             if(!matchFound) throw new ArgumentException($"No match found for CLR Type: {clrType.Name}");
+
             return sqlType;
         }
 

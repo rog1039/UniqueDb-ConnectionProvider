@@ -1,8 +1,6 @@
 using System;
 using FluentAssertions;
 using UniqueDb.ConnectionProvider.DataGeneration;
-using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
-using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 using Xunit;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
@@ -37,17 +35,6 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 
             rewrittenName.Should().Be(expectedName);
             Console.WriteLine(rewrittenName);
-        }
-    }
-
-    public class GetSqlCreateTableScriptsTests
-    {
-        [Fact()]
-        [Trait("Category", "Instant")]
-        public void CreateScriptFromCSharpClass()
-        {
-            var response = CreateTableScriptProvider.GetCreateTableScript<DescribeResultSetRow>();
-            Console.WriteLine(response);
         }
     }
 }
