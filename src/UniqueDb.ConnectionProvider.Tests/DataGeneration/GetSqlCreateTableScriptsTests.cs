@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 using Xunit;
@@ -27,6 +28,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
     public class SampleClassToCreateTableFor
     {
         public TestEnum TestEnum { get; set; }
+        public IList<int> SomeList { get; set; } 
     }
 
     public enum TestEnum

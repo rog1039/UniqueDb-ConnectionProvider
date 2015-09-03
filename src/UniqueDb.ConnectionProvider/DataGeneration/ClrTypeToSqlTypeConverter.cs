@@ -70,7 +70,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         {
             if (clrType.IsGenericType && !clrType.Name.Contains("Nullable"))
                 throw new ArgumentException(
-                    $"Provided type is generic type that is not a nullable generic type.  This conversion requires non-generic types or nullable types.");
+                    $"Provided type, {clrType.Name}, is generic type that is not a nullable generic type.  This conversion requires non-generic types or nullable types.");
         }
     }
 }

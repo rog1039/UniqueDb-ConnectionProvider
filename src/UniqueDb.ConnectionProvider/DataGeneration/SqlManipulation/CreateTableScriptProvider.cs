@@ -28,8 +28,9 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
             var clrProperties = objectType
                 .GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 .ToList();
-
+            
             var createPropertiesSegment = clrProperties
+                .Where(ShouldCreateColumnForProperty)
                 .Select(PropertyInfoToSqlColumnDeclarationConverter.Convert)
                 .Select(sqlColumnDeclaration => sqlColumnDeclaration.ToString())
                 .StringJoin(",\r\n   ");
@@ -40,6 +41,20 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
                                     $"\r\n);";
 
             return createTableScript;
+        }
+
+        private static bool ShouldCreateColumnForProperty(PropertyInfo arg)
+        {
+            var isString = arg.PropertyType == typeof (string);
+            if (isString)
+                return true;
+
+            var implementsEnumerable = arg
+                .PropertyType
+                .GetInterfaces()
+                .Any(interfaceType => interfaceType.Name.ToLower().Equals("ienumerable"));
+
+            return !implementsEnumerable;
         }
     }
 }
