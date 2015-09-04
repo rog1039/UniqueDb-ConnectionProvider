@@ -34,6 +34,11 @@ namespace UniqueDb.ConnectionProvider.Tests
                         var doesTableExist = connectionProvider.CheckTableExistence("dbo", "SimpleClass");
                         doesTableExist.Should().BeTrue();
                     });
+                "Truncate the table"
+                    ._(() =>
+                    {
+                        connectionProvider.TruncateTable("dbo", "SimpleClass");
+                    });
 
                 "Delete the table"
                     ._(() =>

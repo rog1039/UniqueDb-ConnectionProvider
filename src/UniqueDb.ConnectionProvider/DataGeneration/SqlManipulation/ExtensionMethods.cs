@@ -13,6 +13,13 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
             EnsureTableExists<T>(sqlConnectionProvider, schema, typeof(T).Name);
         }
 
+        public static void EnsureTableExists<T>(this SqlTableReference tableReference)
+        {
+            var tableExists = CheckTableExistence(tableReference.SqlConnectionProvider, tableReference.SchemaName, tableReference.TableName);
+            if (!tableExists)
+                CreateTable<T>(tableReference.SqlConnectionProvider, tableReference.SchemaName, tableReference.TableName);
+        }
+
         public static void EnsureTableExists<T>(this ISqlConnectionProvider sqlConnectionProvider, string schema,
                                              string table)
         {
@@ -33,15 +40,27 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
             sqlConnectionProvider.Execute(createTableScript);
         }
 
-        public static void DropTable(this ISqlConnectionProvider sqlConnectionProvider, SqlTableReference tableReference)
+        public static void DropTable(this SqlTableReference tableReference)
         {
-            DropTable(sqlConnectionProvider, tableReference.SchemaName, tableReference.TableName);
+            DropTable(tableReference.SqlConnectionProvider, tableReference.SchemaName, tableReference.TableName);
         }
 
         public static void DropTable(this ISqlConnectionProvider sqlConnectionProvider, string schema, string table)
         {
             var dropScript = DropSqlTableReference.GenerateDropTableScript(schema, table);
             sqlConnectionProvider.Execute(dropScript);
+        }
+
+
+        public static void TruncateTable(this SqlTableReference tableReference)
+        {
+            TruncateTable(tableReference.SqlConnectionProvider, tableReference.SchemaName, tableReference.TableName);
+        }
+
+        public static void TruncateTable(this ISqlConnectionProvider sqlConnectionProvider, string schema, string table)
+        {
+            var truncateScript = $"TRUNCATE TABLE {schema}.{table}";
+            sqlConnectionProvider.Execute(truncateScript);
         }
     }
 }
