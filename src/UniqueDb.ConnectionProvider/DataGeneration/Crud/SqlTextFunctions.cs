@@ -20,15 +20,15 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
             LogSqlStatementAction?.Invoke(sqlStatement);
         }
 
-        public static Action<string> LogSqlStatementAction { get; set; } = s => Debug.WriteLine(s);
+        public static Action<string> LogSqlStatementAction { get; set; } = null;
 
         public static bool UnUnderscoreColumnNames = true;
         public static string GetParameterName(PropertyInfo propertyInfo) => "@" + propertyInfo.Name;
         public static string GetColumnNameFromPropertyInfo(PropertyInfo propertyInfo)
         {
             return UnUnderscoreColumnNames
-                ? propertyInfo.Name.Replace("_", " ").Replace("Property", string.Empty).Bracketize()
-                : propertyInfo.Name.Replace("Property", string.Empty).Bracketize();
+                ? propertyInfo.Name.Replace("_", " ").Replace("Property", String.Empty).Bracketize()
+                : propertyInfo.Name.Replace("Property", String.Empty).Bracketize();
         }
         public static string GetSetClauseParameterName(PropertyInfo propertyInfo) => ("@sc" + propertyInfo.Name);
         public static string GetWhereClauseParameterName(PropertyInfo propertyInfo) => ("@wc" + propertyInfo.Name);
@@ -92,10 +92,33 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
             columnsToIgnore = columnsToIgnore ?? new List<string>();
             var propertyInfos = obj.GetType()
                 .GetProperties()
-                .Where(x => !columnsToIgnore.Contains(x.Name))
-                .Where(x => x.CustomAttributes.All(a => a.AttributeType != typeof(DatabaseGeneratedAttribute)))
+                .Where(x => ShouldTranslateClrPropertyToSqlColumn(x, columnsToIgnore))
                 .ToList();
             return propertyInfos;
+        }
+
+        public static bool ShouldTranslateClrPropertyToSqlColumn(PropertyInfo arg, IEnumerable<string> columnsToIgnore = null)
+        {
+            columnsToIgnore = columnsToIgnore ?? Enumerable.Empty<string>();
+            var inIgnoreList = columnsToIgnore.Contains(arg.Name);
+            if (inIgnoreList)
+                return false;
+
+            var isString = arg.PropertyType == typeof(string);
+            if (isString)
+                return true;
+
+            var implementsEnumerable = arg
+                .PropertyType
+                .GetInterfaces()
+                .Any(interfaceType => interfaceType.Name.ToLower().Equals("ienumerable"));
+
+            var isDatabaseGenerated = arg
+                .CustomAttributes
+                .Any(a => a.AttributeType == typeof (DatabaseGeneratedAttribute));
+
+            var shouldSkip = implementsEnumerable || isDatabaseGenerated;
+            return !shouldSkip;
         }
 
         public static IList<PropertyInfo> GetPropertiesFromObject<T>(T obj, Expression<Func<T, object>> keyProperties)

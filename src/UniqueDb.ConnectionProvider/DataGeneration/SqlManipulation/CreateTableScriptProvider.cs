@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using UniqueDb.ConnectionProvider.DataGeneration.Crud;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
 {
@@ -29,7 +30,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
                 .ToList();
             
             var createPropertiesSegment = clrProperties
-                .Where(ShouldCreateColumnForProperty)
+                .Where(x => SqlTextFunctions.ShouldTranslateClrPropertyToSqlColumn(x))
                 .Select(CreatePropertyInfoWtihAttributes)
                 .Select(PropertyInfoWithAttributeToSqlColumnDeclarationConverter.Convert)
                 .Select(sqlColumnDeclaration => sqlColumnDeclaration.ToString())
@@ -43,19 +44,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
             return createTableScript;
         }
 
-        private static bool ShouldCreateColumnForProperty(PropertyInfo arg)
-        {
-            var isString = arg.PropertyType == typeof (string);
-            if (isString)
-                return true;
-
-            var implementsEnumerable = arg
-                .PropertyType
-                .GetInterfaces()
-                .Any(interfaceType => interfaceType.Name.ToLower().Equals("ienumerable"));
-
-            return !implementsEnumerable;
-        }
+        
 
         private static PropertyInfoWithAttributes CreatePropertyInfoWtihAttributes(PropertyInfo propertyInfo)
         {

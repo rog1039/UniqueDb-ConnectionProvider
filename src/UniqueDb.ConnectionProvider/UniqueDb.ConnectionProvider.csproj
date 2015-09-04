@@ -140,6 +140,7 @@
     <Compile Include="ObjectExtensionMethods.cs" />
     <Compile Include="OldDatabaseDeleter.cs" />
     <Compile Include="RegexExtensions.cs" />
+    <Compile Include="SqlConnectionProviderBulkCopyInsert.cs" />
     <Compile Include="SqlConnectionProviderExtensionMethods.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="StaticSqlConnectionProvider.cs" />

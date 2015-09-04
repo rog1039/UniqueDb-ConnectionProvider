@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
 using Xbehave;
@@ -63,6 +64,7 @@ namespace UniqueDb.ConnectionProvider.Tests
         public DateTime SomeDate { get; set; }
         public bool SomeBoolean { get; set; }
         public SimpleEnum SimpleEnum { get; set; }
+        public List<int> SomeListOfInts { get; set; }
 
         public static SimpleClass GetSample()
         {

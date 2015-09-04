@@ -14,5 +14,11 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         {
             return sqlConnectionProvider.GetSqlConnection().Query<T>(script);
         }
+
+        public static void BulkInsert<T>(this ISqlConnectionProvider sqlConnectionProvider, IList<T> list,
+                                         string tableName, string schemaName = "dbo")
+        {
+            SqlConnectionProviderBulkCopyInsert.BulkInsert(sqlConnectionProvider, list, tableName, schemaName);
+        }
     }
 }
