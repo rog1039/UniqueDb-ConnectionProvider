@@ -55,7 +55,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
             {
                 return "string";
             }
-            if (typeName == "Boolean")
+            if (typeName == "Bit")
             {
                 return "bool";
             }

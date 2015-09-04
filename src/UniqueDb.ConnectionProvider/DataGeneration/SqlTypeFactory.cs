@@ -12,9 +12,9 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         /****   Exact Numerics   ****/
 
-        public static SqlType Boolean()
+        public static SqlType Bit()
         {
-            return SqlType.Type("boolean");
+            return SqlType.Type("bit");
         }
         public static SqlTypeNumberBase TinyInt()
         {

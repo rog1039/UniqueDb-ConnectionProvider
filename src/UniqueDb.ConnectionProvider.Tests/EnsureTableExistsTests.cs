@@ -1,3 +1,4 @@
+using System;
 using FluentAssertions;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
 using Xbehave;
@@ -59,5 +60,7 @@ namespace UniqueDb.ConnectionProvider.Tests
     {
         public int Id { get; set; }
         public string Property { get; set; }
+        public DateTime SomeDate { get; set; }
+        public bool SomeProperty { get; set; }
     }
 }

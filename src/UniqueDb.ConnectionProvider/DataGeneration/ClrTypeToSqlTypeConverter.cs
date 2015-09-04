@@ -13,7 +13,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             { "char[]", SqlTypeFactory.NVarChar(new SqlTextualDataTypeOptions(4000)) },
 
             //Numeric
-            { "boolean", SqlTypeFactory.Boolean() },
+            { "boolean", SqlTypeFactory.Bit() },
             { "byte", SqlTypeFactory.TinyInt() },
             { "int16", SqlTypeFactory.SmallInt() },
             { "int32", SqlTypeFactory.Int() },
