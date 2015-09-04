@@ -13,7 +13,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         public static void DropTable(SqlTableReference table)
         {
-            var dropTableScript = SqlDmlDropTableFromInformationSchemaGenerator.GenerateDropTableScript(table);
+            var dropTableScript = DropSqlTableReference.GenerateDropTableScript(table);
             table.SqlConnectionProvider.Execute(dropTableScript);
         }
     }

@@ -81,9 +81,20 @@ namespace UniqueDb.ConnectionProvider
             var connection = connectionProvider.GetSqlConnection();
             connection.Open();
             var command = new SqlCommand(sqlCommand, connection);
-            var result = (T)command.ExecuteScalar();
+            var result = ConvertFromDBVal<T>(command.ExecuteScalar());
             connection.Dispose();
             return result;
+        }
+        public static T ConvertFromDBVal<T>(object obj)
+        {
+            if (obj == null || obj == DBNull.Value)
+            {
+                return default(T); // returns the default value for the type
+            }
+            else
+            {
+                return (T)obj;
+            }
         }
 
         public static string GenerateClassFromQuery(this ISqlConnectionProvider sqlConnectionProvider, string sqlQuery,

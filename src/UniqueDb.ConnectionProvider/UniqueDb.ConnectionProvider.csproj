@@ -91,6 +91,7 @@
     <Compile Include="DataGeneration\DataAnnotationAttributeHandler.cs" />
     <Compile Include="DataGeneration\PropertyInfoWithAttributeToSqlColumnDeclarationConverter.cs" />
     <Compile Include="DataGeneration\SqlManipulation\CreateTableScriptProvider.cs" />
+    <Compile Include="DataGeneration\SqlManipulation\ExtensionMethods.cs" />
     <Compile Include="DataGeneration\SqlManipulation\PropertyInfoWithAttributes.cs" />
     <Compile Include="DataGeneration\SqlMetadata\AdoSchemaTableHelper.cs" />
     <Compile Include="DataGeneration\CSharpPropertyTextGenerator.cs" />
@@ -118,7 +119,7 @@
     <Compile Include="DataGeneration\DescribeResultSetRowToSqlColumnConverter.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\CSharpPropertyFactoryFromSqlColumn.cs" />
     <Compile Include="DataGeneration\SqlManipulation\SqlDmlCreateTableFromInformationSchemaGenerator.cs" />
-    <Compile Include="DataGeneration\SqlManipulation\SqlDmlDropTableFromInformationSchemaGenerator.cs" />
+    <Compile Include="DataGeneration\SqlManipulation\DropSqlTableReference.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\CSharpPropertyFactoryFromAdoDataReader.cs" />
     <Compile Include="DataGeneration\SqlType.cs" />
     <Compile Include="DataGeneration\SqlTypeFactory.cs" />

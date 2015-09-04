@@ -8,19 +8,19 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
 {
     public class CreateTableScriptProvider
     {
-        public static string GetCreateTableScript<T>(string tableName = null)
+        public static string GetCreateTableScript<T>(string schemaName = "dbo", string tableName = null)
         {
             var objectType = typeof(T);
-            return GetCreateTableScript(objectType, tableName);
+            return GetCreateTableScript(objectType, schemaName, tableName);
         }
 
-        public static string GetCreateTableScript(object obj, string tableName = null)
+        public static string GetCreateTableScript(object obj, string schemaName = "dbo", string tableName = null)
         {
             var objectType = obj.GetType();
-            return GetCreateTableScript(objectType, tableName);
+            return GetCreateTableScript(objectType, schemaName, tableName);
         }
 
-        public static string GetCreateTableScript(Type objectType, string tableName = null)
+        public static string GetCreateTableScript(Type objectType, string schemaName, string tableName = null)
         {
             tableName = tableName ?? objectType.Name;
 
@@ -35,7 +35,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
                 .Select(sqlColumnDeclaration => sqlColumnDeclaration.ToString())
                 .StringJoin(",\r\n   ");
 
-            var createTableScript = $"CREATE TABLE {tableName} " +
+            var createTableScript = $"CREATE TABLE {schemaName}.{tableName} " +
                                     $"(\r\n   " +
                                     $"{createPropertiesSegment} " +
                                     $"\r\n);";

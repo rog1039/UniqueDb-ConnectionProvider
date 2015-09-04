@@ -130,6 +130,7 @@
     <Compile Include="DataGeneration\SqlTypeFactoryTests.cs" />
     <Compile Include="DataGeneration\TableManipulationTests.cs" />
     <Compile Include="DataGeneration\TimeoutAttribute.cs" />
+    <Compile Include="EnsureTableExistsTests.cs" />
     <Compile Include="OldDatabaseDeleterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegexExtensionTests.cs" />
