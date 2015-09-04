@@ -51,6 +51,10 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
             sqlConnectionProvider.Execute(dropScript);
         }
 
+        public static void TruncateTable<T>(this ISqlConnectionProvider sqlConnectionProvider, string schema)
+        {
+            EnsureTableExists<T>(sqlConnectionProvider, schema, typeof(T).Name);
+        }
 
         public static void TruncateTable(this SqlTableReference tableReference)
         {
