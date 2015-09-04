@@ -65,6 +65,8 @@ namespace UniqueDb.ConnectionProvider.Tests
         public bool SomeBoolean { get; set; }
         public SimpleEnum SimpleEnum { get; set; }
         public List<int> SomeListOfInts { get; set; }
+        public Nullable<int> SomeNullableIntWithNullValue { get; set; }
+        public Nullable<int> SomeNullableIntWithValue { get; set; }
 
         public static SimpleClass GetSample()
         {
@@ -74,7 +76,10 @@ namespace UniqueDb.ConnectionProvider.Tests
                 Id = 10,
                 SomeString = "alskdfjals",
                 SomeDate = new DateTime(1,1,1),
-                SomeBoolean = false
+                SomeBoolean = false,
+                SomeNullableIntWithNullValue = null,
+                SomeNullableIntWithValue = 42,
+                SomeListOfInts = new List<int>() { 1,2,3}
             };
             return simpleClass;
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -29,9 +30,19 @@ namespace UniqueDb.ConnectionProvider
             for (int index = 0; index < propertiesToInsert.Count; index++)
             {
                 var propertyInfo = propertiesToInsert[index];
-                dataTable.Columns.Add(propertyInfo.Name, propertyInfo.PropertyType);
+                var type = GetUnderlyingNullableTypeIfNullable(propertyInfo.PropertyType);
+                dataTable.Columns.Add(propertyInfo.Name, type);
             }
             return dataTable;
+        }
+
+        private static Type GetUnderlyingNullableTypeIfNullable(Type propertyType)
+        {
+            if (propertyType.IsGenericType && propertyType.Name.ToLower().Contains("nullable"))
+            {
+                return Nullable.GetUnderlyingType(propertyType);
+            }
+            return propertyType;
         }
 
         private static void PopulateDataTable<T>(IList<T> list, DataTable dataTable, List<PropertyInfo> propertiesToInsert)
@@ -49,7 +60,7 @@ namespace UniqueDb.ConnectionProvider
             for (int index = 0; index < propertiesToInsert.Count; index++)
             {
                 var propertyInfo = propertiesToInsert[index];
-                row[index] = propertyInfo.GetValue(item);
+                row[index] = propertyInfo.GetValue(item) ?? DBNull.Value;
             }
             return row;
         }

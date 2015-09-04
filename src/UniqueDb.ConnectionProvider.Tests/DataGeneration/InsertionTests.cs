@@ -26,16 +26,16 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             using (var lifecycle = connectionProvider.ToDisposable())
             {
                 BddStringExtensions._("Create the table", () =>
-                    {
-                        connectionProvider.EnsureTableExists<SimpleClass>("dbo", "SimpleClass");
-                    });
+                {
+                    connectionProvider.EnsureTableExists<SimpleClass>("dbo", "SimpleClass");
+                });
                 BddStringExtensions._("Insert into the table", () =>
                 {
                     connectionProvider.Insert(SimpleClass.GetSample(), "SimpleClass");
                 });
             }
         }
-        
+
         [Scenario]
         public void SlowBulkInsertSimpleClass()
         {

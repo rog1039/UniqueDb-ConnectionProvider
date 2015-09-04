@@ -64,6 +64,10 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
             {
                 sqlParameter.DbType = DbType.DateTime2;
             }
+            if (sqlParameter.Value == null)
+            {
+                sqlParameter.Value = DBNull.Value;
+            }
             return sqlParameter;
         }
 
