@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -31,7 +30,8 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
             
             var createPropertiesSegment = clrProperties
                 .Where(ShouldCreateColumnForProperty)
-                .Select(PropertyInfoToSqlColumnDeclarationConverter.Convert)
+                .Select(CreatePropertyInfoWtihAttributes)
+                .Select(PropertyInfoWithAttributeToSqlColumnDeclarationConverter.Convert)
                 .Select(sqlColumnDeclaration => sqlColumnDeclaration.ToString())
                 .StringJoin(",\r\n   ");
 
@@ -55,6 +55,17 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
                 .Any(interfaceType => interfaceType.Name.ToLower().Equals("ienumerable"));
 
             return !implementsEnumerable;
+        }
+
+        private static PropertyInfoWithAttributes CreatePropertyInfoWtihAttributes(PropertyInfo propertyInfo)
+        {
+            var attributes = propertyInfo
+                .GetCustomAttributes(false)
+                .Where(att => att.GetType().Namespace?.Contains("System.ComponentModel.DataAnnotations") ?? false)
+                .ToList();
+
+            var result = new PropertyInfoWithAttributes(propertyInfo, attributes);
+            return result;
         }
     }
 }
