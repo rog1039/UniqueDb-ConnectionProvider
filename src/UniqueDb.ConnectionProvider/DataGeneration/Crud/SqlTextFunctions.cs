@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -19,7 +20,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
             LogSqlStatementAction?.Invoke(sqlStatement);
         }
 
-        public static Action<string> LogSqlStatementAction { get; set; } = null;
+        public static Action<string> LogSqlStatementAction { get; set; } = s => Debug.WriteLine(s);
 
         public static bool UnUnderscoreColumnNames = true;
         public static string GetParameterName(PropertyInfo propertyInfo) => "@" + propertyInfo.Name;
