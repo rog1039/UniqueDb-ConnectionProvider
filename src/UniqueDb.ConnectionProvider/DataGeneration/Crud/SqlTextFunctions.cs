@@ -54,7 +54,14 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
             }
             if (propertyInfo.PropertyType == typeof(SqlHierarchyId))
             {
-                sqlParameter.SqlValue = propertyInfo.GetValue(obj, null);
+                if (propertyInfo.PropertyType.IsEnum)
+                {
+                    sqlParameter.SqlValue = (int)propertyInfo.GetValue(obj, null);
+                }
+                else
+                {
+                    sqlParameter.SqlValue = propertyInfo.GetValue(obj, null);
+                }
             }
             return sqlParameter;
         }
@@ -64,6 +71,10 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
             if (propertyInfo.PropertyType.IsGenericType)
             {
                 return Nullable.GetUnderlyingType(propertyInfo.PropertyType);
+            }
+            if (propertyInfo.PropertyType.IsEnum)
+            {
+                return typeof(int);
             }
             return propertyInfo.PropertyType;
         }

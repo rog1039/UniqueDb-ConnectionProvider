@@ -1,14 +1,20 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using FluentAssertions;
+using UniqueDb.ConnectionProvider.DataGeneration.Crud;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
 using Xbehave;
 
-namespace UniqueDb.ConnectionProvider.Tests
+namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 {
-    public class EnsureTableExistsTests
+    public class AutofixtureInsertionTests2
     {
+
         [Scenario]
-        public void ShouldDispose()
+        public void InsertSimpleClass()
         {
             var options = new UniqueDbConnectionProviderOptions("ws2012sqlexp1\\sqlexpress", "autodisposedatabase");
             var connectionProvider = new UniqueDbConnectionProvider(options);
@@ -18,71 +24,40 @@ namespace UniqueDb.ConnectionProvider.Tests
 
             using (var lifecycle = connectionProvider.ToDisposable())
             {
-                "Make sure the table doesn't exist"
-                    ._(() =>
+                BddStringExtensions._("Make sure the table doesn't exist", () =>
                     {
                         var doesTableExist = connectionProvider.CheckTableExistence("dbo", "SimpleClass");
                         doesTableExist.Should().BeFalse();
                     });
-                "Create the table"
-                    ._(() =>
+                BddStringExtensions._("Create the table", () =>
                     {
                         connectionProvider.EnsureTableExists<SimpleClass>("dbo", "SimpleClass");
                     });
-                "Make sure the table does exist"
-                    ._(() =>
+                BddStringExtensions._("Make sure the table does exist", () =>
                     {
                         var doesTableExist = connectionProvider.CheckTableExistence("dbo", "SimpleClass");
                         doesTableExist.Should().BeTrue();
                     });
-                "Truncate the table"
-                    ._(() =>
+                BddStringExtensions._("Truncate the table", () =>
                     {
                         connectionProvider.TruncateTable("dbo", "SimpleClass");
                     });
 
-                "Delete the table"
-                    ._(() =>
+                BddStringExtensions._("Insert into the table", () =>
+                {
+                    connectionProvider.Insert(SimpleClass.GetSample(), "SimpleClass");
+                });
+
+                BddStringExtensions._("Delete the table", () =>
                     {
                         connectionProvider.DropTable("dbo", "SimpleClass");
                     });
-                "Make sure the table doesn't exist"
-                    ._(() =>
+                BddStringExtensions._("Make sure the table doesn't exist", () =>
                     {
                         var doesTableExist = connectionProvider.CheckTableExistence("dbo", "SimpleClass");
                         doesTableExist.Should().BeFalse();
                     });
             }
         }
-    }
-
-    public class SimpleClass
-    {
-        public int Id { get; set; }
-        public string SomeString { get; set; }
-        public DateTime SomeDate { get; set; }
-        public bool SomeBoolean { get; set; }
-        public SimpleEnum SimpleEnum { get; set; }
-
-        public static SimpleClass GetSample()
-        {
-            var simpleClass = new SimpleClass()
-            {
-                SimpleEnum = SimpleEnum.ValueOne,
-                Id = 10,
-                SomeString = "alskdfjals",
-                SomeDate = DateTime.Now,
-                SomeBoolean = false
-            };
-            return simpleClass;
-        }
-
-    }
-
-    public enum SimpleEnum
-    {
-        ValueOne,
-        ValueTwo,
-        ValueThree
     }
 }

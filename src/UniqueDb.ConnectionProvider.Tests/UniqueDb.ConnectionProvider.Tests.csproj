@@ -110,6 +110,7 @@
     <Compile Include="DataGeneration\AdoSchemaTableHelperTests.cs" />
     <Compile Include="DataGeneration\AdventureWorks\GeneratedClasses.cs" />
     <Compile Include="DataGeneration\AutofixtureInsertionTests.cs" />
+    <Compile Include="DataGeneration\AutofixtureInsertionTests2.cs" />
     <Compile Include="DataGeneration\AutoFixtureUpdateTests.cs" />
     <Compile Include="DataGeneration\CompileResults.cs" />
     <Compile Include="DataGeneration\ConversionWorkspace.cs" />
