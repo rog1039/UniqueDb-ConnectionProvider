@@ -71,7 +71,7 @@ namespace UniqueDb.ConnectionProvider.Tests
                 SimpleEnum = SimpleEnum.ValueOne,
                 Id = 10,
                 SomeString = "alskdfjals",
-                SomeDate = DateTime.Now,
+                SomeDate = new DateTime(1,1,1),
                 SomeBoolean = false
             };
             return simpleClass;

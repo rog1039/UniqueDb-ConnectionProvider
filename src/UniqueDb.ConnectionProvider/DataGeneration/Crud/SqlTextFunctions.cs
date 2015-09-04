@@ -54,14 +54,15 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
             }
             if (propertyInfo.PropertyType == typeof(SqlHierarchyId))
             {
-                if (propertyInfo.PropertyType.IsEnum)
-                {
-                    sqlParameter.SqlValue = (int)propertyInfo.GetValue(obj, null);
-                }
-                else
-                {
-                    sqlParameter.SqlValue = propertyInfo.GetValue(obj, null);
-                }
+                sqlParameter.SqlValue = propertyInfo.GetValue(obj, null);
+            }
+            if (propertyInfo.PropertyType.IsEnum)
+            {
+                sqlParameter.SqlValue = (int)propertyInfo.GetValue(obj, null);
+            }
+            else if (propertyInfo.PropertyType == typeof(DateTime))
+            {
+                sqlParameter.DbType = DbType.DateTime2;
             }
             return sqlParameter;
         }
