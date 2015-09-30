@@ -66,7 +66,8 @@ namespace UniqueDb.ConnectionProvider.Tests
         public SimpleEnum SimpleEnum { get; set; }
         public List<int> SomeListOfInts { get; set; }
         public Nullable<int> SomeNullableIntWithNullValue { get; set; }
-        public Nullable<int> SomeNullableIntWithValue { get; set; }
+        public int? SomeNullableIntWithValue { get; set; }
+        public DateTime? SomeNullableDateTime { get; set; }
 
         public static SimpleClass GetSample()
         {
@@ -75,11 +76,12 @@ namespace UniqueDb.ConnectionProvider.Tests
                 SimpleEnum = SimpleEnum.ValueOne,
                 Id = 10,
                 SomeString = "alskdfjals",
-                SomeDate = new DateTime(1,1,1),
+                SomeDate = new DateTime(1, 1, 1),
                 SomeBoolean = false,
                 SomeNullableIntWithNullValue = null,
                 SomeNullableIntWithValue = 42,
-                SomeListOfInts = new List<int>() { 1,2,3}
+                SomeListOfInts = new List<int>() { 1, 2, 3 },
+                SomeNullableDateTime = null
             };
             return simpleClass;
         }

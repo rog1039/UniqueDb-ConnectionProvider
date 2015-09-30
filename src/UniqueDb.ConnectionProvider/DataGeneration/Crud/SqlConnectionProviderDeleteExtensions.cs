@@ -23,7 +23,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
                     SqlTextFunctions.UnUnderscoreColumnNames = true;
 
                     myConnection.Open();
-                    SqlTextFunctions.LogSqlStatement(myCommand.CommandText);
+                    SqlLogger.LogSqlStatement(myCommand.CommandText);
                     myCommand.ExecuteNonQuery();
                     myConnection.Close();
                 }
@@ -32,7 +32,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
 
         private static void BuildOutMyCommand<T>(T objToDelete, Expression<Func<T, object>> keyProperties, string tableName, SqlCommand myCommand)
         {
-            var whereClauseProperties = SqlTextFunctions.GetPropertiesFromObject(objToDelete, keyProperties);
+            var whereClauseProperties = SqlClrHelpers.GetPropertiesFromObject(objToDelete, keyProperties);
             var whereClauseColumnNames = whereClauseProperties.Select(SqlTextFunctions.GetColumnNameFromPropertyInfo).ToList();
             var whereClauseParameterNames = whereClauseProperties.Select(SqlTextFunctions.GetParameterName).ToList();
             var whereClauseParts = Enumerable

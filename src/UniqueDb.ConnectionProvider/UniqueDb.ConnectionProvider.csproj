@@ -69,7 +69,10 @@
     <Compile Include="DataGeneration\AutomaticPropertyNameRewrites.cs" />
     <Compile Include="DataGeneration\ClrAccessModifier.cs" />
     <Compile Include="DataGeneration\ClrTypeToSqlTypeConverter.cs" />
+    <Compile Include="DataGeneration\Crud\SqlClrHelpers.cs" />
     <Compile Include="DataGeneration\Crud\SqlConnectionProviderDeleteExtensions.cs" />
+    <Compile Include="DataGeneration\Crud\SqlConnectionProviderUpdateExtensions.cs" />
+    <Compile Include="DataGeneration\Crud\SqlLogger.cs" />
     <Compile Include="DataGeneration\Crud\SqlTextFunctions.cs" />
     <Compile Include="DataGeneration\Crud\SqlValueEncoder.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\CSharpClassGeneratorFromQueryViaSqlDescribeResultSet.cs" />

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -28,25 +31,79 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
             var clrProperties = objectType
                 .GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 .ToList();
+            clrProperties = OrderByColumnNumber(clrProperties);
             
             var createPropertiesSegment = clrProperties
-                .Where(x => SqlTextFunctions.ShouldTranslateClrPropertyToSqlColumn(x))
-                .Select(CreatePropertyInfoWtihAttributes)
+                .Where(x => SqlClrHelpers.ShouldTranslateClrPropertyToSqlColumn(x))
+                .Select(CreatePropertyInfoWithAttributes)
                 .Select(PropertyInfoWithAttributeToSqlColumnDeclarationConverter.Convert)
                 .Select(sqlColumnDeclaration => sqlColumnDeclaration.ToString())
                 .StringJoin(",\r\n   ");
 
+
+            var primaryKeySegment = GetPrimaryKeySegment(objectType, tableName);
+
             var createTableScript = $"CREATE TABLE {schemaName}.{tableName} " +
                                     $"(\r\n   " +
-                                    $"{createPropertiesSegment} " +
-                                    $"\r\n);";
+                                    $"{createPropertiesSegment}" +
+                                    $"{primaryKeySegment}" +
+                                    $");";
 
             return createTableScript;
         }
 
-        
+        private static string GetPrimaryKeySegment(Type objectType, string tableName)
+        {
+            var keyProperties = GetKeyProperties(objectType);
+            if (keyProperties.Count == 0)
+                return String.Empty;
 
-        private static PropertyInfoWithAttributes CreatePropertyInfoWtihAttributes(PropertyInfo propertyInfo)
+            var primaryKeyConstraintName = $"PK_{tableName}";
+            var keyColumnSegments = keyProperties.Select(kp => $"[{kp}] ASC");
+            var keyColumnSegment = string.Join(",\r\n", keyColumnSegments);
+
+            var completePrimaryKeySegment = $",\r\n\r\nCONSTRAINT [{primaryKeyConstraintName}] PRIMARY KEY CLUSTERED" +
+                                            $"(\r\n" +
+                                            $"{keyColumnSegment}" +
+                                            $"\r\n)\r\n";
+            return completePrimaryKeySegment;
+        }
+
+        private static IList<string> GetKeyProperties(Type objectType)
+        {
+            var keyProperties = objectType
+                .GetProperties()
+                .Where(x => x.GetCustomAttribute<KeyAttribute>() != null)
+                .Select(x => x.Name)
+                .ToList();
+            return keyProperties;
+        }
+
+        private static List<PropertyInfo> OrderByColumnNumber(List<PropertyInfo> clrProperties)
+        {
+            var props = clrProperties
+                .Select(
+                    (info, i) =>
+                        new
+                        {
+                            Property = info,
+                            ClrPropertyOrder = i,
+                            ColumnOrderAttributeOrder = GetColumnAttributeOrder(info)
+                        })
+                .OrderByDescending(z => z.ColumnOrderAttributeOrder.HasValue)
+                .ThenBy(z => z.ColumnOrderAttributeOrder)
+                .ThenBy(z => z.ClrPropertyOrder)
+                .ToList();
+            return props.Select(z => z.Property).ToList();
+        }
+
+        private static int? GetColumnAttributeOrder(PropertyInfo info)
+        {
+            var columnOrder = info.GetCustomAttribute<ColumnAttribute>()?.Order;
+            return columnOrder;
+        }
+
+        private static PropertyInfoWithAttributes CreatePropertyInfoWithAttributes(PropertyInfo propertyInfo)
         {
             var attributes = propertyInfo
                 .GetCustomAttributes(false)

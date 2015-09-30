@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
@@ -45,11 +46,17 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 
     public class SampleClassToCreateTableFor
     {
+        [Key]
+        [Column(Order = 100)]
+        public int OrderLineNumber { get; set; }
         public TestEnum TestEnum { get; set; }
         public IList<int> SomeList { get; set; }
         [StringLength(20)]
         [MaxLength(10)]
         public string SomeString { get; set; }
+        [Key]
+        [Column(Order=10)]
+        public int OrderNumber { get; set; }
     }
 
     public enum TestEnum

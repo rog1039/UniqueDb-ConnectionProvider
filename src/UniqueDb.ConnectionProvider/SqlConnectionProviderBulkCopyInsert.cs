@@ -18,7 +18,7 @@ namespace UniqueDb.ConnectionProvider
 
         private static DataTable CreateDataTable<T>(IList<T> list)
         {
-            var propertiesToInsert = SqlTextFunctions.GetRelevantPropertyInfos(list[0], null);
+            var propertiesToInsert = SqlClrHelpers.GetRelevantPropertyInfos(list[0], null);
             var dataTable = CreateDataTable(propertiesToInsert);
             PopulateDataTable(list, dataTable, propertiesToInsert);
             return dataTable;

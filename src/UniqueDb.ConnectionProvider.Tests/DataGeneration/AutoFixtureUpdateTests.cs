@@ -20,7 +20,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         [Trait("Category", "Integration")]
         public void SimpleUpdateTest()
         {
-            SqlTextFunctions.LogSqlStatementAction = s =>
+            SqlLogger.LogSqlStatementAction = s =>
             {
                 if (PrintDebug)
                 {
