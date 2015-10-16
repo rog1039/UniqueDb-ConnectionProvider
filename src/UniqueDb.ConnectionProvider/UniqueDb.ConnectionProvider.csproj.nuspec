@@ -13,7 +13,6 @@
     <dependencies>
       <dependency id="Dapper" version="1.40" />
       <dependency id="FluentAssertions" version="3.5.0" />
-      <dependency id="Microsoft.SqlServer.Types" version="11.0.2" />
       <dependency id="Newtonsoft.Json" version="7.0.1" />
     </dependencies>
   </metadata>
