@@ -8,7 +8,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Xml.Linq;
-using Microsoft.SqlServer.Types;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
 {
@@ -43,10 +42,6 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
                 sqlParameter.DbType = DbType.Xml;
                 var xElement = (XElement)propertyInfo.GetValue(obj, null);
                 sqlParameter.Value = new SqlXml(xElement.CreateReader());
-            }
-            if (propertyInfo.PropertyType == typeof(SqlHierarchyId))
-            {
-                sqlParameter.SqlValue = propertyInfo.GetValue(obj, null);
             }
             if (propertyInfo.PropertyType.IsEnum)
             {

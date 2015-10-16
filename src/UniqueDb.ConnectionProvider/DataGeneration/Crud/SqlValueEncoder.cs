@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using Microsoft.SqlServer.Types;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
 {
@@ -34,10 +33,6 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
                 return $"'{dateTimeString}'";
             }
             if (value is Guid)
-            {
-                return $"'{value}'";
-            }
-            if (value is SqlGeography)
             {
                 return $"'{value}'";
             }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using Microsoft.SqlServer.Types;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
@@ -60,7 +59,6 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             typeof(byte), typeof(byte[]),
             typeof(DateTime), typeof(TimeSpan),
             typeof(string), typeof(Guid),
-            typeof(SqlHierarchyId),
             typeof(XElement),
 
         };
