@@ -43,5 +43,7 @@ namespace UniqueDb.ConnectionProvider
             }
             return builder;
         }
+
+        public static ISqlConnectionProvider Blank => new StaticSqlConnectionProvider("","");
     }
 }
