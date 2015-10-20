@@ -136,9 +136,11 @@
     <Compile Include="DataGeneration\Table_Types.cs" />
     <Compile Include="ISqlConnectionProvider.cs" />
     <Compile Include="MemberwiseDeepCopy.cs" />
+    <Compile Include="MyStringUtils.cs" />
     <Compile Include="ObjectExtensionMethods.cs" />
     <Compile Include="OldDatabaseDeleter.cs" />
     <Compile Include="RegexExtensions.cs" />
+    <Compile Include="SearchNotFoundOption.cs" />
     <Compile Include="SqlConnectionProviderBulkCopyInsert.cs" />
     <Compile Include="SqlConnectionProviderExtensionMethods.cs" />
     <Compile Include="StaticSqlConnectionProvider.cs" />

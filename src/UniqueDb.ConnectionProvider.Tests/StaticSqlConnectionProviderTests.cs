@@ -1,6 +1,8 @@
 using System;
+using System.Runtime.InteropServices.ComTypes;
 using FluentAssertions;
 using Xbehave;
+using Xunit;
 
 namespace UniqueDb.ConnectionProvider.Tests
 {
@@ -45,6 +47,27 @@ namespace UniqueDb.ConnectionProvider.Tests
                     connectionString.Contains(username).Should().BeFalse();
                     connectionString.Contains(password).Should().BeFalse();
                 });
+        }
+    }
+
+    public class BaseSqlConnectionProvider_ServerAndInstanceName_Tests
+    {
+        [Theory]
+        [Trait("Category", "Instant")]
+        [InlineData("server\\instance", "server", "instance")]
+        [InlineData("server", "server", "")]
+        [InlineData("server\\", "server", "")]
+        public void TestVariousServerInstanceNames(string server, string serverName, string instanceName)
+        {
+            var scp = GetConnectionProvider(server);
+            scp.JustServerName.Should().Be(serverName);
+            scp.JustInstanceName.Should().Be(instanceName);
+        }
+
+        private ISqlConnectionProvider GetConnectionProvider(string server)
+        {
+            return new StaticSqlConnectionProvider(server, "");
+
         }
     }
 }
