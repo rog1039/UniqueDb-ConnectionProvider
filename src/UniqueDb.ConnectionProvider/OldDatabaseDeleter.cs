@@ -56,7 +56,7 @@ namespace UniqueDb.ConnectionProvider
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    LoggerHelper.Log(e.ToString());
                 }
             }
             return oldDatabases;
@@ -68,5 +68,6 @@ namespace UniqueDb.ConnectionProvider
             DatabaseDeleter.DeleteDatabase(staticSqlConnectionProvider);
         }
 
+        
     }
 }

@@ -135,6 +135,7 @@
     <Compile Include="DataGeneration\TableParserExtensions.cs" />
     <Compile Include="DataGeneration\Table_Types.cs" />
     <Compile Include="ISqlConnectionProvider.cs" />
+    <Compile Include="LoggerHelper.cs" />
     <Compile Include="MemberwiseDeepCopy.cs" />
     <Compile Include="MyStringUtils.cs" />
     <Compile Include="ObjectExtensionMethods.cs" />

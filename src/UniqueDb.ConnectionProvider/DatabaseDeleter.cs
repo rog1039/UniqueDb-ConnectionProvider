@@ -32,7 +32,7 @@ namespace UniqueDb.ConnectionProvider
             catch (Exception e)
             {
                 //Ignored...
-                Console.WriteLine(e);
+                LoggerHelper.Log(e.ToString());
             }
         }
     }
