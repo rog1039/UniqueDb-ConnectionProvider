@@ -70,4 +70,19 @@ namespace UniqueDb.ConnectionProvider.Tests
 
         }
     }
+
+    public class ServerInstanceNameTests
+    {
+        [Theory]
+        [Trait("Category", "Instant")]
+        [InlineData("server\\instance", "server", "instance")]
+        [InlineData("server", "server", "")]
+        [InlineData("server\\", "server", "")]
+        public void ParseTests(string server, string serverName, string instanceName)
+        {
+            var serverInstanceName = ServerInstanceName.Parse(server);
+            serverInstanceName.ServerName.Should().Be(serverName);
+            serverInstanceName.InstanceName.Should().Be(instanceName);
+        }
+    }
 }

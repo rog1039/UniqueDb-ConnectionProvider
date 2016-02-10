@@ -142,6 +142,7 @@
     <Compile Include="OldDatabaseDeleter.cs" />
     <Compile Include="RegexExtensions.cs" />
     <Compile Include="SearchNotFoundOption.cs" />
+    <Compile Include="ServerInstanceName.cs" />
     <Compile Include="SqlConnectionProviderBulkCopyInsert.cs" />
     <Compile Include="SqlConnectionProviderExtensionMethods.cs" />
     <Compile Include="StaticSqlConnectionProvider.cs" />
