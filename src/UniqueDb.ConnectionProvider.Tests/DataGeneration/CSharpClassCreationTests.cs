@@ -87,6 +87,59 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 
     public class CSharpClassCreationTests
     {
+
+        [Fact()]
+        [Trait("Category", "Integration")]
+        public void CreateClassFromSqlTableReferenceForActualUseWhenNeedingToGenerateCSharpClasses()
+        {
+            var sqlTableReference = new SqlTableReference(new StaticSqlConnectionProvider("WS2012sqlexp1\\sqlexpress", "PbsiCopy"), "dbo.MTDINV_LINE");
+            var sqlTable = SqlTableFactory.Create(sqlTableReference);
+            var cSharpClass = CSharpClassGeneratorFromSqlTable.GenerateClass(sqlTable);
+            Console.WriteLine(cSharpClass);
+        }
+
+        [Fact()]
+        [Trait("Category", "Integration")]
+        public void CreateClassFromSqlForActualUseWhenNeedingToGenerateCSharpClasses()
+        {
+            var sql = @"
+select im.PbsiItemNumber, im.EpicorItemNumber, i.StockWeight, i.ItemDescription, i.ItemDescription2, i.ItemDescription3
+    from ItemMaps im
+  join Items i on im.PbsiItemNumber = i.ItemNumber
+";
+
+            var sqlConnProvider =
+                new StaticSqlConnectionProvider("WS2012sqlexp1\\sqlexpress", "PbsiDatabase");
+            var cSharpClass = CSharpClassGeneratorFromQueryViaSqlDescribeResultSet.GenerateClass(sqlConnProvider, sql, "TruckOrderRecordDto");
+            Console.WriteLine(cSharpClass);
+        }
+
+        [Fact()]
+        [Trait("Category", "Integration")]
+        public void CreateClassFromSqlForActualUseWhenNeedingToGenerateCSharpClasses_UsingEpicorTest905()
+        {
+            var sql = @"  SELECT
+  pb.Company
+ ,pb.BinNum
+ ,pb.PartNum as EpicorPartNumber
+ ,CASE 
+    WHEN SUM(pb.OnhandQty) IS NULL THEN 0
+    ELSE  SUM(pb.OnhandQty)
+  END as OnHandQty
+ ,pb.DimCode
+FROM PartBin pb
+WHERE pb.WarehouseCode = 'DC' and pb.binnum = 'S1'
+GROUP BY pb.Company
+        ,PartNum
+        ,pb.BinNum
+        ,pb.DimCode";
+
+            var sqlConnProvider =
+                new StaticSqlConnectionProvider("epicor905", "EpicorTest905");
+            var cSharpClass = CSharpClassGeneratorFromAdoDataReader.GenerateClass(sqlConnProvider, sql, "EpicorItemInventory");
+            Console.WriteLine(cSharpClass);
+        }
+
         private const string TableName = "HumanResources.Employee";
 
         [Fact()]
