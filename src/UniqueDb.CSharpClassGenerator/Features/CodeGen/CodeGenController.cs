@@ -20,27 +20,27 @@ namespace UniqueDb.CSharpClassGenerator.Features.CodeGen
         public ReactiveProperty<string> SqlQuery { get; } = new ReactiveProperty<string>();
         public ReactiveProperty<string> GeneratedCode { get; } = new ReactiveProperty<string>();
 
-        public DelegateCommand<object> GenerateCodeCommand { get; private set; }
-        public DelegateCommand<object> CopyCodeCommand { get; private set; }
+        public DelegateCommand GenerateCodeCommand { get; private set; }
+        public DelegateCommand CopyCodeCommand { get; private set; }
 
         public CodeGenController()
         {
-            CopyCodeCommand = new DelegateCommand<object>(CopyCode, CanCopyCode);
-            GenerateCodeCommand = new DelegateCommand<object>(GenerateCode, CanGenerateCode);
+            CopyCodeCommand = new DelegateCommand(CopyCode, CanCopyCode);
+            GenerateCodeCommand = new DelegateCommand(GenerateCode, CanGenerateCode);
             SelectedSqlConnection.Value = SqlConnections.Skip(1).First();
         }
 
-        private void CopyCode(object obj)
+        private void CopyCode()
         {
             Clipboard.SetText(GeneratedCode.Value);
         }
 
-        private bool CanCopyCode(object arg)
+        private bool CanCopyCode()
         {
             return !string.IsNullOrWhiteSpace(GeneratedCode.Value);
         }
 
-        private void GenerateCode(object o)
+        private void GenerateCode()
         {
             try
             {
@@ -54,7 +54,7 @@ namespace UniqueDb.CSharpClassGenerator.Features.CodeGen
             }
         }
 
-        private bool CanGenerateCode(object o)
+        private bool CanGenerateCode()
         {
             return SelectedSqlConnection.Value != null 
                 && !string.IsNullOrWhiteSpace(ClassName.Value) 
