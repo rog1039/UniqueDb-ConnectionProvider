@@ -1,0 +1,67 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:UniqueDb.CSharpClassGenerator.Features.MainShell"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:databaseSelection="clr-namespace:UniqueDb.CSharpClassGenerator.Features.DatabaseSelection"
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+    x:Class="UniqueDb.CSharpClassGenerator.Features.MainShell.MainShell"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance local:MainShellController, d:IsDesignTimeCreatable=False}"
+    
+    d:DesignHeight="700" d:DesignWidth="700">
+    <Grid>
+
+        <dxlc:LayoutControl Orientation="Vertical">
+            <dxlc:LayoutGroup Header="Database Connection" IsCollapsible="True" Orientation="Vertical" View="GroupBox"
+                              VerticalAlignment="Top">
+                <dxlc:LayoutGroup Header="Database Connection" View="Tabs" IsCollapsible="True" Orientation="Vertical">
+                    <dxlc:LayoutGroup Header="SQL">
+                        <databaseSelection:SqlDbEntryView2
+                            DataContext="{Binding DatabaseSelectionController.SqlDbEntryController}" />
+                    </dxlc:LayoutGroup>
+                    <dxlc:LayoutGroup Header="ODBC">
+                        <databaseSelection:TransoftDbEntryView
+                            DataContext="{Binding DatabaseSelectionController.TransoftEntryController}" />
+                    </dxlc:LayoutGroup>
+                </dxlc:LayoutGroup>
+            </dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup Header="Query" View="GroupBox" Orientation="Vertical" IsCollapsible="True">
+                <dxlc:LayoutItem Label="Class Name">
+                    <dxe:TextEdit EditValue="{Binding ClassName.Value, UpdateSourceTrigger=PropertyChanged}" />
+                </dxlc:LayoutItem>
+                <dxe:TextEdit EditValue="{Binding SqlQuery.Value, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True"
+                              VerticalContentAlignment="Top" />
+                <dxlc:LayoutItem Height="25">
+                    <Button Content="Execute" Command="{Binding ExecuteQueryCommand}" />
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup View="Tabs">
+                <dxlc:LayoutGroup Header="C# Generated Code">
+                    <dxlc:LayoutItem VerticalAlignment="Stretch">
+                        <dxe:TextEdit EditValue="{Binding GeneratedCSharpText.Value}" AcceptsReturn="True" AcceptsTab="True"
+                              VerticalContentAlignment="Top" />
+                    </dxlc:LayoutItem>
+                </dxlc:LayoutGroup>
+                <dxlc:LayoutGroup Header="Query Results" Orientation="Vertical">
+
+                    <dxg:GridControl AutoGenerateColumns="RemoveOld" EnableSmartColumnsGeneration="True"
+                                     HorizontalAlignment="Stretch"
+                                     ItemsSource="{Binding Datatable.Value}">
+                        <dxg:GridControl.View>
+                            <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True"
+                                           ShowGroupPanel="False" ShowIndicator="False" />
+                        </dxg:GridControl.View>
+                    </dxg:GridControl>
+                </dxlc:LayoutGroup>
+            </dxlc:LayoutGroup>
+        </dxlc:LayoutControl>
+
+
+    </Grid>
+</UserControl>

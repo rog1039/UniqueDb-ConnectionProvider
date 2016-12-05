@@ -39,11 +39,27 @@
       <HintPath>..\packages\Autofac.4.2.0\lib\net45\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Dapper, Version=1.40.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.42\lib\net45\Dapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="DevExpress.CodeParser.v16.1, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Data.v16.1, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Images.v16.1, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="DevExpress.Mvvm.v16.1, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Printing.v16.1.Core, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.Core.v16.1, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Xpf.Grid.v16.1, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Xpf.Grid.v16.1.Core, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Xpf.LayoutControl.v16.1, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Xpf.Themes.Office2016White.v16.1, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Build.Tasks.v4.0" />
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Rogero.Option, Version=1.0.22.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Rogero.Option.1.0.22\lib\portable-net45+win+wpa81\Rogero.Option.dll</HintPath>
       <Private>True</Private>
@@ -100,6 +116,26 @@
     <Compile Include="Features\CodeGen\CodeGenView.xaml.cs">
       <DependentUpon>CodeGenView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Features\DatabaseSelection\DatabaseConnectionStorage.cs" />
+    <Compile Include="Features\DatabaseSelection\DatabaseSelectionController.cs" />
+    <Compile Include="Features\DatabaseSelection\DbConnectionTester.cs" />
+    <Compile Include="Features\DatabaseSelection\OdbcDsnDto.cs" />
+    <Compile Include="Features\DatabaseSelection\SqlDbEntryView.xaml.cs">
+      <DependentUpon>SqlDbEntryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Features\DatabaseSelection\SqlDbEntryController.cs" />
+    <Compile Include="Features\DatabaseSelection\SqlDbEntryView2.xaml.cs">
+      <DependentUpon>SqlDbEntryView2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Features\DatabaseSelection\SqlRecordDto.cs" />
+    <Compile Include="Features\DatabaseSelection\TransoftDbEntryView.xaml.cs">
+      <DependentUpon>TransoftDbEntryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Features\DatabaseSelection\TransoftEntryController.cs" />
+    <Compile Include="Features\MainShell\MainShell.xaml.cs">
+      <DependentUpon>MainShell.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Features\MainShell\MainShellController.cs" />
     <Compile Include="Infrastructure\DelegateCommand.cs" />
     <Compile Include="Infrastructure\MyApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -132,6 +168,22 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Features\CodeGen\CodeGenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Features\DatabaseSelection\SqlDbEntryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Features\DatabaseSelection\SqlDbEntryView2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Features\DatabaseSelection\TransoftDbEntryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Features\MainShell\MainShell.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

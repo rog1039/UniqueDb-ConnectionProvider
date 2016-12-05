@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="UniqueDb.CSharpClassGenerator.Features.DatabaseSelection.SqlDbEntryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:UniqueDb.CSharpClassGenerator.Features.DatabaseSelection"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance local:SqlDbEntryController, IsDesignTimeCreatable=False}"
+             d:DesignHeight="245" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="36" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="130" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Saved Connections:" />
+        <ComboBox Grid.Row="0" Grid.Column="1"
+                  ItemsSource="{Binding SavedConnections}"
+                  SelectedItem="{Binding SelectedConnection.Value}" />
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Connection Name:" />
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Server:" />
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Database:" />
+
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Username:" />
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="Password:" />
+
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ConnectionName.Value}" />
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ServerName.Value}" />
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DatabaseName.Value}" />
+        <CheckBox Grid.Row="4" Grid.ColumnSpan="2" Content="Use Integrated Auth"
+                  IsChecked="{Binding UseIntegratedAuth.Value}" />
+        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding UserName.Value}" />
+        <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Password.Value}" />
+
+        <Border Grid.Row="7" 
+                HorizontalAlignment="Stretch" Grid.ColumnSpan="2" Margin="0,5,0,2" 
+                Background="Beige" BorderBrush="DarkGray" BorderThickness="0,1">
+        <DockPanel VerticalAlignment="Center"
+                   LastChildFill="False">
+            <DockPanel.Resources>
+                <Thickness x:Key="CrudButtonResource">0,0,10,0</Thickness>
+            </DockPanel.Resources>
+            <Button Content="Delete" Margin="{StaticResource CrudButtonResource}" DockPanel.Dock="Right" />
+            <Button Content="Save" Margin="{StaticResource CrudButtonResource}" DockPanel.Dock="Right" />
+            <Button DockPanel.Dock="Left" Margin="10,0,0,0">Test Connection</Button>
+        </DockPanel>
+        </Border>
+        <Button Grid.Row="8" Grid.ColumnSpan="2"
+                Margin="0,2,0,0" HorizontalAlignment="Stretch"
+                Content="Make Active" Command="{Binding MakeActiveCommand}" />
+    </Grid>
+</UserControl>

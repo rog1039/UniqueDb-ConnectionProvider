@@ -86,9 +86,14 @@ namespace UniqueDb.CSharpClassGenerator.Features.CodeGen
             Name = "PBSI Copy",
             SqlConnectionProvider = new StaticSqlConnectionProvider("ws2012sqlexp1\\sqlexpress", "PbsiCopy")
         };
+        public static SqlConnectionHolder PbsiSyncMetadata = new SqlConnectionHolder()
+        {
+            Name = "PBSI Sync Metadata",
+            SqlConnectionProvider = new StaticSqlConnectionProvider("ws2016sql", "PbsiSyncMetadata")
+        };
         public static IList<SqlConnectionHolder> All = new List<SqlConnectionHolder>()
         {
-            Epicor905Test, PbsiDatabase, PbsiCopy
+            Epicor905Test, PbsiDatabase, PbsiCopy, PbsiSyncMetadata
         };
     }
 }
