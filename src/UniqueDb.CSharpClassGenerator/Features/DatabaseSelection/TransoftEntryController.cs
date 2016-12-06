@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Common;
 using System.Data.Odbc;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DevExpress.Mvvm;
 using Rogero.ReactiveProperty;
 
@@ -61,7 +58,7 @@ namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection
 
         private void MakeConnectionActive()
         {
-            var createOdbcConnection = new Func<DbConnection>(() => new OdbcConnection(ConnectionString));
+            var createOdbcConnection = new Func<DbConnection>(() => GetConnection(AppSettings.DefaultConnectionTimeout));
             _connectionChanged(createOdbcConnection);
         }
 

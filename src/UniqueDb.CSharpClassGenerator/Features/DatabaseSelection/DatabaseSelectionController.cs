@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Rogero.ReactiveProperty;
+using System.Data.Odbc;
+using System.Data.SqlClient;
 
 namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection
 {
     public class DatabaseSelectionController
     {
-        public ReactiveProperty<Func<DbConnection>> DbConnectionFactory { get; } = new ReactiveProperty<Func<DbConnection>>();
         public SqlDbEntryController SqlDbEntryController { get; }
         public TransoftEntryController TransoftEntryController { get; }
 
+        private Func<DbConnection> _dbConnectionFactory;
         private readonly DatabaseConnectionStorage _databaseConnectionStorage = new DatabaseConnectionStorage();
 
         public DatabaseSelectionController()
@@ -25,7 +23,36 @@ namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection
 
         private void ConnectionChanged(Func<DbConnection> dbConnection)
         {
-            DbConnectionFactory.Value = dbConnection;
+            _dbConnectionFactory = dbConnection;
+        }
+
+        public bool HasDbConnectionFactory() => _dbConnectionFactory != null;
+
+        public DbConnection GetDbConnection() => _dbConnectionFactory.Invoke();
+
+        public DataTable GetDataTable(string query)
+        {
+            var adapter = GetDataAdapter(query);
+            var table = new DataTable();
+            adapter.Fill(table);
+            return table;
+        }
+
+        private DbDataAdapter GetDataAdapter(string query)
+        {
+            var conn = _dbConnectionFactory();
+            if (conn is SqlConnection)
+            {
+                var command = new SqlCommand(query, (SqlConnection)conn);
+                var adapter = new SqlDataAdapter(command);
+                return adapter;
+            }
+            else
+            {
+                var command = new OdbcCommand(query, (OdbcConnection)conn);
+                var adapter = new OdbcDataAdapter(command);
+                return adapter;
+            }
         }
     }
 }

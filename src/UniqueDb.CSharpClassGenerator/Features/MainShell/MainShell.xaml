@@ -11,11 +11,11 @@
     x:Class="UniqueDb.CSharpClassGenerator.Features.MainShell.MainShell"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance local:MainShellController, d:IsDesignTimeCreatable=False}"
-    
+
     d:DesignHeight="700" d:DesignWidth="700">
     <Grid>
 
-        <dxlc:LayoutControl Orientation="Vertical">
+        <dxlc:LayoutControl Orientation="Vertical" AllowVerticalSizing="True">
             <dxlc:LayoutGroup Header="Database Connection" IsCollapsible="True" Orientation="Vertical" View="GroupBox"
                               VerticalAlignment="Top">
                 <dxlc:LayoutGroup Header="Database Connection" View="Tabs" IsCollapsible="True" Orientation="Vertical">
@@ -30,22 +30,29 @@
                 </dxlc:LayoutGroup>
             </dxlc:LayoutGroup>
 
-            <dxlc:LayoutGroup Header="Query" View="GroupBox" Orientation="Vertical" IsCollapsible="True">
+            <dxlc:LayoutGroup Header="Query" View="GroupBox" Orientation="Vertical" IsCollapsible="True" dxlc:LayoutControl.AllowVerticalSizing="True">
+                <dxlc:LayoutGroup.InputBindings>
+                    <KeyBinding Key="Enter" Modifiers="Control" Command="{Binding ExecuteQueryCommand}"></KeyBinding>
+                </dxlc:LayoutGroup.InputBindings>
                 <dxlc:LayoutItem Label="Class Name">
                     <dxe:TextEdit EditValue="{Binding ClassName.Value, UpdateSourceTrigger=PropertyChanged}" />
                 </dxlc:LayoutItem>
-                <dxe:TextEdit EditValue="{Binding SqlQuery.Value, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True"
+                <dxe:TextEdit EditValue="{Binding SqlQuery.Value, UpdateSourceTrigger=PropertyChanged}"
+                              VerticalScrollBarVisibility="Auto"
+                              AcceptsReturn="True" AcceptsTab="True"
                               VerticalContentAlignment="Top" />
                 <dxlc:LayoutItem Height="25">
                     <Button Content="Execute" Command="{Binding ExecuteQueryCommand}" />
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
 
-            <dxlc:LayoutGroup View="Tabs">
+            <dxlc:LayoutGroup View="Tabs" dxlc:LayoutControl.AllowVerticalSizing="True">
                 <dxlc:LayoutGroup Header="C# Generated Code">
                     <dxlc:LayoutItem VerticalAlignment="Stretch">
-                        <dxe:TextEdit EditValue="{Binding GeneratedCSharpText.Value}" AcceptsReturn="True" AcceptsTab="True"
-                              VerticalContentAlignment="Top" />
+                        <dxe:TextEdit EditValue="{Binding GeneratedCSharpText.Value}"
+                                      VerticalScrollBarVisibility="Auto"
+                                      AcceptsReturn="True" AcceptsTab="True"
+                                      VerticalContentAlignment="Top" />
                     </dxlc:LayoutItem>
                 </dxlc:LayoutGroup>
                 <dxlc:LayoutGroup Header="Query Results" Orientation="Vertical">
