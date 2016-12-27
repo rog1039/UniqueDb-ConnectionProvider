@@ -55,7 +55,7 @@
                                       VerticalContentAlignment="Top" />
                     </dxlc:LayoutItem>
                 </dxlc:LayoutGroup>
-                <dxlc:LayoutGroup Header="Query Results" Orientation="Vertical">
+                <dxlc:LayoutGroup Header="{Binding Path=QueryTabName.Value}" Orientation="Vertical">
 
                     <dxg:GridControl AutoGenerateColumns="RemoveOld" EnableSmartColumnsGeneration="True"
                                      HorizontalAlignment="Stretch"

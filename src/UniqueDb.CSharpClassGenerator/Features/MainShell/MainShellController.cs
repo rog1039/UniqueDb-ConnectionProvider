@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Diagnostics;
 using System.Windows;
 using DevExpress.Mvvm;
 using Rogero.ReactiveProperty;
@@ -17,6 +18,8 @@ namespace UniqueDb.CSharpClassGenerator.Features.MainShell
 
         public ReactiveProperty<string> GeneratedCSharpText { get; } = new ReactiveProperty<string>();
         public ReactiveProperty<DataTable> Datatable { get; } = new ReactiveProperty<DataTable>();
+        public ReactiveProperty<string> QueryTabName { get; } = new ReactiveProperty<string>("Query Results");
+		
 		
         public DelegateCommand ExecuteQueryCommand { get; }
 
@@ -29,7 +32,10 @@ namespace UniqueDb.CSharpClassGenerator.Features.MainShell
         {
             try
             {
-                Datatable.Value = DatabaseSelectionController.GetDataTable(SqlQuery);
+                var sw = Stopwatch.StartNew();
+                var dataTable = DatabaseSelectionController.GetDataTable(SqlQuery);
+                QueryTabName.Value = "Query Results " + sw.Elapsed.ToString("s\\.fff") + "s | Rows: " + dataTable.Rows.Count;
+                Datatable.Value = dataTable;
             }
             catch (Exception e)
             {
