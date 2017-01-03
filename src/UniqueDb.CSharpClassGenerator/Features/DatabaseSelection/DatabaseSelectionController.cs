@@ -41,15 +41,20 @@ namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection
         private DbDataAdapter GetDataAdapter(string query)
         {
             var conn = _dbConnectionFactory();
+            return GetCorrectDbAdapterForConnectionType(query, conn);
+        }
+
+        private static DbDataAdapter GetCorrectDbAdapterForConnectionType(string query, DbConnection conn)
+        {
             if (conn is SqlConnection)
             {
-                var command = new SqlCommand(query, (SqlConnection)conn);
+                var command = new SqlCommand(query, (SqlConnection) conn);
                 var adapter = new SqlDataAdapter(command);
                 return adapter;
             }
             else
             {
-                var command = new OdbcCommand(query, (OdbcConnection)conn);
+                var command = new OdbcCommand(query, (OdbcConnection) conn);
                 var adapter = new OdbcDataAdapter(command);
                 return adapter;
             }
