@@ -10,7 +10,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
                 .Select(CSharpPropertyFactoryFromSqlColumn.ToCSharpProperty)
                 .ToList();
             className = className ?? table.Name;
-            var cSharpClass = CSharpClassTextGenerator.GenerateClassText(className, cSharpProperties);
+            var cSharpClass = CSharpClassTextGenerator.GenerateClassText(className, cSharpProperties, CSharpClassTextGeneratorOptions.Default);
             return cSharpClass;
         }
     }

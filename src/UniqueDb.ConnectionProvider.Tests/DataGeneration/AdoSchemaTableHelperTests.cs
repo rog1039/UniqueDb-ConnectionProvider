@@ -16,7 +16,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         public void Get_Ado_SchemaTable_ColumnInformation()
         {
             var query = "SELECT 1";
-            var dataColumns = AdoSchemaTableHelper.GetAdoSchemaDataColumns(LiveDbTestingSqlProvider.AdventureWorksDb, query);
+            var dataColumns = AdoSchemaTableHelper.GetAdoSchemaDataColumns(SqlConnectionProviders.AdventureWorksDb, query);
             
             var cSharpProperties = dataColumns.Select(CSharpPropertyFactoryFromAdoSchemaTableDataColumn.ToCSharpProperty).ToList();
             var cSharpClass = GetCSharpClassFromAdoSchemaTableColumns(cSharpProperties);
@@ -27,7 +27,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 
         private static string GetCSharpClassFromAdoSchemaTableColumns(IList<CSharpProperty> cSharpProperties)
         {
-            var cSharpClass = CSharpClassTextGenerator.GenerateClassText("SysTypes", cSharpProperties);
+            var cSharpClass = CSharpClassTextGenerator.GenerateClassText("SysTypes", cSharpProperties, CSharpClassTextGeneratorOptions.Default);
             var compileResult = RoslynHelper.TryCompile(cSharpClass);
             compileResult.IsValid().Should().BeTrue();
             return cSharpClass;

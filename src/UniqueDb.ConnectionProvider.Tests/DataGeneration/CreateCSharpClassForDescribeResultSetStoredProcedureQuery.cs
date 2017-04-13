@@ -13,8 +13,8 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         {
             var query = "sp_describe_first_result_set @tsql = N'SELECT object_id, name, type_desc FROM sys.indexes'";
             var cSharpClass =
-                CSharpClassGeneratorFromAdoDataReader.GenerateClass(LiveDbTestingSqlProvider.AdventureWorksDb,
-                    query, "DescribeResultSetRow");
+                CSharpClassGeneratorFromAdoDataReader.GenerateClass(SqlConnectionProviders.AdventureWorksDb,
+                    query, "DescribeResultSetRow", CSharpClassTextGeneratorOptions.Default);
             Console.WriteLine(cSharpClass);
         }
         
@@ -24,8 +24,8 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         {
             var query = "select * from sys.types where is_user_defined = 1";
             var cSharpClass =
-                CSharpClassGeneratorFromAdoDataReader.GenerateClass(LiveDbTestingSqlProvider.AdventureWorksDb,
-                    query, "SqlSysType");
+                CSharpClassGeneratorFromAdoDataReader.GenerateClass(SqlConnectionProviders.AdventureWorksDb,
+                    query, "SqlSysType", CSharpClassTextGeneratorOptions.Default);
             Console.WriteLine(cSharpClass);
         }
     }

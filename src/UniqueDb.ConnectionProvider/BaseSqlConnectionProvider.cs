@@ -7,9 +7,9 @@ namespace UniqueDb.ConnectionProvider
         public string DatabaseName { get; protected set; }
         public string ServerName { get; protected set; }
 
-        public bool UseIntegratedAuthentication { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
+        public bool UseIntegratedAuthentication { get; protected set; }
+        public string UserName { get; protected set; }
+        public string Password { get; protected set; }
 
         public virtual string GetSqlConnectionString() => GetSqlConnectionStringBuilder().ConnectionString;
         

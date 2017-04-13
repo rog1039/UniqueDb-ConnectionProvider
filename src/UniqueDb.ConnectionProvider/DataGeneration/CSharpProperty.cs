@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
@@ -17,6 +18,12 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         public override string ToString()
         {
             var generator = new CSharpPropertyTextGenerator(this);
+            return generator.Generate();
+        }
+
+        public string ToString(CSharpClassTextGeneratorOptions options)
+        {
+            var generator = new CSharpPropertyTextGenerator(this, options);
             return generator.Generate();
         }
     }

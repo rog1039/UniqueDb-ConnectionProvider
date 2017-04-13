@@ -6,7 +6,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
 {
     public static class CSharpClassTextGenerator
     {
-        public static string GenerateClassText(string className, IEnumerable<CSharpProperty> cSharpProperties)
+        public static string GenerateClassText(string className, IEnumerable<CSharpProperty> cSharpProperties, CSharpClassTextGeneratorOptions options)
         {
             var sb = new StringBuilder();
             sb.AppendLine(string.Format("public class {0}", className));
@@ -14,7 +14,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
             foreach (var cSharpProperty in cSharpProperties)
             {
                 var transformedCSharpProperty = TransformProperty(className, cSharpProperty);
-                sb.AppendLine(transformedCSharpProperty.ToString());
+                sb.AppendLine(transformedCSharpProperty.ToString(options));
             }
             sb.AppendLine("}");
             return sb.ToString();
@@ -30,5 +30,12 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
             }
             return property;
         }
+    }
+
+    public class CSharpClassTextGeneratorOptions
+    {
+        public bool IncludePropertyAnnotationAttributes { get; set; } = true;
+
+        public static CSharpClassTextGeneratorOptions Default = new CSharpClassTextGeneratorOptions();
     }
 }

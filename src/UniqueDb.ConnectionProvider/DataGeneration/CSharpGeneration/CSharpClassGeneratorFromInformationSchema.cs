@@ -8,11 +8,11 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
         public static string CreateCSharpClass(SqlTableReference sqlTableReference, string className = default(string))
         {
             var schemaColumns = InformationSchemaMetadataExplorer.GetInformationSchemaColumns(sqlTableReference);
-            var sqlColumns = schemaColumns.Select(x => InformationSchemaColumnToSqlColumn(x)).ToList();
-            var cSharpProperties = sqlColumns.Select(x => CSharpPropertyFactoryFromSqlColumn.ToCSharpProperty(x)).ToList();
+            var sqlColumns = schemaColumns.Select(InformationSchemaColumnToSqlColumn).ToList();
+            var cSharpProperties = sqlColumns.Select(CSharpPropertyFactoryFromSqlColumn.ToCSharpProperty).ToList();
 
             var tableName = className ?? sqlTableReference.TableName;
-            var classText = CSharpClassTextGenerator.GenerateClassText(tableName, cSharpProperties);
+            var classText = CSharpClassTextGenerator.GenerateClassText(tableName, cSharpProperties, CSharpClassTextGeneratorOptions.Default);
             return classText.Trim();
         }
 
@@ -24,7 +24,6 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
                 IsNullable = column.IS_NULLABLE == "YES",
                 OrdinalPosition = column.ORDINAL_POSITION,
                 Default = column.COLUMN_DEFAULT,
-                
             };
 
             var ambigiousSqlType = FromInformationSchemaColumn(column);
@@ -32,7 +31,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
             return sqlColumn;
         }
 
-        public static AmbigiousSqlType FromInformationSchemaColumn(InformationSchemaColumn column)
+        private static AmbigiousSqlType FromInformationSchemaColumn(InformationSchemaColumn column)
         {
             var ambigiousSqlType = new AmbigiousSqlType()
             {

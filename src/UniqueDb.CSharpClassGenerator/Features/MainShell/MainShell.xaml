@@ -12,8 +12,11 @@
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance local:MainShellController, d:IsDesignTimeCreatable=False}"
 
-    d:DesignHeight="700" d:DesignWidth="700">
+    d:DesignHeight="900" d:DesignWidth="700">
     <Grid>
+        <Grid.InputBindings>
+            <KeyBinding Key="Enter" Modifiers="Control+Shift" Command="{Binding CopyCSharpClassCommand}"></KeyBinding>
+        </Grid.InputBindings>
 
         <dxlc:LayoutControl Orientation="Vertical" AllowVerticalSizing="True">
             <dxlc:LayoutGroup Header="Database Connection" IsCollapsible="True" Orientation="Vertical" View="GroupBox"
@@ -41,6 +44,9 @@
                               VerticalScrollBarVisibility="Auto"
                               AcceptsReturn="True" AcceptsTab="True"
                               VerticalContentAlignment="Top" />
+                <UniformGrid Height="25">
+                    <CheckBox VerticalAlignment="Top" Content="Include Property Attributes" IsChecked="{Binding IncludePropertyAttributes.Value}"></CheckBox>
+                </UniformGrid>
                 <dxlc:LayoutItem Height="25">
                     <Button Content="Execute" Command="{Binding ExecuteQueryCommand}" />
                 </dxlc:LayoutItem>

@@ -24,7 +24,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             var typesToInsert = new List<Type>();
             var randomSqlTableReferences = new List<SqlTableReference>();
 
-            var db = LiveDbTestingSqlProvider.AdventureWorksDb;
+            var db = SqlConnectionProviders.AdventureWorksDb;
 
             "Given a bunch of DB tables and CLR types that represent those tables"
                 ._(() =>

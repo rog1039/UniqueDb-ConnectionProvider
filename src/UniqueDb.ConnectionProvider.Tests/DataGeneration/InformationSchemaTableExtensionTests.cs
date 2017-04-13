@@ -46,7 +46,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             "Given a list of datatypes from SQL Server."
                 ._(() =>
                 {
-                    var connection = LiveDbTestingSqlProvider.AdventureWorksDb;
+                    var connection = SqlConnectionProviders.AdventureWorksDb;
                     sqlDataTypeList = connection.Query<string>("SELECT name FROM sys.Types where is_user_defined=0").ToList();
                 });
 

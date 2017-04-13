@@ -20,12 +20,16 @@ namespace UniqueDb.CSharpClassGenerator.Features.MainShell
         public ReactiveProperty<DataTable> Datatable { get; } = new ReactiveProperty<DataTable>();
         public ReactiveProperty<string> QueryTabName { get; } = new ReactiveProperty<string>("Query Results");
 		
+        public ReactiveProperty<bool> IncludePropertyAttributes { get; } = new ReactiveProperty<bool>(false);
+		
 		
         public DelegateCommand ExecuteQueryCommand { get; }
+        public DelegateCommand CopyCSharpClassCommand { get; }
 
         public MainShellController()
         {
             ExecuteQueryCommand = new DelegateCommand(ExecuteQuery, CanExecuteQuery);
+            CopyCSharpClassCommand = new DelegateCommand(CopyCSharpCommand);
         }
 
         private void ExecuteQuery()
@@ -44,8 +48,10 @@ namespace UniqueDb.CSharpClassGenerator.Features.MainShell
 
             try
             {
+                var options = new CSharpClassTextGeneratorOptions();
+                options.IncludePropertyAnnotationAttributes = IncludePropertyAttributes.Value;
                 var conn = DatabaseSelectionController.GetDbConnection();
-                GeneratedCSharpText.Value = CSharpClassGeneratorFromAdoDataReader.GenerateClass(conn, SqlQuery.Value, ClassName.Value);
+                GeneratedCSharpText.Value = CSharpClassGeneratorFromAdoDataReader.GenerateClass(conn, SqlQuery.Value, ClassName.Value, options);
             }
             catch (Exception e)
             {
@@ -59,6 +65,12 @@ namespace UniqueDb.CSharpClassGenerator.Features.MainShell
                              !string.IsNullOrWhiteSpace(ClassName) && 
                              !string.IsNullOrWhiteSpace(SqlQuery);
             return canExecute;
+        }
+
+        private void CopyCSharpCommand()
+        {
+            if(!string.IsNullOrWhiteSpace(GeneratedCSharpText.Value))
+                Clipboard.SetText(GeneratedCSharpText.Value);
         }
     }
 }

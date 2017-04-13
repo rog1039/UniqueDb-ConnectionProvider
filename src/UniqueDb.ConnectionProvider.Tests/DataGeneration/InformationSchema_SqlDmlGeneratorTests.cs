@@ -13,7 +13,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         [Trait("Category", "Integration")]
         public void RetrieveHumanResourcesEmployeeTableAsJson()
         {
-            var sqlTableReference = new SqlTableReference(LiveDbTestingSqlProvider.AdventureWorksDb, "HumanResources.Employee");
+            var sqlTableReference = new SqlTableReference(SqlConnectionProviders.AdventureWorksDb, "HumanResources.Employee");
             var informationSchemaTableDefinition = InformationSchemaMetadataExplorer.GetInformationSchemaTableDefinition(sqlTableReference);
             var tableDefinitionAsJson = JsonConvert.SerializeObject(informationSchemaTableDefinition);
             Console.WriteLine(tableDefinitionAsJson);

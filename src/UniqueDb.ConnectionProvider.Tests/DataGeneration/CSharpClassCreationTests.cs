@@ -17,7 +17,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         [Trait("Category", "Integration")]
         public void CreateClassFromSqlTableReference()
         {
-            var sqlTableReference = new SqlTableReference(LiveDbTestingSqlProvider.AdventureWorksDb, TableName);
+            var sqlTableReference = new SqlTableReference(SqlConnectionProviders.AdventureWorksDb, TableName);
             var cSharpClass = CSharpClassGeneratorFromInformationSchema.CreateCSharpClass(sqlTableReference);
             var compileResult = RoslynHelper.TryCompile(cSharpClass);
             compileResult.IsValid().Should().BeTrue();
@@ -34,13 +34,15 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         public void CreateClassFromQueryTest()
         {
             var cSharpClass = CSharpClassGeneratorFromQueryViaSqlDescribeResultSet.GenerateClass(
-                LiveDbTestingSqlProvider.AdventureWorksDb,
+                SqlConnectionProviders.AdventureWorksDb,
                 $"SELECT * from {TableName}", "Employee");
             var compileResult = RoslynHelper.TryCompile(cSharpClass);
             compileResult.IsValid().Should().BeTrue();
             Console.WriteLine(cSharpClass);
-            cSharpClass.Should().Be(
-@"public class Employee
+            cSharpClass.Should().Be(EmployeeCSharpClassText);
+        }
+
+        private static string EmployeeCSharpClassText => @"public class Employee
 {
     [Range(-2147483648, 2147483647)]
     public int BusinessEntityID { get; set; }
@@ -68,8 +70,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
     public bool CurrentFlag { get; set; }
     public Guid rowguid { get; set; }
     public DateTime ModifiedDate { get; set; }
-}");
-        }
+}";
 
 
         [Fact()]
@@ -77,7 +78,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         public void CreateClassForDocumentTableFromQueryTest()
         {
             var cSharpClass = CSharpClassGeneratorFromQueryViaSqlDescribeResultSet.GenerateClass(
-                LiveDbTestingSqlProvider.AdventureWorksDb,
+                SqlConnectionProviders.AdventureWorksDb,
                 $"SELECT * from Production.Document", "Document");
             var compileResult = RoslynHelper.TryCompile(cSharpClass);
             compileResult.IsValid().Should().BeTrue();
@@ -92,7 +93,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         [Trait("Category", "Integration")]
         public void CreateClassFromSqlTableReferenceForActualUseWhenNeedingToGenerateCSharpClasses()
         {
-            var sqlTableReference = new SqlTableReference(new StaticSqlConnectionProvider("WS2012sqlexp1\\sqlexpress", "PbsiCopy"), "dbo.MTDINV_LINE");
+            var sqlTableReference = new SqlTableReference(SqlConnectionProviders.PbsiCopy, "dbo.MTDINV_LINE");
             var sqlTable = SqlTableFactory.Create(sqlTableReference);
             var cSharpClass = CSharpClassGeneratorFromSqlTable.GenerateClass(sqlTable);
             Console.WriteLine(cSharpClass);
@@ -107,10 +108,7 @@ select im.PbsiItemNumber, im.EpicorItemNumber, i.StockWeight, i.ItemDescription,
     from ItemMaps im
   join Items i on im.PbsiItemNumber = i.ItemNumber
 ";
-
-            var sqlConnProvider =
-                new StaticSqlConnectionProvider("WS2012sqlexp1\\sqlexpress", "PbsiDatabase");
-            var cSharpClass = CSharpClassGeneratorFromQueryViaSqlDescribeResultSet.GenerateClass(sqlConnProvider, sql, "TruckOrderRecordDto");
+            var cSharpClass = CSharpClassGeneratorFromQueryViaSqlDescribeResultSet.GenerateClass(SqlConnectionProviders.PbsiDatabase, sql, "TruckOrderRecordDto");
             Console.WriteLine(cSharpClass);
         }
 
@@ -118,7 +116,8 @@ select im.PbsiItemNumber, im.EpicorItemNumber, i.StockWeight, i.ItemDescription,
         [Trait("Category", "Integration")]
         public void CreateClassFromSqlForActualUseWhenNeedingToGenerateCSharpClasses_UsingEpicorTest905()
         {
-            var sql = @"  SELECT
+            var sql = @"
+SELECT
   pb.Company
  ,pb.BinNum
  ,pb.PartNum as EpicorPartNumber
@@ -133,10 +132,8 @@ GROUP BY pb.Company
         ,PartNum
         ,pb.BinNum
         ,pb.DimCode";
-
-            var sqlConnProvider =
-                new StaticSqlConnectionProvider("epicor905", "EpicorTest905");
-            var cSharpClass = CSharpClassGeneratorFromAdoDataReader.GenerateClass(sqlConnProvider, sql, "EpicorItemInventory");
+            
+            var cSharpClass = CSharpClassGeneratorFromAdoDataReader.GenerateClass(SqlConnectionProviders.EpicorTest905, sql, "EpicorItemInventory");
             Console.WriteLine(cSharpClass);
         }
 
@@ -146,7 +143,7 @@ GROUP BY pb.Company
         [Trait("Category", "Integration")]
         public void CreateClassFromSqlTableReference()
         {
-            var sqlTableReference = new SqlTableReference(LiveDbTestingSqlProvider.AdventureWorksDb, TableName);
+            var sqlTableReference = new SqlTableReference(SqlConnectionProviders.AdventureWorksDb, TableName);
             var sqlTable = SqlTableFactory.Create(sqlTableReference);
             var cSharpClass = CSharpClassGeneratorFromSqlTable.GenerateClass(sqlTable);
             Console.WriteLine(cSharpClass);
@@ -158,7 +155,7 @@ GROUP BY pb.Company
         {
             var query = "select * from sys.types";
             var cSharpClass = CSharpClassGeneratorFromAdoDataReader
-                .GenerateClass(LiveDbTestingSqlProvider.AdventureWorksDb, query, "SysType");
+                .GenerateClass(SqlConnectionProviders.AdventureWorksDb, query, "SysType");
             Console.WriteLine(cSharpClass);
         }
 
@@ -168,7 +165,7 @@ GROUP BY pb.Company
         {
             var query = $"select * from {TableName}";
             var cSharpClass = CSharpClassGeneratorFromAdoDataReader
-                .GenerateClass(LiveDbTestingSqlProvider.AdventureWorksDb, query, "Employee");
+                .GenerateClass(SqlConnectionProviders.AdventureWorksDb, query, "Employee");
             Console.WriteLine(cSharpClass);
         }
         
@@ -183,7 +180,7 @@ GROUP BY pb.Company
                 {
                     var query = string.Format("select * from {0}", TableName);
                     classFromQuery = CSharpClassGeneratorFromQueryViaSqlDescribeResultSet
-                        .GenerateClass(LiveDbTestingSqlProvider.AdventureWorksDb, query, "Employee");
+                        .GenerateClass(SqlConnectionProviders.AdventureWorksDb, query, "Employee");
 
                     var compileResults = RoslynHelper.TryCompile(classFromQuery);
                     compileResults.IsValid().Should().BeTrue();
@@ -191,7 +188,7 @@ GROUP BY pb.Company
             "Given a C# class generated from SQL InformationSchema metadata"
                 ._(() =>
                 {
-                    var sqlTableReference = new SqlTableReference(LiveDbTestingSqlProvider.AdventureWorksDb, TableName);
+                    var sqlTableReference = new SqlTableReference(SqlConnectionProviders.AdventureWorksDb, TableName);
                     classFromTable = CSharpClassGeneratorFromInformationSchema.CreateCSharpClass(sqlTableReference);
                     var compileResults = RoslynHelper.TryCompile(classFromTable);
                     compileResults.IsValid().Should().BeTrue();
@@ -210,7 +207,7 @@ GROUP BY pb.Company
         public void CreateManyRandomClassesFromInformationSchema()
         {
             string outputText = String.Empty;
-            var randomSqlTableReferences = RandomTableSelector.GetRandomSqlTableReferences(LiveDbTestingSqlProvider.AdventureWorksDb, 400);
+            var randomSqlTableReferences = RandomTableSelector.GetRandomSqlTableReferences(SqlConnectionProviders.AdventureWorksDb, 400);
             foreach (var sqlTableReference in randomSqlTableReferences)
             {
                 var sqlTable = SqlTableFactory.Create(sqlTableReference);
@@ -225,7 +222,7 @@ GROUP BY pb.Company
         public void CreateManyRandomClassesFromDescribeResultSet()
         {
             string outputText = String.Empty;
-            var randomSqlTableReferences = RandomTableSelector.GetRandomSqlTableReferences(LiveDbTestingSqlProvider.AdventureWorksDb, 400).OrderBy(x => x.SchemaName).ThenBy(x => x.TableName);
+            var randomSqlTableReferences = RandomTableSelector.GetRandomSqlTableReferences(SqlConnectionProviders.AdventureWorksDb, 400).OrderBy(x => x.SchemaName).ThenBy(x => x.TableName);
             foreach (var sqlTableReference in randomSqlTableReferences)
             {
                 var sqlTable = SqlTableFactory.Create(sqlTableReference);
@@ -249,7 +246,7 @@ GROUP BY pb.Company
                 ._(() =>
                 {
                     randomSqlTableReferences =
-                        RandomTableSelector.GetRandomSqlTableReferences(LiveDbTestingSqlProvider.AdventureWorksDb, 400);
+                        RandomTableSelector.GetRandomSqlTableReferences(SqlConnectionProviders.AdventureWorksDb, 400);
                 });
 
             "Convert each table reference to a C# class and check for syntax errors using Roslyn"

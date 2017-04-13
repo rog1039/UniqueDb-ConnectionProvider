@@ -12,7 +12,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
         public static string GenerateClass(ISqlConnectionProvider sqlConnectionProvider, string sqlQuery, string className)
         {
             var cSharpProperties = GetCSharpProperties(sqlConnectionProvider, sqlQuery);
-            var classText = CSharpClassTextGenerator.GenerateClassText(className, cSharpProperties);
+            var classText = CSharpClassTextGenerator.GenerateClassText(className, cSharpProperties, CSharpClassTextGeneratorOptions.Default);
             return classText.Trim();
         }
 

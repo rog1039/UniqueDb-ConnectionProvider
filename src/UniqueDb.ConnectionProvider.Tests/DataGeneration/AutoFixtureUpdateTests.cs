@@ -33,7 +33,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             AWBuildVersion buildVersion2 = null;
             AWBuildVersion buildVersion3 = null;
 
-            ISqlConnectionProvider db = LiveDbTestingSqlProvider.AdventureWorksDb;
+            ISqlConnectionProvider db = SqlConnectionProviders.AdventureWorksDb;
             
             "Given a build version in the database"
                 ._(() =>

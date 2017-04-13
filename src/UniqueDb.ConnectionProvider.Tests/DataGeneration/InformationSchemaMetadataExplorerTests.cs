@@ -12,7 +12,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         public void GetInformationSchemaTablesForAllTables()
         {
             var schemaTables = InformationSchemaMetadataExplorer
-                .GetInformationSchemaTables(LiveDbTestingSqlProvider.AdventureWorksDb)
+                .GetInformationSchemaTables(SqlConnectionProviders.AdventureWorksDb)
                 .OrderBy(x => x.TABLE_SCHEMA)
                 .ThenBy(x => x.TABLE_NAME);
             Console.WriteLine(schemaTables.ToStringTable());

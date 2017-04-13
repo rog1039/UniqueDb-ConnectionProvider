@@ -29,7 +29,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
                 "Given a source database and a new blank database"
                 ._(() =>
                 {
-                    sourceSqlConnectionProvider = LiveDbTestingSqlProvider.AdventureWorksDb;
+                    sourceSqlConnectionProvider = SqlConnectionProviders.AdventureWorksDb;
                 });
 
                 "Given a source table to copy"
@@ -75,7 +75,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
                             "ws2012sqlexp1\\sqlexpress", "TableManipulationTests"));
                     targetSqlConnectionProvider.CreateDatabase();
 
-                    sourceSqlConnectionProvider = LiveDbTestingSqlProvider.AdventureWorksDb;
+                    sourceSqlConnectionProvider = SqlConnectionProviders.AdventureWorksDb;
                     sourceSqlTableReference = new SqlTableReference(
                         sourceSqlConnectionProvider, "Person.Person");
                     targetSqlTableReference = new SqlTableReference(
