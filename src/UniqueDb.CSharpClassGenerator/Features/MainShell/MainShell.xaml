@@ -72,6 +72,9 @@
                         </dxg:GridControl.View>
                     </dxg:GridControl>
                 </dxlc:LayoutGroup>
+                <dxlc:LayoutGroup Header="Design Time Data Code">
+                    <dxe:TextEdit EditValue="{Binding DesignTimeDataCode.Value}" />
+                </dxlc:LayoutGroup>
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>
 

@@ -11,7 +11,6 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         private const long bigIntUpperBound = 9223372036854775807;
 
         /****   Exact Numerics   ****/
-
         public static SqlType Bit()
         {
             return SqlType.Type("bit");

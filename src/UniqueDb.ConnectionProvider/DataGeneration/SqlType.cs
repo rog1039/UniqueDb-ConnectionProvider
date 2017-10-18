@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
@@ -11,7 +12,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         public int? NumericScale { get; set; }
         public int? FractionalSecondsPrecision { get; set; }
         public int? Mantissa { get; set; }
-        
+
 
         protected SqlType(string typeName)
         {
@@ -25,9 +26,9 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         public static SqlType TextType(string typeName, int? precision)
         {
-            return new SqlType(typeName) { MaximumCharLength = precision};
+            return new SqlType(typeName) { MaximumCharLength = precision };
         }
-        
+
         public static SqlType ApproximateNumeric(string typeName, int? mantissa = 53)
         {
             return new SqlType(typeName) { Mantissa = mantissa };
@@ -35,13 +36,14 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         public static SqlType ExactNumericType(string typeName, int? numericPrecision, int? numericScale)
         {
-            return new SqlType(typeName) { NumericPrecision = numericPrecision, NumericScale = numericScale};
+            return new SqlType(typeName) { NumericPrecision = numericPrecision, NumericScale = numericScale };
         }
 
         public static SqlType DateTime(string typeName, int? fractionalSecondsPrecision)
         {
-            return new SqlType(typeName) { FractionalSecondsPrecision = fractionalSecondsPrecision};
+            return new SqlType(typeName) { FractionalSecondsPrecision = fractionalSecondsPrecision };
         }
+
         public override string ToString()
         {
             if (SqlTypes.IsCharType(TypeName))
@@ -72,6 +74,31 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             }
             return TypeName;
             throw new ArgumentException($"Conversion for the type {TypeName} is not defined.");
+        }
+    }
+
+    public class SqlTypeConverter
+    {
+        public static SqlType FromInformationSchemaColumn(InformationSchemaColumn col)
+        {
+            if (SqlTypes.IsDateTime(col.DATA_TYPE))
+            {
+                return SqlType.DateTime(col.DATA_TYPE, col.DATETIME_PRECISION);
+            }
+            if (SqlTypes.IsApproximateNumeric(col.DATA_TYPE))
+            {
+                if (col.DATA_TYPE == "float") return SqlTypeFactory.Float(col.NUMERIC_PRECISION.Value);
+                if (col.DATA_TYPE == "real") return SqlTypeFactory.Real();
+            }
+            if (SqlTypes.IsExactNumeric(col.DATA_TYPE))
+            {
+                return SqlType.ExactNumericType(col.DATA_TYPE, col.NUMERIC_PRECISION, col.NUMERIC_PRECISION_RADIX);
+            }
+            if (SqlTypes.IsCharType(col.DATA_TYPE))
+            {
+                return SqlType.TextType(col.DATA_TYPE, col.CHARACTER_MAXIMUM_LENGTH);
+            }
+            throw new NotImplementedException();
         }
     }
 }

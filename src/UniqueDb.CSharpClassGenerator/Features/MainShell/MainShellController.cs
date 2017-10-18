@@ -5,6 +5,7 @@ using System.Windows;
 using DevExpress.Mvvm;
 using Rogero.ReactiveProperty;
 using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
+using UniqueDb.ConnectionProvider.DataGeneration.DesignTimeDataGeneration;
 using UniqueDb.CSharpClassGenerator.Features.DatabaseSelection;
 
 namespace UniqueDb.CSharpClassGenerator.Features.MainShell
@@ -19,7 +20,8 @@ namespace UniqueDb.CSharpClassGenerator.Features.MainShell
         public ReactiveProperty<string> GeneratedCSharpText { get; } = new ReactiveProperty<string>();
         public ReactiveProperty<DataTable> Datatable { get; } = new ReactiveProperty<DataTable>();
         public ReactiveProperty<string> QueryTabName { get; } = new ReactiveProperty<string>("Query Results");
-		
+        public ReactiveProperty<string> DesignTimeDataCode { get; } = new ReactiveProperty<string>();
+
         public ReactiveProperty<bool> IncludePropertyAttributes { get; } = new ReactiveProperty<bool>(false);
 		
 		
@@ -52,6 +54,16 @@ namespace UniqueDb.CSharpClassGenerator.Features.MainShell
                 options.IncludePropertyAnnotationAttributes = IncludePropertyAttributes.Value;
                 var conn = DatabaseSelectionController.GetDbConnection();
                 GeneratedCSharpText.Value = CSharpClassGeneratorFromAdoDataReader.GenerateClass(conn, SqlQuery.Value, ClassName.Value, options);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+
+            try
+            {
+                var json = DatabaseSelectionController.GetQueryResultsAsJson(SqlQuery);
+                DesignTimeDataCode.Value = DesignTimeDataCodeTemplate.CreateCode(ClassName, json, GeneratedCSharpText);
             }
             catch (Exception e)
             {

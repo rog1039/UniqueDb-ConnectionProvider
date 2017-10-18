@@ -3,6 +3,9 @@ using System.Data;
 using System.Data.Common;
 using System.Data.Odbc;
 using System.Data.SqlClient;
+using System.Linq;
+using Dapper;
+using Newtonsoft.Json;
 
 namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection
 {
@@ -36,6 +39,13 @@ namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection
             var table = new DataTable();
             adapter.Fill(table);
             return table;
+        }
+
+        public string GetQueryResultsAsJson(string query)
+        {
+            var results = _dbConnectionFactory().Query(query).ToList();
+            var json = JsonConvert.SerializeObject(results);
+            return json;
         }
 
         private DbDataAdapter GetDataAdapter(string query)
