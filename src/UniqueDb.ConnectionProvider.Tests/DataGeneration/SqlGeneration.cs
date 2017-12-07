@@ -30,7 +30,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         {
             var tableGenerationScript = $"create table TestTable( FirstName {testCase.ColumnDeclaration});";
             var uniqueDbProvider = UniqueTestingDbProvider.GetUniqueSqlConnectionProvider();
-            using (uniqueDbProvider.ToDisposable())
+            using (uniqueDbProvider.ToSelfDeletingDisposable())
             {
                 uniqueDbProvider.CreateDatabase();
                 testCase.PreTestSqlScripts.ForEach(uniqueDbProvider.Execute);

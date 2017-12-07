@@ -23,7 +23,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             "After creating a database"
                 ._(() => connectionProvider.CreateDatabase());
 
-            using (var lifecycle = connectionProvider.ToDisposable())
+            using (var lifecycle = connectionProvider.ToSelfDeletingDisposable())
             {
                 BddStringExtensions._("Create the table", () =>
                 {
@@ -45,7 +45,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             "After creating a database"
                 ._(() => connectionProvider.CreateDatabase());
 
-            using (var lifecycle = connectionProvider.ToDisposable())
+            using (var lifecycle = connectionProvider.ToSelfDeletingDisposable())
             {
                 BddStringExtensions._("Create the table", () =>
                 {
@@ -71,7 +71,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             "After creating a database"
                 ._(() => connectionProvider.CreateDatabase());
 
-            using (var lifecycle = connectionProvider.ToDisposable())
+            using (var lifecycle = connectionProvider.ToSelfDeletingDisposable())
             {
                 BddStringExtensions._("Create the table", () =>
                 {

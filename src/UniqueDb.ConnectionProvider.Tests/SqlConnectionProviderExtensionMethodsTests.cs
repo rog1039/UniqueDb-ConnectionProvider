@@ -12,7 +12,7 @@ namespace UniqueDb.ConnectionProvider.Tests
         {
             var options = new UniqueDbConnectionProviderOptions("ws2012sqlexp1\\sqlexpress", "autodisposedatabase");
             var connectionProvider = new UniqueDbConnectionProvider(options);
-            using (connectionProvider.ToDisposable())
+            using (connectionProvider.ToSelfDeletingDisposable())
             {
                 connectionProvider.CreateDatabase();
                 connectionProvider.ExecuteNonDapper("Use [" + connectionProvider.DatabaseName + "]");
@@ -24,7 +24,7 @@ namespace UniqueDb.ConnectionProvider.Tests
         {
             var options = new UniqueDbConnectionProviderOptions("ws2012sqlexp1\\sqlexpress", "autodisposedatabase");
             var connectionProvider = new UniqueDbConnectionProvider(options);
-            using (connectionProvider.ToDisposable())
+            using (connectionProvider.ToSelfDeletingDisposable())
             {
                 connectionProvider.CreateDatabase();
                 connectionProvider.ExecuteScalar<int>("Select 1");

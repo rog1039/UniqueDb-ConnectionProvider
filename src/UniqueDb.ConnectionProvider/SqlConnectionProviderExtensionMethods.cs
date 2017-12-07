@@ -9,9 +9,9 @@ namespace UniqueDb.ConnectionProvider
 {
     public static class SqlConnectionProviderExtensionMethods
     {
-        public static SqlConnectionDbDisposable ToDisposable(this ISqlConnectionProvider dbConnectionProvider)
+        public static SqlConnectionDbDeletingDisposable ToSelfDeletingDisposable(this ISqlConnectionProvider dbConnectionProvider)
         {
-            var disposable = new SqlConnectionDbDisposable(dbConnectionProvider);
+            var disposable = new SqlConnectionDbDeletingDisposable(dbConnectionProvider);
             return disposable;
         }
 

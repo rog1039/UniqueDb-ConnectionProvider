@@ -24,7 +24,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
                     targetSqlConnectionProvider.CreateDatabase();
                 });
 
-            using (targetSqlConnectionProvider.ToDisposable())
+            using (targetSqlConnectionProvider.ToSelfDeletingDisposable())
             {
                 "Given a source database and a new blank database"
                 ._(() =>
@@ -87,7 +87,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
                     tableSchemas[0].TABLE_NAME.Should().Be("Person");
                 });
 
-            using (targetSqlConnectionProvider.ToDisposable())
+            using (targetSqlConnectionProvider.ToSelfDeletingDisposable())
             {
                 "When dropping the target table."
                     ._(() =>

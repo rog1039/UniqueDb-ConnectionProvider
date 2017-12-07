@@ -16,10 +16,10 @@ namespace UniqueDb.ConnectionProvider.Tests
             "After creating a database"
                 ._(() => connectionProvider.CreateDatabase());
 
-            "Disposing of the disposable provided by the ToDisposable extension method should delete the database"
+            "Disposing of the disposable provided by the ToSelfDeletingDisposable extension method should delete the database"
                 ._(() =>
                 {
-                    using (var lifecycle = connectionProvider.ToDisposable())
+                    using (var lifecycle = connectionProvider.ToSelfDeletingDisposable())
                     {
                         var result = connectionProvider.ExecuteScalar<int>("SELECT 1 ");
                     }

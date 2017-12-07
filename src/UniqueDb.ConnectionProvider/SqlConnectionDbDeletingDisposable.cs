@@ -2,11 +2,11 @@
 
 namespace UniqueDb.ConnectionProvider
 {
-    public class SqlConnectionDbDisposable : IDisposable
+    public class SqlConnectionDbDeletingDisposable : IDisposable
     {
         private readonly ISqlConnectionProvider _dbConnectionProvider;
 
-        public SqlConnectionDbDisposable(ISqlConnectionProvider dbConnectionProvider)
+        public SqlConnectionDbDeletingDisposable(ISqlConnectionProvider dbConnectionProvider)
         {
             _dbConnectionProvider = dbConnectionProvider;
         }

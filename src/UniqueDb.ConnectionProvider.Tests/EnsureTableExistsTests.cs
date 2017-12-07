@@ -17,7 +17,7 @@ namespace UniqueDb.ConnectionProvider.Tests
             "After creating a database"
                 ._(() => connectionProvider.CreateDatabase());
 
-            using (var lifecycle = connectionProvider.ToDisposable())
+            using (var lifecycle = connectionProvider.ToSelfDeletingDisposable())
             {
                 "Make sure the table doesn't exist"
                     ._(() =>
