@@ -1,5 +1,5 @@
+using AutoFixture;
 using FluentAssertions;
-using Ploeh.AutoFixture;
 using Xbehave;
 using Xunit;
 
@@ -30,9 +30,6 @@ namespace UniqueDb.ConnectionProvider.Tests
                 connectionProvider.ExecuteScalar<int>("Select 1");
             }
         }
-
-        
-        
 
         [Fact()]
         [Trait("Category", "Integration")]

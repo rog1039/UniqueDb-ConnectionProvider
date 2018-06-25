@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using System.Linq;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.Crud;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;

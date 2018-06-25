@@ -18,7 +18,71 @@
             <KeyBinding Key="Enter" Modifiers="Control+Shift" Command="{Binding CopyCSharpClassCommand}"></KeyBinding>
         </Grid.InputBindings>
 
-        <dxlc:LayoutControl Orientation="Vertical" AllowVerticalSizing="True">
+        <!--<Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <dxlc:LayoutGroup Header="Database Connection" View="Tabs" IsCollapsible="True" Orientation="Vertical" Grid.Row="0">
+            <dxlc:LayoutGroup Header="SQL">
+                <databaseSelection:SqlDbEntryView2
+                    DataContext="{Binding DatabaseSelectionController.SqlDbEntryController}" />
+            </dxlc:LayoutGroup>
+            <dxlc:LayoutGroup Header="ODBC">
+                <databaseSelection:TransoftDbEntryView
+                    DataContext="{Binding DatabaseSelectionController.TransoftEntryController}" />
+            </dxlc:LayoutGroup>
+        </dxlc:LayoutGroup>
+
+        <dxlc:LayoutGroup Header="Query" View="GroupBox" Orientation="Vertical" IsCollapsible="True" dxlc:LayoutControl.AllowVerticalSizing="True" Grid.Row="1">
+            <dxlc:LayoutGroup.InputBindings>
+                <KeyBinding Key="Enter" Modifiers="Control" Command="{Binding ExecuteQueryCommand}"></KeyBinding>
+            </dxlc:LayoutGroup.InputBindings>
+            <dxlc:LayoutItem Label="Class Name">
+                <dxe:TextEdit EditValue="{Binding ClassName.Value, UpdateSourceTrigger=PropertyChanged}" />
+            </dxlc:LayoutItem>
+            <TextBox Text="{Binding SqlQuery.Value, UpdateSourceTrigger=PropertyChanged, Delay=500}"
+                     VerticalScrollBarVisibility="Auto"
+                     AcceptsReturn="True" AcceptsTab="True"
+                     VerticalContentAlignment="Top" />
+            <UniformGrid Height="25">
+                <CheckBox VerticalAlignment="Top" Content="Include Property Attributes" IsChecked="{Binding IncludePropertyAttributes.Value}"></CheckBox>
+            </UniformGrid>
+            <dxlc:LayoutItem Height="25">
+                <Button Content="Execute" Command="{Binding ExecuteQueryCommand}" />
+            </dxlc:LayoutItem>
+        </dxlc:LayoutGroup>
+
+        <GridSplitter Grid.Row="2" ResizeBehavior="PreviousAndNext" ResizeDirection="Rows" Height="2" HorizontalAlignment="Stretch"  />
+
+        <dxlc:LayoutGroup View="Tabs" dxlc:LayoutControl.AllowVerticalSizing="True" Grid.Row="3">
+            <dxlc:LayoutGroup Header="C# Generated Code">
+                <dxlc:LayoutItem VerticalAlignment="Stretch">
+                    <dxe:TextEdit EditValue="{Binding GeneratedCSharpText.Value}"
+                                  VerticalScrollBarVisibility="Auto"
+                                  AcceptsReturn="True" AcceptsTab="True"
+                                  VerticalContentAlignment="Top" />
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+            <dxlc:LayoutGroup Header="{Binding Path=QueryTabName.Value}" Orientation="Vertical">
+
+                <dxg:GridControl AutoGenerateColumns="RemoveOld" EnableSmartColumnsGeneration="True"
+                                 HorizontalAlignment="Stretch"
+                                 ItemsSource="{Binding Datatable.Value}">
+                    <dxg:GridControl.View>
+                        <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True"
+                                       ShowGroupPanel="False" ShowIndicator="False" />
+                    </dxg:GridControl.View>
+                </dxg:GridControl>
+            </dxlc:LayoutGroup>
+            <dxlc:LayoutGroup Header="Design Time Data Code">
+                <dxe:TextEdit EditValue="{Binding DesignTimeDataCode.Value}" />
+            </dxlc:LayoutGroup>
+        </dxlc:LayoutGroup>-->
+
+        <dxlc:LayoutControl Orientation="Vertical" AllowVerticalSizing="True" >
             <dxlc:LayoutGroup Header="Database Connection" IsCollapsible="True" Orientation="Vertical" View="GroupBox"
                               VerticalAlignment="Top">
                 <dxlc:LayoutGroup Header="Database Connection" View="Tabs" IsCollapsible="True" Orientation="Vertical">
@@ -40,7 +104,7 @@
                 <dxlc:LayoutItem Label="Class Name">
                     <dxe:TextEdit EditValue="{Binding ClassName.Value, UpdateSourceTrigger=PropertyChanged}" />
                 </dxlc:LayoutItem>
-                <dxe:TextEdit EditValue="{Binding SqlQuery.Value, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox Text="{Binding SqlQuery.Value, UpdateSourceTrigger=PropertyChanged, Delay=500}"
                               VerticalScrollBarVisibility="Auto"
                               AcceptsReturn="True" AcceptsTab="True"
                               VerticalContentAlignment="Top" />

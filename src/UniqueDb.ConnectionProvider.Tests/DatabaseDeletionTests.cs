@@ -1,6 +1,3 @@
-using System;
-using System.Data.SqlClient;
-using Dapper;
 using Xbehave;
 
 namespace UniqueDb.ConnectionProvider.Tests
