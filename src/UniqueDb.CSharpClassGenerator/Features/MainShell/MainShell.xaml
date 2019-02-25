@@ -83,7 +83,8 @@
         </dxlc:LayoutGroup>-->
 
         <dxlc:LayoutControl Orientation="Vertical" AllowVerticalSizing="True" >
-            <dxlc:LayoutGroup Header="Database Connection" IsCollapsible="True" Orientation="Vertical" View="GroupBox"
+            <dxlc:LayoutGroup Header="Database Connection" Orientation="Vertical" View="GroupBox"
+                              Height="340"
                               VerticalAlignment="Top">
                 <dxlc:LayoutGroup Header="Database Connection" View="Tabs" IsCollapsible="True" Orientation="Vertical">
                     <dxlc:LayoutGroup Header="SQL">
@@ -97,14 +98,15 @@
                 </dxlc:LayoutGroup>
             </dxlc:LayoutGroup>
 
-            <dxlc:LayoutGroup Header="Query" View="GroupBox" Orientation="Vertical" IsCollapsible="True" dxlc:LayoutControl.AllowVerticalSizing="True">
+            <dxlc:LayoutGroup Header="Query" View="GroupBox" Orientation="Vertical" IsCollapsible="True"
+                              Height="300">
                 <dxlc:LayoutGroup.InputBindings>
                     <KeyBinding Key="Enter" Modifiers="Control" Command="{Binding ExecuteQueryCommand}"></KeyBinding>
                 </dxlc:LayoutGroup.InputBindings>
-                <dxlc:LayoutItem Label="Class Name">
+                <dxlc:LayoutItem Label="Class Name" Height="23">
                     <dxe:TextEdit EditValue="{Binding ClassName.Value, UpdateSourceTrigger=PropertyChanged}" />
                 </dxlc:LayoutItem>
-                <TextBox Text="{Binding SqlQuery.Value, UpdateSourceTrigger=PropertyChanged, Delay=500}"
+                <TextBox Text="{Binding SqlQuery.Value, UpdateSourceTrigger=PropertyChanged, Delay=50}"
                               VerticalScrollBarVisibility="Auto"
                               AcceptsReturn="True" AcceptsTab="True"
                               VerticalContentAlignment="Top" />
@@ -116,7 +118,7 @@
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
 
-            <dxlc:LayoutGroup View="Tabs" dxlc:LayoutControl.AllowVerticalSizing="True">
+            <dxlc:LayoutGroup View="Tabs" >
                 <dxlc:LayoutGroup Header="C# Generated Code">
                     <dxlc:LayoutItem VerticalAlignment="Stretch">
                         <dxe:TextEdit EditValue="{Binding GeneratedCSharpText.Value}"

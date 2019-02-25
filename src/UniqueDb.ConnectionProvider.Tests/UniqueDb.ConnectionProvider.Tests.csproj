@@ -209,6 +209,7 @@
     <Compile Include="StaticSqlConnectionProviderTests.cs" />
     <Compile Include="StringTableExtensions.cs" />
     <Compile Include="TestingConstants.cs" />
+    <Compile Include="UnitTestBaseWithConsoleRedirection.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UniqueDb.ConnectionProvider\UniqueDb.ConnectionProvider.csproj">

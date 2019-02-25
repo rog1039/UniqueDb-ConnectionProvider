@@ -46,6 +46,12 @@ namespace UniqueDb.ConnectionProvider
             connection.Dispose();
         }
 
+        public static void EnsureDatabaseExists(this ISqlConnectionProvider connectionProvider)
+        {
+            var databaseExists = DoesDatabaseExist(connectionProvider);
+            if (!databaseExists) connectionProvider.CreateDatabase();
+        }
+
         private static SqlConnection CreateSqlConnectionOnMasterDatabase(ISqlConnectionProvider connectionProvider)
         {
             var connectionStringBuilder = connectionProvider.GetSqlConnectionStringBuilder();

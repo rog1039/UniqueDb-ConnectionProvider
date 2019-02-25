@@ -41,9 +41,9 @@ namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection
             return table;
         }
 
-        public string GetQueryResultsAsJson(string query)
+        public string GetQueryResultsAsJson(string query, int count = 100)
         {
-            var results = _dbConnectionFactory().Query(query).ToList();
+            var results = _dbConnectionFactory().Query(query).Take(count).ToList();
             var json = JsonConvert.SerializeObject(results);
             return json;
         }

@@ -6,10 +6,11 @@ using System.Linq;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 {
-    public class GetSqlCreateTableScriptsTests
+    public class GetSqlCreateTableScriptsTests : UnitTestBaseWithConsoleRedirection
     {
         [Fact()]
         [Trait("Category", "Instant")]
@@ -42,6 +43,8 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
                 Console.WriteLine(attribute.GetType().FullName);
             }
         }
+
+        public GetSqlCreateTableScriptsTests(ITestOutputHelper outputHelperHelper) : base(outputHelperHelper) { }
     }
 
     public class SampleClassToCreateTableFor

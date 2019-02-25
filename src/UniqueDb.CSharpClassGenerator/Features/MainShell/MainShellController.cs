@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
+using System.Text;
 using System.Windows;
 using DevExpress.Mvvm;
 using Newtonsoft.Json;
@@ -39,33 +42,64 @@ namespace UniqueDb.CSharpClassGenerator.Features.MainShell
 
         private void ExecuteQuery()
         {
+            PopulateDataTable();
+            GenerateCSharpClassDefinition();
+            GenerateDesignTimeCode();
+        }
+
+        private void PopulateDataTable()
+        {
             try
             {
                 var sw = Stopwatch.StartNew();
                 var dataTable = DatabaseSelectionController.GetDataTable(SqlQuery);
                 var elapsedTime = sw.Elapsed;
-                var customJson = Datatable.Value.ToCustomJson(Formatting.None);
+                var customJson = dataTable.ToCustomJson(Formatting.None);
                 DataSize.Value = customJson.Length;
-                QueryTabName.Value = $"Query Results {elapsedTime:s\\.fff}s | Rows: {dataTable.Rows.Count} | Size: {DataSize.Value/1024:N1} KB";
+                var gzipLength = GetGzipLength(customJson);
+                QueryTabName.Value =
+                    $"Query Results {elapsedTime:s\\.fff}s | Rows: {dataTable.Rows.Count} | Size: {DataSize.Value / 1024:N1} KB | Compressed: {gzipLength / 1024:N1} KB";
                 Datatable.Value = dataTable;
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.ToString());
             }
+        }
 
+        private long GetGzipLength(string customJson)
+        {
+            using (var compressedStream = new MemoryStream())
+            {
+                using (var zipStream = new GZipStream(compressedStream, CompressionMode.Compress))
+                {
+                    var data = UTF8Encoding.UTF8.GetBytes(customJson);
+                    zipStream.Write(data, 0, data.Length);
+                    var length = compressedStream.Length;
+                    zipStream.Close();
+                    return length;
+                }
+            }
+        }
+
+        private void GenerateCSharpClassDefinition()
+        {
             try
             {
                 var options = new CSharpClassTextGeneratorOptions();
                 options.IncludePropertyAnnotationAttributes = IncludePropertyAttributes.Value;
                 var conn = DatabaseSelectionController.GetDbConnection();
-                GeneratedCSharpText.Value = CSharpClassGeneratorFromAdoDataReader.GenerateClass(conn, SqlQuery.Value, ClassName.Value, options);
+                GeneratedCSharpText.Value =
+                    CSharpClassGeneratorFromAdoDataReader.GenerateClass(conn, SqlQuery.Value, ClassName.Value, options);
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.ToString());
             }
+        }
 
+        private void GenerateDesignTimeCode()
+        {
             try
             {
                 var json = DatabaseSelectionController.GetQueryResultsAsJson(SqlQuery);

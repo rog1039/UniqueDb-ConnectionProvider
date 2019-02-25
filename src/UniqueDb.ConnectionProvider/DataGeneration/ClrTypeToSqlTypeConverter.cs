@@ -42,6 +42,13 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             return nullableSqlType;
         }
 
+        private static void ValidateClrType(Type clrType)
+        {
+            if (clrType.IsGenericType && !clrType.Name.Contains("Nullable"))
+                throw new ArgumentException(
+                    $"Provided type, {clrType.Name}, is generic type that is not a nullable generic type.  This conversion requires non-generic types or nullable types.");
+        }
+
         private static SqlType GetSqlType(Type clrType)
         {
             SqlType sqlType = null;
@@ -64,13 +71,6 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         private static bool IsClrTypeNullable(Type clrType)
         {
             return clrType.IsGenericType && clrType.Name.Contains("Nullable");
-        }
-
-        private static void ValidateClrType(Type clrType)
-        {
-            if (clrType.IsGenericType && !clrType.Name.Contains("Nullable"))
-                throw new ArgumentException(
-                    $"Provided type, {clrType.Name}, is generic type that is not a nullable generic type.  This conversion requires non-generic types or nullable types.");
         }
     }
 }
