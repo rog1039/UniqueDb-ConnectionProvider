@@ -156,3 +156,6 @@ $RECYCLE.BIN/
 
 # Rosyln folders??....
 *.sln.ide*
+src/\.vs/
+
+src/\.idea/
