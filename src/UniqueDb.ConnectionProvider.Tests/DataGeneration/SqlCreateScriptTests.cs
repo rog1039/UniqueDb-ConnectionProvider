@@ -15,6 +15,15 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
             Console.WriteLine(script);
         }
         
+        [Fact()]
+        [Trait("Category", "Instant")]
+        public void TestClassATestUsingRuntimeType()
+        {
+            var type = new TestClassA().GetType();
+            var script = CreateTableScriptProvider.GetCreateTableScript(type);
+            Console.WriteLine(script);
+        }
+        
         public SqlCreateScriptTests(ITestOutputHelper outputHelperHelper) : base(outputHelperHelper)
         {
         }
