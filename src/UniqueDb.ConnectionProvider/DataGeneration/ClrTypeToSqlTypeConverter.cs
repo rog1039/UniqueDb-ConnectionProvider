@@ -32,11 +32,30 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             { "timespan", SqlTypeFactory.Time() },
         };
 
+        public static bool CanTranslateToSqlType(Type clrType)
+        {
+            var isNonNullableGeneric = IsNonNullableGeneric(clrType);
+            if (isNonNullableGeneric) return false;
+            
+            clrType = StripNullableOuterGeneric(clrType);
+            if (clrType.IsEnum) return true;
+            var matchingSqlTypeExists = DefaultClrToSqlTypeMap.ContainsKey(clrType.Name.ToLower());
+            return matchingSqlTypeExists;
+        }
+
+        public static bool IsNonNullableGeneric(Type clrType)
+        {
+            var isGeneric = clrType.IsGenericType;
+            var isNotANullable = !clrType.Name.Contains("Nullable");
+
+            return isGeneric && isNotANullable;
+        }
+        
         public static NullableSqlType Convert(Type clrType)
         {
             ValidateClrType(clrType);
             var isNullable = IsClrTypeNullable(clrType);
-            clrType = GetClrType(clrType);
+            clrType = StripNullableOuterGeneric(clrType);
             var sqlType = GetSqlType(clrType);
             var nullableSqlType = new NullableSqlType(sqlType, isNullable);
             return nullableSqlType;
@@ -44,7 +63,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         private static void ValidateClrType(Type clrType)
         {
-            if (clrType.IsGenericType && !clrType.Name.Contains("Nullable"))
+            if (IsNonNullableGeneric(clrType))
                 throw new ArgumentException(
                     $"Provided type, {clrType.Name}, is generic type that is not a nullable generic type.  This conversion requires non-generic types or nullable types.");
         }
@@ -60,7 +79,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             return sqlType;
         }
 
-        private static Type GetClrType(Type clrType)
+        private static Type StripNullableOuterGeneric(Type clrType)
         {
             var underlyingType = clrType.Name.Contains("Nullable")
                 ? Nullable.GetUnderlyingType(clrType)

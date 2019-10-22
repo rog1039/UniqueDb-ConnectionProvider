@@ -22,26 +22,41 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
         public static bool ShouldTranslateClrPropertyToSqlColumn(PropertyInfo arg,
                                                                  IEnumerable<string> columnsToIgnore = null)
         {
-            columnsToIgnore = columnsToIgnore ?? Enumerable.Empty<string>();
-            var inIgnoreList = columnsToIgnore.Contains(arg.Name);
-            if (inIgnoreList)
-                return false;
+            if (IsColumnIgnored(arg, columnsToIgnore)) return false;
+            if (IsPropertyDatabaseGenerated(arg)) return false;
+            
+            return ClrTypeToSqlTypeConverter.CanTranslateToSqlType(arg.PropertyType);
 
-            var isString = arg.PropertyType == typeof(string);
-            if (isString)
-                return true;
+            // var isString = argType == typeof(string);
+            // if (isString)
+            //     return true;
+            //
+            //
+            // var implementsEnumerable = argType
+            //     .GetInterfaces()
+            //     .Any(interfaceType => interfaceType.Name.ToLower().Equals("ienumerable"));
+            //
+            // var isDatabaseGenerated = arg
+            //     .CustomAttributes
+            //     .Any(a => a.AttributeType == typeof(DatabaseGeneratedAttribute));
+            //
+            // var shouldSkip = implementsEnumerable || isDatabaseGenerated;
+            // return !shouldSkip;
+        }
 
-            var implementsEnumerable = arg
-                .PropertyType
-                .GetInterfaces()
-                .Any(interfaceType => interfaceType.Name.ToLower().Equals("ienumerable"));
-
+        private static bool IsPropertyDatabaseGenerated(PropertyInfo arg)
+        {
             var isDatabaseGenerated = arg
                 .CustomAttributes
                 .Any(a => a.AttributeType == typeof(DatabaseGeneratedAttribute));
+            return isDatabaseGenerated;
+        }
 
-            var shouldSkip = implementsEnumerable || isDatabaseGenerated;
-            return !shouldSkip;
+        private static bool IsColumnIgnored(PropertyInfo arg, IEnumerable<string> columnsToIgnore)
+        {
+            if (columnsToIgnore == null) return false;
+            
+            return columnsToIgnore.Contains(arg.Name);
         }
 
         public static IList<PropertyInfo> GetPropertiesFromObject<T>(T obj, Expression<Func<T, object>> keyProperties)

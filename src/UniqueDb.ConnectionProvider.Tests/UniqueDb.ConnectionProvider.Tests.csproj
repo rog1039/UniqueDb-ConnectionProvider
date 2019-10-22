@@ -206,6 +206,7 @@
     <Compile Include="DataGeneration\RoslynApiExploration.cs" />
     <Compile Include="DataGeneration\RoslynHelper.cs" />
     <Compile Include="DataGeneration\GetSqlCreateTableScriptsTests.cs" />
+    <Compile Include="DataGeneration\SqlCreateScriptTests.cs" />
     <Compile Include="DataGeneration\SqlGeneration.cs" />
     <Compile Include="DataGeneration\SqlTableFactoryTests.cs" />
     <Compile Include="DataGeneration\SqlTypeFactoryTests.cs" />
