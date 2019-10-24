@@ -189,6 +189,7 @@
     <Compile Include="DataGeneration\AdoSchemaTableHelperTests.cs" />
     <Compile Include="DataGeneration\AdventureWorks\GeneratedClasses.cs" />
     <Compile Include="DataGeneration\AutofixtureInsertionTests.cs" />
+    <Compile Include="DataGeneration\ClrTypeToSqlTypeConverter.cs" />
     <Compile Include="DataGeneration\CompareDifferentClassGenerationMethods.cs" />
     <Compile Include="DataGeneration\InsertionTests.cs" />
     <Compile Include="DataGeneration\AutoFixtureUpdateTests.cs" />

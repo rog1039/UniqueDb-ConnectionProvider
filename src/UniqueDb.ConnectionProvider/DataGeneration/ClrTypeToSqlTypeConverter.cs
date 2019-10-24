@@ -34,8 +34,8 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         public static bool CanTranslateToSqlType(Type clrType)
         {
-            var isNonNullableGeneric = IsNonNullableGeneric(clrType);
-            if (isNonNullableGeneric) return false;
+            // var isNonNullableGeneric = IsNonNullableGeneric(clrType);
+            // if (isNonNullableGeneric) return false;
             
             clrType = StripNullableOuterGeneric(clrType);
             if (clrType.IsEnum) return true;
@@ -53,19 +53,22 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         
         public static NullableSqlType Convert(Type clrType)
         {
-            ValidateClrType(clrType);
-            var isNullable = IsClrTypeNullable(clrType);
+            ValidateClrTypeIsTranslatable(clrType);
             clrType = StripNullableOuterGeneric(clrType);
             var sqlType = GetSqlType(clrType);
+            
+            var isNullable = IsClrTypeNullable(clrType);
             var nullableSqlType = new NullableSqlType(sqlType, isNullable);
             return nullableSqlType;
         }
 
-        private static void ValidateClrType(Type clrType)
+        private static void ValidateClrTypeIsTranslatable(Type clrType)
         {
-            if (IsNonNullableGeneric(clrType))
-                throw new ArgumentException(
-                    $"Provided type, {clrType.Name}, is generic type that is not a nullable generic type.  This conversion requires non-generic types or nullable types.");
+            // if (IsNonNullableGeneric(clrType))
+            if (!CanTranslateToSqlType(clrType))
+                throw new ArgumentException($"Can't translate ClrType {clrType.FullName}");
+                // throw new ArgumentException(
+                //     $"Provided type, {clrType.Name}, is generic type that is not a nullable generic type.  This conversion requires non-generic types or nullable types.");
         }
 
         private static SqlType GetSqlType(Type clrType)
@@ -81,15 +84,14 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         private static Type StripNullableOuterGeneric(Type clrType)
         {
-            var underlyingType = clrType.Name.Contains("Nullable")
-                ? Nullable.GetUnderlyingType(clrType)
-                : clrType;
-            return underlyingType;
+            var underlyingType = Nullable.GetUnderlyingType(clrType);
+            return underlyingType ?? clrType;
         }
 
         private static bool IsClrTypeNullable(Type clrType)
         {
-            return clrType.IsGenericType && clrType.Name.Contains("Nullable");
+            var underlyingType = Nullable.GetUnderlyingType(clrType);
+            return underlyingType is null ? false : true;
         }
     }
 }
