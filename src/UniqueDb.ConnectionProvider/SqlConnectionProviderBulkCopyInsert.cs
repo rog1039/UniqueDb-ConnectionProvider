@@ -38,11 +38,7 @@ namespace UniqueDb.ConnectionProvider
 
         private static Type GetUnderlyingNullableTypeIfNullable(Type propertyType)
         {
-            if (propertyType.IsGenericType && propertyType.Name.ToLower().Contains("nullable"))
-            {
-                return Nullable.GetUnderlyingType(propertyType);
-            }
-            return propertyType;
+            return Nullable.GetUnderlyingType(propertyType) ?? propertyType;
         }
 
         private static void PopulateDataTable<T>(IList<T> list, DataTable dataTable, List<PropertyInfo> propertiesToInsert)
