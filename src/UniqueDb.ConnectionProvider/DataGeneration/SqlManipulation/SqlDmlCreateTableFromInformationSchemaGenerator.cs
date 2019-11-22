@@ -62,7 +62,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
 
         private static string AlignLeft(int positionNumber, int alignmentLength)
         {
-            return "{" + positionNumber + ",-" + alignmentLength + "}";
+            return $"{{{positionNumber},-{alignmentLength}}}";
         }
 
         private static string GetStringForDataType(InformationSchemaColumn informationSchemaColumn)

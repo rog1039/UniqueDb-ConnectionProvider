@@ -20,7 +20,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
 
         public static string GetCreateTableScript(object obj, string schemaName = "dbo", string tableName = null)
         {
-            var objectType = obj.GetType();
+            var objectType = obj as Type ?? obj.GetType();
             return GetCreateTableScript(objectType, schemaName, tableName);
         }
 
