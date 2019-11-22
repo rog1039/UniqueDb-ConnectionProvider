@@ -8,14 +8,14 @@ namespace UniqueDb.ConnectionProvider
         private readonly string _userName;
         private readonly string _password;
         private readonly bool _useIntegratedSecurity = true;
-        
+
         public StaticSqlConnectionProvider(string serverName, string databaseName)
         {
             ServerName = serverName;
             DatabaseName = databaseName;
         }
 
-        public StaticSqlConnectionProvider(string serverName, string databaseName, string userName)
+        private StaticSqlConnectionProvider(string serverName, string databaseName, string userName)
         {
             ServerName = serverName;
             DatabaseName = databaseName;
@@ -30,6 +30,22 @@ namespace UniqueDb.ConnectionProvider
             _password = password;
         }
 
+        public StaticSqlConnectionProvider(string connectionString)
+        {
+            var parsedConnectionString = new SqlConnectionStringBuilder(connectionString);
+            
+            ServerName = parsedConnectionString.DataSource;
+            DatabaseName = parsedConnectionString.InitialCatalog;
+
+            var hasPassword = !string.IsNullOrWhiteSpace(parsedConnectionString.Password);
+            if (hasPassword)
+            {
+                _userName = parsedConnectionString.UserID;
+                _password = parsedConnectionString.Password;
+                _useIntegratedSecurity = false;
+            }
+        }
+
         public override SqlConnectionStringBuilder GetSqlConnectionStringBuilder()
         {
             var builder = new SqlConnectionStringBuilder();
@@ -41,9 +57,10 @@ namespace UniqueDb.ConnectionProvider
                 builder.UserID = _userName;
                 builder.Password = _password;
             }
+
             return builder;
         }
 
-        public static ISqlConnectionProvider Blank => new StaticSqlConnectionProvider("","");
+        public static ISqlConnectionProvider Blank => new StaticSqlConnectionProvider("", "");
     }
 }
