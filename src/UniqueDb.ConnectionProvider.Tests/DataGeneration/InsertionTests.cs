@@ -8,7 +8,6 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 {
     public class InsertionTests
     {
-
         [Scenario]
         public void InsertSimpleClass()
         {
@@ -48,7 +47,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
                 });
                 BddStringExtensions._("Insert into the table", () =>
                 {
-                    var listOfSimpleClass = Enumerable.Range(0, 9999).Select(i => SimpleClass.GetSample()).ToList();
+                    var listOfSimpleClass = Enumerable.Range(0, 1000).Select(i => SimpleClass.GetSample()).ToList();
                     foreach (var simpleClass in listOfSimpleClass)
                     {
                         connectionProvider.Insert(simpleClass, "SimpleClass");
@@ -74,7 +73,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
                 });
                 BddStringExtensions._("Insert into the table", () =>
                 {
-                    var listOfSimpleClass = Enumerable.Range(0, 9999).Select(i => SimpleClass.GetSample()).ToList();
+                    var listOfSimpleClass = Enumerable.Range(0, 1000).Select(i => SimpleClass.GetSample()).ToList();
                     connectionProvider.BulkInsert(listOfSimpleClass, "SimpleClass");
                 });
             }

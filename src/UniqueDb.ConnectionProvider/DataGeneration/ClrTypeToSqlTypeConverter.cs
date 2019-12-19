@@ -54,8 +54,8 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         public static NullableSqlType Convert(Type clrType)
         {
             ValidateClrTypeIsTranslatable(clrType);
-            clrType = StripNullableOuterGeneric(clrType);
-            var sqlType = GetSqlType(clrType);
+            var underlyingType = StripNullableOuterGeneric(clrType);
+            var sqlType = GetSqlType(underlyingType);
             
             var isNullable = IsClrTypeNullable(clrType);
             var nullableSqlType = new NullableSqlType(sqlType, isNullable);
