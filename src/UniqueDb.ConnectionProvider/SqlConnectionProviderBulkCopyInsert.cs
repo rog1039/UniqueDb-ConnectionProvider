@@ -17,7 +17,7 @@ namespace UniqueDb.ConnectionProvider
         {
             if (list.Count == 0) return;
             var dataTable = CreateDataTable(list);
-            ExecuteBulkCopy(sqlConnectionProvider, schemaName, tableName, dataTable);
+            ExecuteBulkCopy(sqlConnectionProvider, schemaName, tableName.BracketizeSafe(), dataTable);
         }
 
         private static DataTable CreateDataTable<T>(IList<T> list)

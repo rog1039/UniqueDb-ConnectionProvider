@@ -6,6 +6,12 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 {
     public static class StringExtensions
     {
+        public static string BracketizeSafe(this string input)
+        {
+            if (input[0] == '[' && input[input.Length - 1] == ']') return input;
+            return "[" + input + "]";
+        }
+
         public static string Bracketize(this string input)
         {
             return "[" + input + "]";
