@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Linq;
 using DevExpress.Mvvm;
+using Microsoft.Data.SqlClient;
 using Rogero.ReactiveProperty;
 
 namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection

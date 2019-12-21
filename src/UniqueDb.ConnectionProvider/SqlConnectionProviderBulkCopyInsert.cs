@@ -1,19 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using UniqueDb.ConnectionProvider.DataGeneration;
+using Microsoft.Data.SqlClient;
 using UniqueDb.ConnectionProvider.DataGeneration.Crud;
 
 namespace UniqueDb.ConnectionProvider
 {
     public static class SqlConnectionProviderBulkCopyInsert
     {
-        public static void BulkInsert<T>(ISqlConnectionProvider sqlConnectionProvider, IList<T> list, string tableName,
-                                         string                 schemaName = "dbo")
+        public static void BulkInsert<T>(ISqlConnectionProvider sqlConnectionProvider, IList<T> list, string tableName, string schemaName ="dbo")
         {
             if (list.Count == 0) return;
             var dataTable = CreateDataTable(list);
@@ -23,7 +22,7 @@ namespace UniqueDb.ConnectionProvider
         private static DataTable CreateDataTable<T>(IList<T> list)
         {
             var propertiesToInsert = SqlClrHelpers.GetRelevantPropertyInfos(list[0], null);
-            var dataTable          = CreateDataTable(propertiesToInsert);
+            var dataTable = CreateDataTable(propertiesToInsert);
             PopulateDataTable(list, dataTable, propertiesToInsert);
             return dataTable;
         }
@@ -34,25 +33,18 @@ namespace UniqueDb.ConnectionProvider
             for (int index = 0; index < propertiesToInsert.Count; index++)
             {
                 var propertyInfo = propertiesToInsert[index];
-                var type         = GetUnderlyingNullableTypeIfNullable(propertyInfo.PropertyType);
+                var type = GetUnderlyingNullableTypeIfNullable(propertyInfo.PropertyType);
                 dataTable.Columns.Add(propertyInfo.Name, type);
             }
-
             return dataTable;
         }
 
         private static Type GetUnderlyingNullableTypeIfNullable(Type propertyType)
         {
-            if (propertyType.IsGenericType && propertyType.Name.ToLower().Contains("nullable"))
-            {
-                return Nullable.GetUnderlyingType(propertyType);
-            }
-
-            return propertyType;
+            return Nullable.GetUnderlyingType(propertyType) ?? propertyType;
         }
 
-        private static void PopulateDataTable<T>(IList<T>           list, DataTable dataTable,
-                                                 List<PropertyInfo> propertiesToInsert)
+        private static void PopulateDataTable<T>(IList<T> list, DataTable dataTable, List<PropertyInfo> propertiesToInsert)
         {
             foreach (var item in list)
             {
@@ -61,8 +53,7 @@ namespace UniqueDb.ConnectionProvider
             }
         }
 
-        private static DataRow CreateDataRowFromItem<T>(DataTable dataTable, List<PropertyInfo> propertiesToInsert,
-                                                        T         item)
+        private static DataRow CreateDataRowFromItem<T>(DataTable dataTable, List<PropertyInfo> propertiesToInsert, T item)
         {
             var row = dataTable.NewRow();
             for (int index = 0; index < propertiesToInsert.Count; index++)
@@ -70,12 +61,10 @@ namespace UniqueDb.ConnectionProvider
                 var propertyInfo = propertiesToInsert[index];
                 row[index] = propertyInfo.GetValue(item) ?? DBNull.Value;
             }
-
             return row;
         }
 
-        private static void ExecuteBulkCopy(ISqlConnectionProvider sqlConnectionProvider, string    schemaName,
-                                            string                 tableName,             DataTable dataTable)
+        private static void ExecuteBulkCopy(ISqlConnectionProvider sqlConnectionProvider, string schemaName, string tableName, DataTable dataTable)
         {
             using (var sqlBulkCopy = new SqlBulkCopy(sqlConnectionProvider.GetSqlConnectionString()))
             {
