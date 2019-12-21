@@ -1,6 +1,5 @@
 using System;
 using System.Data;
-using System.Data.SqlClient;
 using System.Diagnostics;
 using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;

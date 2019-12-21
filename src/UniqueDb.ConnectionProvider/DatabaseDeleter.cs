@@ -1,5 +1,5 @@
 using System;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace UniqueDb.ConnectionProvider
 {
@@ -8,7 +8,7 @@ namespace UniqueDb.ConnectionProvider
         public static void DeleteDatabase(ISqlConnectionProvider sqlConnectionProvider)
         {
             var deleteDbSqlText = CreateSqlTextToDeleteDatabase(sqlConnectionProvider);
-            var sqlConnection = sqlConnectionProvider.ConnectionAsMaster();
+            var sqlConnection   = sqlConnectionProvider.ConnectionAsMaster();
             sqlConnection.Open();
             ExecuteSqlCommandToDeleteDatabase(deleteDbSqlText, sqlConnection);
             sqlConnection.Close();
@@ -17,11 +17,13 @@ namespace UniqueDb.ConnectionProvider
 
         private static string CreateSqlTextToDeleteDatabase(ISqlConnectionProvider sqlConnectionProvider)
         {
-            String sqlCommandText = string.Format(
-                "ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; " +
-                "DROP DATABASE [{0}];", sqlConnectionProvider.DatabaseName);
+            var databaseName = sqlConnectionProvider.DatabaseName;
+            var sqlCommandText =
+                $"ALTER DATABASE [{databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; " +
+                $"DROP DATABASE [{databaseName}];";
             return sqlCommandText;
         }
+
         private static void ExecuteSqlCommandToDeleteDatabase(string sqlCommandText, SqlConnection sqlConnection)
         {
             var sqlCommand = new SqlCommand(sqlCommandText, sqlConnection);

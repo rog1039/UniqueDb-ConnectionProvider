@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Reflection;
+using Microsoft.Data.SqlClient;
 using UniqueDb.ConnectionProvider.DataGeneration.Crud;
 
 namespace UniqueDb.ConnectionProvider

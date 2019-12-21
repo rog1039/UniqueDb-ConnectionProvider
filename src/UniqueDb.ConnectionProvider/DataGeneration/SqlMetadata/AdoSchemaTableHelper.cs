@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
+using Microsoft.Data.SqlClient;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata
 {
