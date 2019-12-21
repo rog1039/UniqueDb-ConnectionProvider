@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
+using System.Linq;
 using System.Reflection;
+using UniqueDb.ConnectionProvider.DataGeneration;
 using Microsoft.Data.SqlClient;
 using UniqueDb.ConnectionProvider.DataGeneration.Crud;
 
@@ -65,11 +68,70 @@ namespace UniqueDb.ConnectionProvider
         {
             using (var sqlBulkCopy = new SqlBulkCopy(sqlConnectionProvider.GetSqlConnectionString()))
             {
-                sqlBulkCopy.BulkCopyTimeout = 480;
-                sqlBulkCopy.BatchSize = 35000;
+                VerifyDataTableColumnsMatchDbTableSchema(sqlConnectionProvider, schemaName, tableName, dataTable);
+                SetColumnMappings(sqlBulkCopy, dataTable);
+                sqlBulkCopy.BulkCopyTimeout      = 480;
+                sqlBulkCopy.BatchSize            = 35000;
                 sqlBulkCopy.DestinationTableName = $"{schemaName}.{tableName}";
                 sqlBulkCopy.WriteToServer(dataTable);
                 sqlBulkCopy.Close();
+            }
+        }
+
+        private static void VerifyDataTableColumnsMatchDbTableSchema(ISqlConnectionProvider sqlConnectionProvider,
+                                                                     string                 schemaName,
+                                                                     string                 tableName,
+                                                                     DataTable              dataTable)
+        {
+            var dbTableColumns =
+                InformationSchemaMetadataExplorer.GetInformationSchemaColumns(
+                    new SqlTableReference(sqlConnectionProvider, schemaName, tableName));
+            var columnsFromDbDict = dbTableColumns.ToDictionary(z => z.COLUMN_NAME);
+            
+            var columnsInDataTableButMissingInDbTable = (
+                from DataColumn dataTableColumn in dataTable.Columns
+                let dbContainsDatatableColumn = columnsFromDbDict.ContainsKey(dataTableColumn.ColumnName)
+                where !dbContainsDatatableColumn
+                select dataTableColumn.ColumnName).ToList();
+
+            if (columnsInDataTableButMissingInDbTable.Count > 0)
+            {
+                var message =
+                    $"SqlBulkInsert will fail because the following columns are present in the DataTable but not in the Sql Database table: {string.Join(", ", columnsInDataTableButMissingInDbTable)}";
+
+                throw new InvalidDataException(message);
+            }
+        }
+
+        /// <summary>
+        /// Note: this is necessary at least for the following reason:
+        /// 
+        /// Without explicit mapping based on column names, SqlBulkCopy inserts based on column ordinals.
+        /// So if the datatable has the following properties:
+        /// -------------------------------------------
+        /// PartNumber (int) | PartDescription(string)
+        /// -------------------------------------------
+        /// 
+        /// and the database table has the following properties:
+        /// -------------------------------------------
+        /// PartDescription(string) | PartNumber (int) 
+        /// -------------------------------------------
+        /// 
+        /// then the bulk copy will fail because it will try to insert the part number data into the 
+        /// part description column.  
+        /// 
+        /// So the mapping below will instead perform bulk copies on the names of the CLR properties 
+        /// and the names of the columns in the database rather than on CLR and SQL column ordinals.
+        /// 
+        /// </summary>
+        /// <param name="sqlBulkCopy"></param>
+        /// <param name="dataTable"></param>
+        private static void SetColumnMappings(SqlBulkCopy sqlBulkCopy, DataTable dataTable)
+        {
+            foreach (DataColumn column in dataTable.Columns)
+            {
+                var columnMapping = new SqlBulkCopyColumnMapping(column.ColumnName, column.ColumnName);
+                sqlBulkCopy.ColumnMappings.Add(columnMapping);
             }
         }
     }

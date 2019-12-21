@@ -37,6 +37,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
         public static void CreateTable<T>(this ISqlConnectionProvider sqlConnectionProvider, string schema, string table)
         {
             var createTableScript = CreateTableScriptProvider.GetCreateTableScript<T>(schema, table);
+            Console.WriteLine(createTableScript);
             sqlConnectionProvider.Execute(createTableScript);
         }
 
