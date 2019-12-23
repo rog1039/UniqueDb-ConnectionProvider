@@ -7,7 +7,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         public static string GetInformationSchemaColumnsSqlQuery(SqlTableReference sqlTableReference)
         {
-            var sql = string.Format(_sqlInformationSchemaColumn, sqlTableReference.TableName, sqlTableReference.SqlConnectionProvider.DatabaseName);
+            var sql = string.Format(_sqlInformationSchemaColumn, sqlTableReference.TableName.Debracketize(), sqlTableReference.SqlConnectionProvider.DatabaseName);
             sql = AddSchemaWhereClauseIfNecessary(sql, sqlTableReference);
             return sql;
         }

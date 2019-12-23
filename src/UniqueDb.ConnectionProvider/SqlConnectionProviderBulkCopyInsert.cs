@@ -93,6 +93,8 @@ namespace UniqueDb.ConnectionProvider
                 let dbContainsDatatableColumn = columnsFromDbDict.ContainsKey(dataTableColumn.ColumnName)
                 where !dbContainsDatatableColumn
                 select dataTableColumn.ColumnName).ToList();
+            
+            
 
             if (columnsInDataTableButMissingInDbTable.Count > 0)
             {
