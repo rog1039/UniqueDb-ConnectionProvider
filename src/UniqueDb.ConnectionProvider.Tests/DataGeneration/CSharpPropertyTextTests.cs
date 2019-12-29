@@ -11,7 +11,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
     {
 
         [Theory]
-        [MemberData("TestCases")]
+        [MemberData(nameof(TestCases))]
         [Trait("Category", "Instant")]
         public void RunTestCases(TestCase testCase)
         {

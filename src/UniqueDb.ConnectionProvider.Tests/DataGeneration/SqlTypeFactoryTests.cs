@@ -52,7 +52,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         }
 
         [Theory]
-        [MemberData("DecimalTestCases")]
+        [MemberData(nameof(DecimalTestCases))]
         [Trait("Category", "Instant")]
         public void Decimal(int precision, int? scale, double lowerBound, double upperBound)
         {
@@ -64,7 +64,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         }
 
         [Theory]
-        [MemberData("DecimalTestCases")]
+        [MemberData(nameof(DecimalTestCases))]
         [Trait("Category", "Instant")]
         public void Numeric(int precision, int? scale, double lowerBound, double upperBound)
         {
