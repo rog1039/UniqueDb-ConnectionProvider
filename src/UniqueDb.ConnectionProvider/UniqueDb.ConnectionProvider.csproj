@@ -212,6 +212,7 @@
     <Compile Include="DataGeneration\Crud\SqlConnectionProviderInsertExtensions.cs" />
     <Compile Include="DataGeneration\DataAnnotationAttributeHandler.cs" />
     <Compile Include="DataGeneration\DesignTimeDataGeneration\Class1.cs" />
+    <Compile Include="DataGeneration\DesignTimeDataGeneration\CustomJsonConvert.cs" />
     <Compile Include="DataGeneration\PropertyInfoWithAttributeToSqlColumnDeclarationConverter.cs" />
     <Compile Include="DataGeneration\SqlManipulation\CreateTableScriptProvider.cs" />
     <Compile Include="DataGeneration\SqlManipulation\ExtensionMethods.cs" />
