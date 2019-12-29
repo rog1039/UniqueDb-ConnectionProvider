@@ -5,8 +5,6 @@ namespace UniqueDb.ConnectionProvider
 {
     public class StaticSqlConnectionProvider : BaseSqlConnectionProvider
     {
-        private readonly string _userName;
-        private readonly string _password;
         private readonly bool _useIntegratedSecurity = true;
 
         public StaticSqlConnectionProvider(string serverName, string databaseName)
@@ -19,15 +17,15 @@ namespace UniqueDb.ConnectionProvider
         {
             ServerName = serverName;
             DatabaseName = databaseName;
-            _userName = userName;
+            UserName = userName;
         }
 
         public StaticSqlConnectionProvider(string serverName, string databaseName, string userName, string password)
             : this(serverName, databaseName)
         {
             _useIntegratedSecurity = false;
-            _userName = userName;
-            _password = password;
+            UserName = userName;
+            Password = password;
         }
 
         public StaticSqlConnectionProvider(string connectionString)
@@ -40,8 +38,8 @@ namespace UniqueDb.ConnectionProvider
             var hasPassword = !string.IsNullOrWhiteSpace(parsedConnectionString.Password);
             if (hasPassword)
             {
-                _userName = parsedConnectionString.UserID;
-                _password = parsedConnectionString.Password;
+                UserName = parsedConnectionString.UserID;
+                Password = parsedConnectionString.Password;
                 _useIntegratedSecurity = false;
             }
         }
@@ -54,8 +52,8 @@ namespace UniqueDb.ConnectionProvider
             builder.IntegratedSecurity = _useIntegratedSecurity;
             if (!_useIntegratedSecurity)
             {
-                builder.UserID = _userName;
-                builder.Password = _password;
+                builder.UserID = UserName;
+                builder.Password = Password;
             }
 
             return builder;
