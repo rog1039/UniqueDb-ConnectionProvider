@@ -5,62 +5,66 @@ namespace UniqueDb.ConnectionProvider
 {
     public class StaticSqlConnectionProvider : BaseSqlConnectionProvider
     {
-        private readonly string _userName;
-        private readonly string _password;
-        private readonly bool _useIntegratedSecurity = true;
-
         public StaticSqlConnectionProvider(string serverName, string databaseName)
         {
-            ServerName = serverName;
-            DatabaseName = databaseName;
-        }
-
-        private StaticSqlConnectionProvider(string serverName, string databaseName, string userName)
-        {
-            ServerName = serverName;
-            DatabaseName = databaseName;
-            _userName = userName;
+            ServerName                  = serverName;
+            DatabaseName                = databaseName;
+            UseIntegratedAuthentication = true;
         }
 
         public StaticSqlConnectionProvider(string serverName, string databaseName, string userName, string password)
             : this(serverName, databaseName)
         {
-            _useIntegratedSecurity = false;
-            _userName = userName;
-            _password = password;
+            UserName                    = userName;
+            Password                    = password;
+            UseIntegratedAuthentication = false;
         }
+
+        protected StaticSqlConnectionProvider(){}
 
         public StaticSqlConnectionProvider(string connectionString)
         {
-            var parsedConnectionString = new SqlConnectionStringBuilder(connectionString);
-            
-            ServerName = parsedConnectionString.DataSource;
-            DatabaseName = parsedConnectionString.InitialCatalog;
+            var connectionStringBuilder = new SqlConnectionStringBuilder(connectionString);
 
-            var hasPassword = !string.IsNullOrWhiteSpace(parsedConnectionString.Password);
-            if (hasPassword)
+            ServerName   = connectionStringBuilder.DataSource;
+            DatabaseName = connectionStringBuilder.InitialCatalog;
+
+            var hasPassword = !string.IsNullOrWhiteSpace(connectionStringBuilder.Password);
+            var hasUser     = !string.IsNullOrWhiteSpace(connectionStringBuilder.UserID);
+            if (hasUser && hasPassword)
             {
-                _userName = parsedConnectionString.UserID;
-                _password = parsedConnectionString.Password;
-                _useIntegratedSecurity = false;
+                UserName                    = connectionStringBuilder.UserID;
+                Password                    = connectionStringBuilder.Password;
+                UseIntegratedAuthentication = false;
+            }
+            else
+            {
+                UseIntegratedAuthentication = true;
             }
         }
 
         public override SqlConnectionStringBuilder GetSqlConnectionStringBuilder()
         {
-            var builder = new SqlConnectionStringBuilder();
-            builder.DataSource = ServerName;
-            builder.InitialCatalog = DatabaseName;
-            builder.IntegratedSecurity = _useIntegratedSecurity;
-            if (!_useIntegratedSecurity)
+            var builder = new SqlConnectionStringBuilder
             {
-                builder.UserID = _userName;
-                builder.Password = _password;
-            }
+                DataSource         = ServerName,
+                InitialCatalog     = DatabaseName,
+                IntegratedSecurity = UseIntegratedAuthentication
+            };
+
+            if (UseIntegratedAuthentication) return builder;
+
+            builder.UserID   = UserName;
+            builder.Password = Password;
 
             return builder;
         }
 
         public static ISqlConnectionProvider Blank => new StaticSqlConnectionProvider("", "");
+
+        public override string ToString()
+        {
+            return $"{ServerName}\\{DatabaseName} | IntegAuth: {UseIntegratedAuthentication} | User: {UserName}";
+        }
     }
 }

@@ -1,8 +1,12 @@
-﻿namespace UniqueDb.ConnectionProvider
+﻿using System;
+
+namespace UniqueDb.ConnectionProvider
 {
+    [Serializable]
     public class UniqueDbConnectionProviderOptions
     {
-
+        private UniqueDbConnectionProviderOptions(){}
+        
         public UniqueDbConnectionProviderOptions(string sqlServerName, string databaseNamePrefix)
         {
             SqlServerName = sqlServerName;
