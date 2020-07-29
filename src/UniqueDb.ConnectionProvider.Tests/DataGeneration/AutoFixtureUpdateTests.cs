@@ -5,6 +5,7 @@ using FluentAssertions;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.Crud;
 using UniqueDb.ConnectionProvider.Tests.DataGeneration.AdventureWorks;
+using UniqueDb.ConnectionProvider.Tests.Infrastructure;
 using Xunit;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
