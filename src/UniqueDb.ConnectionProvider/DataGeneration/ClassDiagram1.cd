@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram MajorVersion="1" MinorVersion="1">
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpClassGenerator">
     <Position X="2" Y="5.5" Width="1.75" />
     <TypeIdentifier>
@@ -8,11 +8,19 @@
     </TypeIdentifier>
   </Class>
   <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpProperty">
-    <Position X="4.25" Y="7.25" Width="2" />
+    <Position X="8.75" Y="3.75" Width="2" />
+    <AssociationLine Name="DataAnnotationDefinitionBases" Type="System.Collections.Generic.IList&lt;T&gt;">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.456" Y="1.777" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAIAAAAEAAAAAAQACAAAAAQAAQAABAAAIAA=</HashCode>
+      <HashCode>AAAAAAAAAAIAgAAEAAAAAAQACAAAAAQAAAAABAAAIAA=</HashCode>
       <FileName>DataGeneration\CSharpProperty.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DataAnnotationDefinitionBases" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="UniqueDb.ConnectionProvider.DataGeneration.InformationSchemaColumn">
     <Position X="20" Y="3" Width="2.5" />
@@ -22,17 +30,17 @@
     </TypeIdentifier>
   </Class>
   <Class Name="UniqueDb.ConnectionProvider.DataGeneration.InformationSchemaMetadataExplorer">
-    <Position X="16.75" Y="3" Width="2.75" />
+    <Position X="16.75" Y="3" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AABAAgAAAAAAAAAABAAAAAAAAAACAAAAIAAAAAAAAAA=</HashCode>
       <FileName>DataGeneration\InformationSchemaMetadataExplorer.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.InformationSchemaMetadataQueryGenerator">
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.InformationSchemaMetadataSqlQueryGenerator">
     <Position X="18.5" Y="7" Width="3.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAEAAAAAAQAAAAAAAAAAAAAQAQAAAIAAAAAA=</HashCode>
-      <FileName>DataGeneration\InformationSchemaMetadataQueryGenerator.cs</FileName>
+      <FileName>DataGeneration\InformationSchemaMetadataSqlQueryGenerator.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="UniqueDb.ConnectionProvider.DataGeneration.InformationSchemaTable">
@@ -43,11 +51,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="UniqueDb.ConnectionProvider.DataGeneration.InformationSchemaTableDefinition">
-    <Position X="3" Y="3" Width="2.75" />
+    <Position X="1.5" Y="3" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
       <FileName>DataGeneration\InformationSchemaTableDefinition.cs</FileName>
     </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="InformationSchemaColumns" />
+    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="UniqueDb.ConnectionProvider.DataGeneration.InformationSchemaTableDefinitionFromJson">
     <Position X="17" Y="1.5" Width="3.25" />
@@ -56,11 +67,11 @@
       <FileName>DataGeneration\InformationSchemaTableDefinitionFromJson.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.ISqlConnectionProviderDapperOperations">
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.ISqlConnectionProviderDapperOperationExtensionMethods">
     <Position X="10" Y="1" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
-      <FileName>DataGeneration\ISqlConnectionProviderDapperOperations.cs</FileName>
+      <HashCode>AACAAAAAAAAAAAQAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\ISqlConnectionProviderDapperOperationExtensionMethods.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="UniqueDb.ConnectionProvider.DataGeneration.OptionExtensions">
@@ -94,7 +105,7 @@
   <Class Name="UniqueDb.ConnectionProvider.DataGeneration.SqlColumn">
     <Position X="8.75" Y="7.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AACAAAAAAAAAAAAAAAAAIAQAAAAAAAAAAAAAAAEAIAA=</HashCode>
+      <HashCode>AACAAAAAACAAAAAAAAAAIAQAAAIAAAAAAAAAAAEAIAA=</HashCode>
       <FileName>DataGeneration\SqlColumn.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -106,7 +117,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="UniqueDb.ConnectionProvider.DataGeneration.SqlColumnToCSharpPropertyGenerator">
-    <Position X="8.75" Y="5.75" Width="3" />
+    <Position X="4.5" Y="7.75" Width="3" />
     <NestedTypes>
       <Class Name="UniqueDb.ConnectionProvider.DataGeneration.SqlColumnToCSharpPropertyGenerator.SqlToClrDataTypeConversionResult" Collapsed="true">
         <TypeIdentifier>
@@ -141,14 +152,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="UniqueDb.ConnectionProvider.DataGeneration.SqlTableFactory">
-    <Position X="11.75" Y="6.25" Width="1.75" />
+    <Position X="10.5" Y="6.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
       <FileName>DataGeneration\SqlTableFactory.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="UniqueDb.ConnectionProvider.DataGeneration.SqlTableReference">
-    <Position X="6.5" Y="1.25" Width="2.5" />
+    <Position X="5.75" Y="1.25" Width="3.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAQAA=</HashCode>
       <FileName>DataGeneration\SqlTableReference.cs</FileName>
@@ -168,7 +179,7 @@
       <FileName>DataGeneration\SqlTypeConversion.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.Table_Types">
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.TableTypes">
     <Position X="16.5" Y="8.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAABAAAAAAAAAAAAAAA=</HashCode>
@@ -196,6 +207,17 @@
       <FileName>DataGeneration\SqlDmlDropTableGeneratorFromInformationSchema.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata.InformationSchemaColumn" Collapsed="true">
+    <Position X="6" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EEBAAQAAAEBAEFAAIACAAECAEAAIAAAAQgABgBBABAA=</HashCode>
+      <FileName>DataGeneration\SqlMetadata\InformationSchemaColumn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="System.Collections.Generic.IList&lt;T&gt;" Collapsed="true">
+    <Position X="14.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
   <Enum Name="UniqueDb.ConnectionProvider.DataGeneration.ClrAccessModifier">
     <Position X="2.25" Y="8" Width="1.5" />
     <TypeIdentifier>

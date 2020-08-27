@@ -4,13 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using UniqueDb.ConnectionProvider.DataGeneration.Crud;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
 {
-    public class CreateTableScriptProvider
+    public static class CreateTableScriptProvider
     {
         public static string GetCreateTableScript<T>(string schemaName = "dbo", string tableName = null)
         {
@@ -24,32 +22,65 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
             return GetCreateTableScript(objectType, schemaName, tableName);
         }
 
+        public static string GetCreateTableScriptForHierarchy(Type   rootType, 
+                                                              IList<Type> subTypes,
+                                                              string schemaName,
+                                                              string tableName = null)
+        {
+            tableName = tableName ?? rootType.Name;
+            var keyProperties = GetKeyProperties(rootType);
+            var columnProperties = subTypes
+                .SelectMany(z => z.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                .Distinct()
+                .ToList();
+            var tableCreationScript = GetCreateTableScript(schemaName, tableName, keyProperties, columnProperties);
+            return tableCreationScript;
+        }
+
         public static string GetCreateTableScript(Type objectType, string schemaName, string tableName = null)
         {
             tableName = tableName ?? objectType.Name;
 
-            var clrProperties = objectType
+            var columnProperties = objectType
                 .GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 .ToList();
-            clrProperties = OrderByColumnNumber(clrProperties);
+
+            var keyProperties = GetKeyProperties(objectType);
+
+            var tableCreationScript = GetCreateTableScript(schemaName, tableName, keyProperties, columnProperties);
+            return tableCreationScript;
+        }
+
+        public static string GetCreateTableScript(string              schemaName,
+                                                  string              tableName, 
+                                                  IList<string> keyProperties,
+                                                  IList<PropertyInfo> columnProperties)
+        {
+            columnProperties = OrderByColumnNumber(columnProperties);
+            var createColumnsSegment = CreateColumnsSegment(columnProperties);
+            var primaryKeySegment = CreatePrimaryKeySegment(tableName, keyProperties);
             
+            var createTableScript = 
+                $@"
+CREATE TABLE {schemaName}.{tableName}
+(
+    {createColumnsSegment}
+    {primaryKeySegment}
+);";
+
+            return createTableScript;
+        }
+
+        private static string CreateColumnsSegment(IList<PropertyInfo> clrProperties)
+        {
             var createPropertiesSegment = clrProperties
                 .Where(x => SqlClrHelpers.ShouldTranslateClrPropertyToSqlColumn(x))
                 .Select(CreatePropertyInfoWithAttributes)
                 .Select(PropertyInfoWithAttributeToSqlColumnDeclarationConverter.Convert)
                 .Select(sqlColumnDeclaration => sqlColumnDeclaration.ToString())
+                .Distinct()
                 .StringJoin(",\r\n   ");
-
-
-            var primaryKeySegment = GetPrimaryKeySegment(objectType, tableName);
-
-            var createTableScript = $"CREATE TABLE {schemaName}.{tableName} " +
-                                    $"(\r\n   " +
-                                    $"{createPropertiesSegment}" +
-                                    $"{primaryKeySegment}" +
-                                    $");";
-
-            return createTableScript;
+            return createPropertiesSegment;
         }
 
         private static string GetPrimaryKeySegment(Type objectType, string tableName)
@@ -58,14 +89,22 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
             if (keyProperties.Count == 0)
                 return String.Empty;
 
-            var primaryKeyConstraintName = $"PK_{tableName}";
-            var keyColumnSegments = keyProperties.Select(kp => $"[{kp}] ASC");
-            var keyColumnSegment = string.Join(",\r\n", keyColumnSegments);
+            return CreatePrimaryKeySegment(tableName, keyProperties);
+        }
 
-            var completePrimaryKeySegment = $",\r\n\r\nCONSTRAINT [{primaryKeyConstraintName}] PRIMARY KEY CLUSTERED" +
-                                            $"(\r\n" +
-                                            $"{keyColumnSegment}" +
-                                            $"\r\n)\r\n";
+        private static string CreatePrimaryKeySegment(string tableName, IList<string> keyProperties)
+        {
+            var primaryKeyConstraintName = $"PK_{tableName}";
+            var keyColumnSegments        = keyProperties.Select(kp => $"[{kp}] ASC");
+            var keyColumnSegment         = string.Join(",\r\n", keyColumnSegments);
+
+            var completePrimaryKeySegment =
+                $@",
+CONSTRAINT [{primaryKeyConstraintName}] PRIMARY KEY CLUSTERED
+(
+    {keyColumnSegment}
+)
+";
             return completePrimaryKeySegment;
         }
 
@@ -79,7 +118,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
             return keyProperties;
         }
 
-        private static List<PropertyInfo> OrderByColumnNumber(List<PropertyInfo> clrProperties)
+        private static IList<PropertyInfo> OrderByColumnNumber(IList<PropertyInfo> clrProperties)
         {
             var props = clrProperties
                 .Select(

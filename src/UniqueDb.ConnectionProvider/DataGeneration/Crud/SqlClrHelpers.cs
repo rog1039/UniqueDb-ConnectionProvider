@@ -54,9 +54,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
 
         private static bool IsColumnIgnored(PropertyInfo arg, IEnumerable<string> columnsToIgnore)
         {
-            if (columnsToIgnore == null) return false;
-            
-            return columnsToIgnore.Contains(arg.Name);
+            return columnsToIgnore?.Contains(arg.Name) == true;
         }
 
         public static IList<PropertyInfo> GetPropertiesFromObject<T>(T obj, Expression<Func<T, object>> keyProperties)

@@ -79,14 +79,14 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration.AdventureWorks
         [StringLength(1)]
         public string MaritalStatus { get; set; }
         [StringLength(1)]
-        public string Gender { get; set; }
+        public String Gender { get; set; }
         public DateTime HireDate { get; set; }
-        public bool SalariedFlag { get; set; }
+        public Boolean SalariedFlag { get; set; }
         [Range(-32768, 32767)]
         public Int16 VacationHours { get; set; }
         [Range(-32768, 32767)]
-        public Int16 SickLeaveHours { get; set; }
-        public bool CurrentFlag { get; set; }
+        public short SickLeaveHours { get; set; }
+        public Boolean CurrentFlag { get; set; }
         public Guid rowguid { get; set; }
         public DateTime ModifiedDate { get; set; }
     }

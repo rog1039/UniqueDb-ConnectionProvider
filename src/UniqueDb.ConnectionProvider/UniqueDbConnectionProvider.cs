@@ -21,6 +21,9 @@ namespace UniqueDb.ConnectionProvider
             ServerName = Options.SqlServerName;
             DatabaseNameFormatString = "{0}-({1})-{2:n}";
             DatabaseName = GenerateDbName();
+            UserName = options.UserName;
+            Password = options.Password;
+            UseIntegratedAuthentication = string.IsNullOrWhiteSpace(options.Password);
         }
 
         private string GenerateDbName()
