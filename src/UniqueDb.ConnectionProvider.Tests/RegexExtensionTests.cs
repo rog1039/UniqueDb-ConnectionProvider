@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using FluentAssertions;
 using UniqueDb.ConnectionProvider.DataGeneration;
+using UniqueDb.ConnectionProvider.Tests.Infrastructure;
 using Xunit;
 
 namespace UniqueDb.ConnectionProvider.Tests

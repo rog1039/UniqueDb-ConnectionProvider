@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
+using UniqueDb.ConnectionProvider.Tests.Infrastructure;
 using Xunit;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
