@@ -64,7 +64,7 @@ namespace UniqueDb.ConnectionProvider
 
         private static void DeleteDatabase(UniqueDbConnectionProvider connectionProvider, string databaseName)
         {
-            var staticSqlConnectionProvider = new StaticSqlConnectionProvider(connectionProvider.ServerName, databaseName);
+            var staticSqlConnectionProvider = connectionProvider.ChangeDatabase(databaseName);
             DatabaseDeleter.DeleteDatabase(staticSqlConnectionProvider);
         }
 

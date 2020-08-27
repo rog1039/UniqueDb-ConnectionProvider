@@ -9,7 +9,7 @@ namespace UniqueDb.ConnectionProvider.Tests
     {
         private const double _17_3 = 99999999999999.999;
         [Theory]
-        [MemberData("TestCases")]
+        [MemberData(nameof(TestCases))]
         [Trait("Category", "Instant")]
         public void TestWithDifferentPrecisionsAndScale(int scale, int precision, double lowerBound, double upperBound)
         {

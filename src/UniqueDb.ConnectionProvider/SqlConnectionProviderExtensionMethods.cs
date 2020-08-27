@@ -117,5 +117,13 @@ namespace UniqueDb.ConnectionProvider
             var sqlTable = SqlTableFactory.Create(sqlTableReference);
             return CSharpClassGeneratorFromSqlTable.GenerateClass(sqlTable, className);
         }
+
+        public static ISqlConnectionProvider ChangeDatabase(this ISqlConnectionProvider sqlConnectionProvider, string databaseName)
+        {
+            var oldScp = sqlConnectionProvider;
+            var newScp = new StaticSqlConnectionProvider(oldScp.ServerName, databaseName, 
+                                                         oldScp.UserName, oldScp.Password);
+            return newScp;
+        }
     }
 }
