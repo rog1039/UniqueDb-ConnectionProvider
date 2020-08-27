@@ -14,9 +14,10 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         private static string AddSchemaWhereClauseIfNecessary(string sql, SqlTableReference sqlTableReference)
         {
-            if (!string.IsNullOrWhiteSpace(sqlTableReference.SchemaName))
+            var hasSchemaName = !string.IsNullOrWhiteSpace(sqlTableReference.SchemaName);
+            if (hasSchemaName)
             {
-                sql += string.Format(" AND TABLE_SCHEMA = '{0}'", sqlTableReference.SchemaName);
+                sql += $" AND TABLE_SCHEMA = '{sqlTableReference.SchemaName}'";
             }
             return sql;
         }

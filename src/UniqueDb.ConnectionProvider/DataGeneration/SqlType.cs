@@ -8,6 +8,9 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
     {
         public string TypeName { get; set; }
         public int? MaximumCharLength { get; set; }
+        public string MaximumCharLengthString => MaximumCharLength == null 
+            ? null 
+            : ((MaximumCharLength.Value == -1) ? "Max" : MaximumCharLength.ToString());
         public int? NumericPrecision { get; set; }
         public int? NumericScale { get; set; }
         public int? FractionalSecondsPrecision { get; set; }
@@ -98,7 +101,16 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             {
                 return SqlType.TextType(col.DATA_TYPE, col.CHARACTER_MAXIMUM_LENGTH);
             }
-            throw new NotImplementedException();
+
+            if (col.DATA_TYPE.Equals("uniqueidentifier", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return SqlType.Type(col.DATA_TYPE);
+            }
+            if (col.DATA_TYPE.Equals("varbinary", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return SqlType.Type(col.DATA_TYPE);
+            }
+            throw new NotImplementedException($"Unknown type {col.DATA_TYPE}");
         }
     }
 }

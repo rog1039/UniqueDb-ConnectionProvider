@@ -7,6 +7,18 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 {
     public static class InformationSchemaMetadataExplorer
     {
+        public static (List<InformationSchemaTable> schemaTables, List<InformationSchemaColumn> schemaColumns)
+            GetAllTableAndColumnInfoForDatabase(ISqlConnectionProvider sqlConnectionProvider)
+        {
+            var informationSchemaTables = sqlConnectionProvider
+                .Query<InformationSchemaTable>("SELECT * FROM INFORMATION_SCHEMA.TABLES ORDER BY TABLE_SCHEMA, TABLE_NAME")
+                .ToList();
+            var informationSchemaColumns = sqlConnectionProvider
+                .Query<InformationSchemaColumn>("SELECT * FROM INFORMATION_SCHEMA.COLUMNS ORDER BY TABLE_NAME, ORDINAL_POSITION")
+                .ToList();
+            return (informationSchemaTables, informationSchemaColumns);
+        } 
+
         public static IList<InformationSchemaTable> GetInformationSchemaTables(ISqlConnectionProvider sqlConnectionProvider)
         {
             var informationSchemaTables = sqlConnectionProvider

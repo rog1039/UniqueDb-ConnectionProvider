@@ -14,6 +14,21 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             "float", "real",
         };
 
+        public static IList<string> SqlIntTypes = new List<string>
+        {
+            "bigint", "int", "smallint", "tinyint"
+        };
+
+        public static IList<string> SqlDecimalNumericTypes = new List<string>
+        {
+            "decimal", "numeric"
+        };
+
+        public static IList<string> SqlMoneyTypes = new List<string>
+        {
+            "money", "smallmoney"
+        };
+
         public static IList<string> SqlExactNumericTypes = new List<string>
         {
             "bigint", "bit", "decimal", "int", "money", "numeric", "smallint", "smallmoney", "tinyint"
@@ -50,6 +65,14 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             "datetime2", "datetimeoffset", "time"
         };
 
+        public static IList<string> SqlTypesWithoutArguments = new List<string>
+        {
+            "date", "datetime", "smalldatetime",
+            "bit", "int", "bigint", "smallint", "tinyint",
+            "money","smallmoney",
+            "uniqueidentifier", "rowversion", "xml"
+        };
+
 
         public static IList<Type> ClrTypesThatAreHaveSqlSystemTypes = new List<Type>
         {
@@ -63,6 +86,10 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         };
 
+        public static bool IsTypeWithoutArguments(string sqlTypeName)
+        {
+            return SqlTypesWithoutArguments.Contains(sqlTypeName.ToLower());
+        }
         public static bool IsCharType(string sqlTypeName)
         {
             return SqlCharTypes.Contains(sqlTypeName.ToLower());
@@ -73,9 +100,19 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             return SqlSystemTypes.Contains(sqlTypeName.ToLower());
         }
 
-        public static bool IsNumeric(string sqlTypeName)
+        public static bool IsIntLikeType(string sqlTypeName)
         {
-            return SqlNumericTypes.Contains(sqlTypeName.ToLower());
+            return SqlIntTypes.Contains(sqlTypeName.ToLower());
+        }
+
+        public static bool IsDecimalOrNumeric(string sqlTypeName)
+        {
+            return SqlDecimalNumericTypes.Contains(sqlTypeName.ToLower());
+        }
+
+        public static bool IsMoneyLikeType(string sqlTypeName)
+        {
+            return SqlMoneyTypes.Contains(sqlTypeName.ToLower());
         }
 
         public static bool IsSpecialSystemType(string sqlTypeName)
