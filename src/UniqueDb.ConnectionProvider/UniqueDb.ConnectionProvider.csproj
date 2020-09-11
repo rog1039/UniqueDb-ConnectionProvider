@@ -198,6 +198,8 @@
     <Compile Include="DataGeneration\CSharpGeneration\DoubleTypeRangeCalculator.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\GenericRange.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\NumericRange.cs" />
+    <Compile Include="DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription.cs" />
+    <Compile Include="DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs" />
     <Compile Include="DataGeneration\CSharpProperty.cs" />
     <Compile Include="DataGeneration\CSharpGeneration\CSharpPropertyFactoryFromDescribeResultSetRow.cs" />
     <Compile Include="DataGeneration\Crud\SqlConnectionProviderInsertExtensions.cs" />
