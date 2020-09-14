@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Dapper;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen
 {
@@ -25,12 +23,11 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLay
                     case ClassBuilder classBuilder:
                         yield return Build(classBuilder);
                         break;
-                        case WebApiBuilder webApiBuilder:
-                            yield return Build(webApiBuilder);
-                            break;
+                    case WebApiBuilder webApiBuilder:
+                        yield return Build(webApiBuilder);
+                        break;
                     default:
-                            break;
-
+                        break;
                 }
             }
         }
@@ -47,9 +44,9 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLay
 
         private string GetClassContents(WebApiBuilder builder)
         {
-            var Namespace    = builder.GetNamespace();
+            var Namespace = builder.GetNamespace();
             var inheritsText = GetInheritsText(builder);
-            var methodsCode  = GetMethodsContent(builder);
+            var methodsCode = GetMethodsContent(builder);
 
             var classContents = $@"
 namespace {Namespace}
@@ -74,10 +71,10 @@ namespace {Namespace}
 
         private string GetClassContents(ClassBuilder builder)
         {
-            var Namespace    = builder.GetNamespace();
-            var MethodsCode  = GetMethodsContent(builder);
+            var Namespace = builder.GetNamespace();
+            var MethodsCode = GetMethodsContent(builder);
             var inheritsText = GetInheritsText(builder);
-            
+
             var classContents = $@"
 namespace {Namespace}
 {{
@@ -92,10 +89,10 @@ namespace {Namespace}
 
         private string GetInheritsText(BuilderPart builder)
         {
-            if(builder.ImplementList.Count == 0) return String.Empty;
+            if (builder.ImplementList.Count == 0) return String.Empty;
             var implementsString = builder
                 .ImplementList
-                .Select(z => z.Type.GetTypeName())
+                .Select(z => z.Name)
                 .StringJoin(", ");
             return $" : {implementsString}";
         }
@@ -104,6 +101,7 @@ namespace {Namespace}
         {
             var methodsToImplement = new List<ReadObject>();
             throw new NotImplementedException("Figure out how to handle methods from DelegateTo and ImplementList");
+
             var methodDescriptions = builder
                 .ImplementList
                 .SelectMany(z => z.MethodDescriptions)
@@ -116,8 +114,8 @@ namespace {Namespace}
 
         private string GetMethodContent(BuilderPart builder, MethodDescription methodDescription)
         {
-            var returnType    = methodDescription.ReturnType.GetTypeName();
-            var methodName          = methodDescription.Name;
+            var returnType = methodDescription.ReturnType.GetTypeName();
+            var methodName = methodDescription.Name;
             var parameterText = GetParameterText(methodDescription.Parameters);
 
             return $@"public {returnType} {methodName}({parameterText})
@@ -143,7 +141,7 @@ namespace {Namespace}
         public string GetFilePath(BuilderPart builder)
         {
             var featurePath = GetFeaturePath(builder.ProjectBuilder, builder.FeatureBuilder);
-            var fileName    = $"{builder.Name}.cs";
+            var fileName = $"{builder.Name}.cs";
 
             var filePath = Path.Combine(featurePath, fileName);
             return filePath;
@@ -151,11 +149,11 @@ namespace {Namespace}
 
         public string GetFeaturePath(ProjectBuilder project, FeatureBuilder feature)
         {
-            var basePath       = project.ProjectRoot;
-            var featureRoot    = project.DefaultFeaturePath;
-            var featureSubPath = feature.Name.Split(new[]{"."}, StringSplitOptions.RemoveEmptyEntries);
-            
-            var pathParts = new List<string>(){basePath, featureRoot};
+            var basePath = project.ProjectRoot;
+            var featureRoot = project.DefaultFeaturePath;
+            var featureSubPath = feature.Name.Split(new[] {"."}, StringSplitOptions.RemoveEmptyEntries);
+
+            var pathParts = new List<string>() {basePath, featureRoot};
             pathParts.AddRange(featureSubPath);
 
             var path = Path.Combine(pathParts.ToArray());
@@ -165,20 +163,20 @@ namespace {Namespace}
 
     public class MethodDescription
     {
-        public Type    ReturnType { get; set; }
-        public string  Name       { get; set; }
-        public IList<ParameterDescription> Parameters       { get; set; }
+        public Type ReturnType { get; set; }
+        public string Name { get; set; }
+        public IList<ParameterDescription> Parameters { get; set; }
     }
 
     public class ParameterDescription
     {
         public Type Type { get; set; }
-        public string    Name    { get; set; }
+        public string Name { get; set; }
     }
 
     public class FileResult
     {
-        public string Path     { get; set; }
+        public string Path { get; set; }
         public string Contents { get; set; }
     }
 
@@ -236,23 +234,22 @@ namespace {Namespace}
         {
             DelegatesImplTo = builder;
             //Is below a good idea?
-            ImplementList.Add(ClassBuilder);
+            ImplementList.Add(DelegatesImplTo);
         }
-
     }
 
-    public class BuilderPart
+    public class BuilderPart: IHasClassParts
     {
         public ConfigBuilder ConfigBuilder { get; set; }
 
-        public ProjectBuilder    ProjectBuilder { get; set; }
-        public FeatureBuilder    FeatureBuilder { get; set; }
-        public string            Name           { get; set; }
-        public IList<ReadObject> ImplementList  { get; } = new List<ReadObject>();
+        public ProjectBuilder ProjectBuilder { get; set; }
+        public FeatureBuilder FeatureBuilder { get; set; }
+        public string Name { get; set; }
+        public IList<IHasClassParts> ImplementList { get; } = new List<IHasClassParts>();
 
         public string GetNamespace()
         {
-            var projectNamespace     = ProjectBuilder.ProjectName;
+            var projectNamespace = ProjectBuilder.ProjectName;
             var featureNamespaceRoot = ProjectBuilder.DefaultFeaturePath;
             var featureNamespacePart = FeatureBuilder.Name;
 
@@ -266,7 +263,7 @@ namespace {Namespace}
         private string CreateNamespaceFromParts(string[] namespaceParts)
         {
             var nonEmptyParts = namespaceParts.Where(z => !string.IsNullOrWhiteSpace(z)).ToList();
-            var nameSpace     = string.Join(".", nonEmptyParts);
+            var nameSpace = string.Join(".", nonEmptyParts);
             return nameSpace;
         }
 
@@ -274,16 +271,28 @@ namespace {Namespace}
         {
             ImplementList.Add(readObject);
         }
+        public List<MethodDescription> MethodDescriptions
+        {
+            get
+            {
+                var readObjectsMethods = ImplementList
+                    .Where(z => z is ReadObject)
+                    .SelectMany(z => z.MethodDescriptions)
+                    .ToList();
+                return readObjectsMethods;
+            }
+        }
     }
 
     public class ClassBuilder : BuilderPart
     {
-        public ClassBuilder(ConfigBuilder configBuilder, ProjectBuilder projectBuilder, FeatureBuilder featureBuilder, string name)
+        public ClassBuilder(ConfigBuilder configBuilder, ProjectBuilder projectBuilder, FeatureBuilder featureBuilder,
+            string name)
         {
             ConfigBuilder = configBuilder;
-            ProjectBuilder     = projectBuilder;
-            FeatureBuilder     = featureBuilder;
-            Name               = name;
+            ProjectBuilder = projectBuilder;
+            FeatureBuilder = featureBuilder;
+            Name = name;
         }
 
         public ClassBuilder(ProjectBuilder projectBuilder, FeatureBuilder featureBuilder)
@@ -299,12 +308,13 @@ namespace {Namespace}
                 : readObject.Type.GetTypeName();
             Name = $"{baseName}{suffix}";
         }
+
     }
 
     public class ImplementsBuilder
     {
-        public ReadObject ObjectToImplement                    { get; set; }
-        public bool       ImplementWithNotImplementedException { get; set; }
+        public ReadObject ObjectToImplement { get; set; }
+        public bool ImplementWithNotImplementedException { get; set; }
     }
 
     public class FeatureBuilder
@@ -317,9 +327,16 @@ namespace {Namespace}
         }
     }
 
-    public class ReadObject
+    public interface IHasClassParts
     {
-        public Type   Type              { get; set; }
+        string Name { get; }
+        List<MethodDescription> MethodDescriptions { get; }
+    }
+
+    public class ReadObject : IHasClassParts
+    {
+        public Type Type { get; set; }
+        public string Name => Type.GetTypeName();
         public List<MethodDescription> MethodDescriptions { get; set; } = new List<MethodDescription>();
 
         public ReadObject(Type type)
@@ -349,7 +366,7 @@ namespace {Namespace}
 
             var description = new MethodDescription()
             {
-                Name       = method.Name,
+                Name = method.Name,
                 ReturnType = method.ReturnType,
                 Parameters = parameters
             };
@@ -370,14 +387,14 @@ namespace {Namespace}
 
     public class ProjectBuilder
     {
-        public string ProjectRoot        { get; set; }
-        public string ProjectName        { get; set; }
+        public string ProjectRoot { get; set; }
+        public string ProjectName { get; set; }
         public string DefaultFeaturePath { get; set; }
 
         public ProjectBuilder(string projectRoot, string projectName, string featurePath = default)
         {
-            ProjectRoot        = projectRoot;
-            ProjectName        = projectName;
+            ProjectRoot = projectRoot;
+            ProjectName = projectName;
             DefaultFeaturePath = featurePath ?? string.Empty;
         }
     }
@@ -388,10 +405,10 @@ namespace {Namespace}
         {
             if (type.IsConstructedGenericType)
             {
-                var genericType     = type.GetGenericTypeDefinition();
-                var genericArgs     = type.GenericTypeArguments.ToList();
+                var genericType = type.GetGenericTypeDefinition();
+                var genericArgs = type.GenericTypeArguments.ToList();
                 var genericArgTexts = genericArgs.Select(z => z.GetTypeName()).ToList();
-                var genericArgText  = string.Join(", ", genericArgTexts);
+                var genericArgText = string.Join(", ", genericArgTexts);
 
                 var genericTypeName = type.Name.Split(new[] {'`'}).First();
 
