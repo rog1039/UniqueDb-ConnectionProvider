@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen
 {
@@ -76,10 +77,11 @@ namespace {Namespace}
 
         private string GetClassContents(ClassBuilder builder)
         {
-            var Namespace    = builder.GetNamespace();
-            var MethodsCode  = GetMethodsContent(builder);
-            var inheritsText = GetInheritsText(builder);
-            var fieldsText   = GetFieldsText(builder);
+            var                    Namespace    = builder.GetNamespace();
+            var                    MethodsCode  = GetMethodsContent(builder);
+            var                    inheritsText = GetInheritsText(builder);
+            var                    fieldsText   = GetFieldsText(builder);
+            ClassDeclarationSyntax x;
 
             var classContents = $@"
 namespace {Namespace}
