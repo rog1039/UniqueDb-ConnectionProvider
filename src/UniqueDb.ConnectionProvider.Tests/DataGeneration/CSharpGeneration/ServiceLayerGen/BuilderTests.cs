@@ -26,7 +26,9 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration.CSharpGeneration.Serv
             impl.Implements(origInterface);
 
             var apiController = builder.CreateApiController(proj, feature);
+            apiController.NamedBy(origInterface, suffix: "ApiController");
             apiController.DelegatesTo(impl);
+            apiController.BaseTypeName = "ApiController";
 
             var realizer = new ConfigRealizer();
             var results  = realizer.RealizeConfig(builder);

@@ -45,14 +45,19 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLay
         private string GetClassContents(WebApiBuilder builder)
         {
             var Namespace = builder.GetNamespace();
-            var inheritsText = GetInheritsText(builder);
+            var inheritsText = string.IsNullOrWhiteSpace(builder.BaseTypeName)
+                ? string.Empty
+                : $" : {builder.BaseTypeName}";
             var methodsCode = GetMethodsContent(builder);
+            var fieldsText   = GetFieldsText(builder);
 
             var classContents = $@"
 namespace {Namespace}
 {{
     public class {builder.Name}{inheritsText}
     {{
+        {fieldsText}
+
         {methodsCode}
     }}
 }}";
@@ -71,20 +76,34 @@ namespace {Namespace}
 
         private string GetClassContents(ClassBuilder builder)
         {
-            var Namespace = builder.GetNamespace();
-            var MethodsCode = GetMethodsContent(builder);
+            var Namespace    = builder.GetNamespace();
+            var MethodsCode  = GetMethodsContent(builder);
             var inheritsText = GetInheritsText(builder);
+            var fieldsText   = GetFieldsText(builder);
 
             var classContents = $@"
 namespace {Namespace}
 {{
     public class {builder.Name}{inheritsText}
     {{
+        {fieldsText}
+
         {MethodsCode}
     }}  
 }}
 ";
             return classContents;
+        }
+
+        private string GetFieldsText(BuilderPart builder)
+        {
+            var fields = new List<string>();
+            foreach (var delegateTo in builder.DelegatesImplTo)
+            {
+                fields.Add($"private readonly {delegateTo.Name} {delegateTo.Name.GetFieldName()};");
+            }
+
+            return string.Join(Environment.NewLine, fields);
         }
 
         private string GetInheritsText(BuilderPart builder)
@@ -99,24 +118,62 @@ namespace {Namespace}
 
         private string GetMethodsContent(BuilderPart builder)
         {
-            var methodsToImplement = new List<ReadObject>();
-            throw new NotImplementedException("Figure out how to handle methods from DelegateTo and ImplementList");
+            var methodsToImplement = new List<MethodDescription>();
+            var content            = string.Empty;
 
-            var methodDescriptions = builder
-                .ImplementList
-                .SelectMany(z => z.MethodDescriptions)
-                .Select(z => GetMethodContent(builder, z))
+            foreach (var delegateTo in builder.DelegatesImplTo)
+            {
+                foreach (var delegateMethodDesc in delegateTo.MethodDescriptions)
+                {
+                    if (methodsToImplement.Any(z => z.Name == delegateMethodDesc.Name))
+                        continue;
+                    methodsToImplement.Add(delegateMethodDesc);
+                    content += Environment.NewLine + GetmethodContentViaDelegation(builder, delegateTo, delegateMethodDesc);
+                }
+            }
+
+            foreach (var implement in builder.ImplementList)
+            {
+                foreach (var implementMethodDesc in implement.MethodDescriptions)
+                {
+                    if (methodsToImplement.Any(z => z.Name == implementMethodDesc.Name))
+                        continue;
+                    methodsToImplement.Add(implementMethodDesc);
+                    content += Environment.NewLine + GetMethodContentViaNotImplemented(builder, implementMethodDesc);
+                }
+            }
+
+            return content;
+
+
+
+            //throw new NotImplementedException("Figure out how to handle methods from DelegateTo and ImplementList");
+
+            var methodDescriptions = methodsToImplement
+                .Select(z => GetMethodContentViaNotImplemented(builder, z))
                 .ToList();
 
             var methodsText = string.Join(Environment.NewLine + Environment.NewLine, methodDescriptions);
             return methodsText;
         }
 
-        private string GetMethodContent(BuilderPart builder, MethodDescription methodDescription)
+        private object GetmethodContentViaDelegation(BuilderPart builder, IHasClassParts delegateTo, MethodDescription methodDescription)
         {
             var returnType = methodDescription.ReturnType.GetTypeName();
             var methodName = methodDescription.Name;
-            var parameterText = GetParameterText(methodDescription.Parameters);
+            var parameterText = GetParameterTextWithTypes(methodDescription.Parameters);
+
+            return $@"public {returnType} {methodName}({parameterText})
+{{
+    return {delegateTo.Name.GetFieldName()}.{methodDescription.Name}({GetParameterTextWithoutTypes(methodDescription.Parameters)});
+}}";
+        }
+
+        private string GetMethodContentViaNotImplemented(BuilderPart builder, MethodDescription methodDescription)
+        {
+            var returnType = methodDescription.ReturnType.GetTypeName();
+            var methodName = methodDescription.Name;
+            var parameterText = GetParameterTextWithTypes(methodDescription.Parameters);
 
             return $@"public {returnType} {methodName}({parameterText})
 {{
@@ -124,18 +181,32 @@ namespace {Namespace}
 }}";
         }
 
-        private string GetParameterText(IList<ParameterDescription> methodDescriptionParameters)
+        private string GetParameterTextWithTypes(IList<ParameterDescription> methodDescriptionParameters)
         {
             var parameterTextParts = methodDescriptionParameters
-                .Select(mdp => GetParameterText(mdp))
+                .Select(mdp => GetParameterTextWithTypes(mdp))
                 .ToList();
             var parameterText = string.Join(", ", parameterTextParts);
             return parameterText;
         }
 
-        private string GetParameterText(ParameterDescription parameter)
+        private string GetParameterTextWithoutTypes(IList<ParameterDescription> methodDescriptionParameters)
+        {
+            var parameterTextParts = methodDescriptionParameters
+                .Select(mdp => GetParameterTextWithoutTypes(mdp))
+                .ToList();
+            var parameterText = string.Join(", ", parameterTextParts);
+            return parameterText;
+        }
+
+        private string GetParameterTextWithTypes(ParameterDescription parameter)
         {
             return $"{parameter.Type.Name} {parameter.Name}";
+        }
+
+        private string GetParameterTextWithoutTypes(ParameterDescription parameter)
+        {
+            return $"{parameter.Name}";
         }
 
         public string GetFilePath(BuilderPart builder)
@@ -222,19 +293,11 @@ namespace {Namespace}
     public class WebApiBuilder : BuilderPart
     {
         public string BaseTypeName { get; set; }
-        public ClassBuilder DelegatesImplTo { get; set; }
 
         public WebApiBuilder(ProjectBuilder projectBuilder, FeatureBuilder feature)
         {
             ProjectBuilder = projectBuilder;
             FeatureBuilder = feature;
-        }
-
-        public void DelegatesTo(ClassBuilder builder)
-        {
-            DelegatesImplTo = builder;
-            //Is below a good idea?
-            ImplementList.Add(DelegatesImplTo);
         }
     }
 
@@ -282,6 +345,21 @@ namespace {Namespace}
                 return readObjectsMethods;
             }
         }
+
+        public IList<IHasClassParts> DelegatesImplTo { get; set; } = new List<IHasClassParts>();
+
+        public void DelegatesTo(IHasClassParts builder)
+        {
+            DelegatesImplTo.Add(builder);
+        }
+
+        public void NamedBy(ReadObject readObject, string suffix)
+        {
+            var baseName = readObject.Type.IsInterface && readObject.Type.Name.StartsWith("I")
+                ? readObject.Type.GetTypeName().Substring(1)
+                : readObject.Type.GetTypeName();
+            Name = $"{baseName}{suffix}";
+        }
     }
 
     public class ClassBuilder : BuilderPart
@@ -301,13 +379,6 @@ namespace {Namespace}
             FeatureBuilder = featureBuilder;
         }
 
-        public void NamedBy(ReadObject readObject, string suffix)
-        {
-            var baseName = readObject.Type.IsInterface && readObject.Type.Name.StartsWith("I")
-                ? readObject.Type.GetTypeName().Substring(1)
-                : readObject.Type.GetTypeName();
-            Name = $"{baseName}{suffix}";
-        }
 
     }
 
@@ -418,6 +489,16 @@ namespace {Namespace}
             {
                 return type.Name;
             }
+        }
+
+    }
+
+    public static class StringExtensionMethods
+    {
+        public static string GetFieldName(this string name)
+        {
+            name = name[0].ToString().ToLower() + name.Substring(1);
+            return $"_{name}";
         }
     }
 }
