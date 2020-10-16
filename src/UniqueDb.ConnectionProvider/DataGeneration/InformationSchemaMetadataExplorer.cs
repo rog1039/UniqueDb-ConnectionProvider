@@ -31,8 +31,9 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             SqlTableReference sqlTableReference)
         {
             var definition = new InformationSchemaTableDefinition();
-            definition.InformationSchemaTable = GetInformationSchemaTable(sqlTableReference);
+            definition.InformationSchemaTable   = GetInformationSchemaTable(sqlTableReference);
             definition.InformationSchemaColumns = GetInformationSchemaColumns(sqlTableReference);
+            definition.TableConstraints         = GetTableConstraints(sqlTableReference);
             return definition;
         }
 
@@ -60,5 +61,16 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             var tableColumns = sqlTableReference.SqlConnectionProvider.Query<InformationSchemaColumn>(sqlQuery).ToList();
             return tableColumns;
         }
+        
+        private static List<TableConstraintInfoDto> GetTableConstraints(SqlTableReference sqlTableReference)
+        {
+            var whereclause =
+                $"WHERE tableConstraint.TABLE_SCHEMA = @schemaName AND tableConstraint.TABLE_NAME = @tableName ";
+            var query       = TableConstraintInfoDto.SqlQuery.Replace("--WHERE", whereclause);
+            var queryParams = new {schemaName = sqlTableReference.SchemaName, tableName = sqlTableReference.TableName};
+            var result      = sqlTableReference.SqlConnectionProvider.Query<TableConstraintInfoDto>(query, queryParams).ToList();
+            return result;    
+        }
+
     }
 }

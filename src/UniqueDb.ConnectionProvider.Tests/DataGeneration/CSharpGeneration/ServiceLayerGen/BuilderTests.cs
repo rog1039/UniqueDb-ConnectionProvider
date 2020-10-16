@@ -16,24 +16,51 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration.CSharpGeneration.Serv
         public void name()
         {
             var builder = new ConfigBuilder();
-            var proj    = builder.CreateProject("F:\\wg\\CronNET\\CronNET", "CronNET", "Features");
-            var feature = builder.CreateFeature("MainFeature.SubFeature");
+            var domainProj    = builder.CreateProject("F:\\wgtest\\CodeGenTestSol1\\CodeGenTestSol1.Project1", "CodeGenTestSol1.Project1", "Features");
+            var webApiProj    = builder.CreateProject("F:\\wgtest\\CodeGenTestSol1\\CodeGenTestSol1.WebApiProj1", "CodeGenTestSol1.WebApiProj1", "");
+            var coreFeature = builder.CreateFeature("MainFeature.SubFeature1");
+            var webApiFeature = builder.CreateFeature("Controllers.SubFeature1");
 
             var origInterface = builder.ReadInterface(typeof(IMyTestService));
+            origInterface.FullName = "CodeGenTestSol1.Project1.Features.MainFeature.SubFeature1.IMyTestService";
 
-            var impl = builder.CreateClass(proj, feature);
+            var impl = builder.CreateClass(domainProj, coreFeature);
             impl.NamedBy(origInterface, suffix: "Impl");
             impl.Implements(origInterface);
 
-            var apiController = builder.CreateApiController(proj, feature);
+            var apiController = builder.CreateApiController(webApiProj, webApiFeature);
             apiController.NamedBy(origInterface, suffix: "ApiController");
             apiController.DelegatesTo(impl);
             apiController.BaseTypeName = "ApiController";
+
+            var apiDef = builder.CreateApiDef(domainProj, coreFeature);
+            apiDef.NamedBy(origInterface, suffix: "ApiDef");
+            apiDef.TalksTo = apiController;
+
+            var stub = builder.CreateInterface(domainProj, coreFeature);
+            stub.HasBaseInterface(origInterface);
+            stub.BaseTypeName = origInterface.Name;
+            stub.NamedBy(origInterface, suffix:"Stub");
+
+            var fromApi = builder.CreateClass(domainProj, coreFeature);
+            fromApi.NamedBy(stub, suffix:"FromApi");
+            fromApi.DelegatesTo(apiDef);
+            fromApi.Implements(stub);
+
+            var fromDb = builder.CreateClass(domainProj, coreFeature);
+            fromDb.NamedBy(stub, suffix: "FromDb");
+            fromDb.DelegatesTo(impl);
+            fromDb.Implements(stub);
+
 
             var realizer = new ConfigRealizer();
             var results  = realizer.RealizeConfig(builder);
 
             results.PrintStringTable();
+            foreach (var fileResult in results)
+            {
+                fileResult.SaveToDisk();
+            }
         }
 
         [Fact()]

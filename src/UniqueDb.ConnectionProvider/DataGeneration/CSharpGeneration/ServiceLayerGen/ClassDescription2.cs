@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen
@@ -21,11 +22,17 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLay
             {
                 switch (build)
                 {
+                    case WebApiBuilder webApiBuilder:
+                        yield return Build(webApiBuilder);
+                        break;
                     case ClassBuilder classBuilder:
                         yield return Build(classBuilder);
                         break;
-                    case WebApiBuilder webApiBuilder:
-                        yield return Build(webApiBuilder);
+                    case InterfaceBuilder interfaceBuilder:
+                        yield return Build(interfaceBuilder);
+                        break;
+                    case ApiDefBuilder apiDefBuilder:
+                        yield return Build(apiDefBuilder);
                         break;
                     default:
                         break;
@@ -33,11 +40,82 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLay
             }
         }
 
+        private FileResult Build(ApiDefBuilder builder)
+        {
+            var result = new FileResult()
+            {
+                Path     = GetFilePath(builder),
+                Contents = GetClassContents(builder)
+            };
+            return result;
+        }
+
+        private string GetClassContents(ApiDefBuilder builder)
+        {
+            var Namespace = builder.GetNamespace();
+            var inheritsText = string.IsNullOrWhiteSpace(builder.BaseTypeName)
+                ? string.Empty
+                : $" : {builder.BaseTypeName}";
+            var methodsCode = GetMethodsContent(builder);
+            var fieldsText  = GetFieldsText(builder);
+
+            var classContents = $@"
+//ApiDefBuilder
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Refit;
+
+namespace {Namespace}
+{{
+    public interface {builder.Name}{inheritsText}
+    {{
+        {methodsCode}
+    }}
+}}";
+            return CustomCodeFormattingEngine.Format(classContents);
+        }
+
+        private FileResult Build(InterfaceBuilder builder)
+        {
+            var result = new FileResult()
+            {
+                Path     = GetFilePath(builder),
+                Contents = GetClassContents(builder)
+            };
+            return result;
+        }
+
+        private string GetClassContents(InterfaceBuilder builder)
+        {
+            var Namespace = builder.GetNamespace();
+            var inheritsText = string.IsNullOrWhiteSpace(builder.BaseTypeName)
+                ? string.Empty
+                : $" : {builder.BaseTypeName}";
+            var methodsCode = GetMethodsContent(builder);
+            var fieldsText  = GetFieldsText(builder);
+
+            var classContents = $@"
+//InterfaceBuilder
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace {Namespace}
+{{
+    public interface {builder.Name}{inheritsText}
+    {{
+    }}
+}}";
+            return CustomCodeFormattingEngine.Format(classContents);
+        }
+
+
         private FileResult Build(WebApiBuilder builder)
         {
             var result = new FileResult()
             {
-                Path = GetFilePath(builder),
+                Path     = GetFilePath(builder),
                 Contents = GetClassContents(builder)
             };
             return result;
@@ -49,27 +127,37 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLay
             var inheritsText = string.IsNullOrWhiteSpace(builder.BaseTypeName)
                 ? string.Empty
                 : $" : {builder.BaseTypeName}";
-            var methodsCode = GetMethodsContent(builder);
-            var fieldsText   = GetFieldsText(builder);
+            var methodsCode     = GetMethodsContent(builder);
+            var fieldsText      = GetFieldsText(builder);
+            var constructorText = GetConstructorsText(builder);
+            var usingStatements = GetUsingStatements(builder);
 
             var classContents = $@"
+//WebApiBuilder
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+{usingStatements}
+
 namespace {Namespace}
 {{
     public class {builder.Name}{inheritsText}
     {{
         {fieldsText}
 
+        {constructorText}
+
         {methodsCode}
     }}
 }}";
-            return classContents;
+            return CustomCodeFormattingEngine.Format(classContents);
         }
 
         public FileResult Build(ClassBuilder builder)
         {
             var result = new FileResult()
             {
-                Path = GetFilePath(builder),
+                Path     = GetFilePath(builder),
                 Contents = GetClassContents(builder)
             };
             return result;
@@ -77,38 +165,83 @@ namespace {Namespace}
 
         private string GetClassContents(ClassBuilder builder)
         {
-            var                    Namespace    = builder.GetNamespace();
-            var                    MethodsCode  = GetMethodsContent(builder);
-            var                    inheritsText = GetInheritsText(builder);
-            var                    fieldsText   = GetFieldsText(builder);
-            ClassDeclarationSyntax x;
+            var Namespace        = builder.GetNamespace();
+            var MethodsCode      = GetMethodsContent(builder);
+            var inheritsText     = GetInheritsText(builder);
+            var fieldsText       = GetFieldsText(builder);
+            var constructorsText = GetConstructorsText(builder);
+            var usingStatements  = GetUsingStatements(builder);
 
             var classContents = $@"
+//ClassBuilder
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+{usingStatements}
+
 namespace {Namespace}
 {{
     public class {builder.Name}{inheritsText}
     {{
         {fieldsText}
 
+        {constructorsText}
+
         {MethodsCode}
     }}  
 }}
 ";
-            return classContents;
+            return CustomCodeFormattingEngine.Format(classContents);
         }
 
-        private string GetFieldsText(BuilderPart builder)
+        private string GetUsingStatements(ClassBuilder builder)
+        {
+            var namespaces = builder.ImplementList
+                .Select(z => z.FullName.GetNamespaceFromFullName())
+                .Concat(builder.DelegatesImplTo
+                    .Select(z => z.FullTypeInfo.FullName.GetNamespaceFromFullName()))
+        .Distinct();
+
+            var usingStatements = namespaces
+                .Select(@namespace => $"using {@namespace};")
+                .StringJoin(Environment.NewLine);
+            
+            return usingStatements;
+        }
+
+        private string GetConstructorsText(ClassBuilder builder)
+        {
+            var args = builder.DelegatesImplTo
+                .Select(z => z.FullTypeInfo)
+                .Select(z => $"{z.Name} {z.Name.ToCamelCase()}")
+                .StringJoin(", ");
+            var assignments = builder.DelegatesImplTo
+                .Select(z => z.FullTypeInfo)
+                .Select(z => $"{z.Name.ToUnderscoreCamelCase()} = {z.Name.ToCamelCase()};")
+                .StringJoin(Environment.NewLine);
+
+            foreach (var delegatesToOptionse in builder.DelegatesImplTo) { }
+
+            return $@"
+public {builder.Name}({args})
+{{
+    {assignments}
+}}";
+        }
+
+        private string GetFieldsText(HasMembersBase builder)
         {
             var fields = new List<string>();
             foreach (var delegateTo in builder.DelegatesImplTo)
             {
-                fields.Add($"private readonly {delegateTo.Name} {delegateTo.Name.GetFieldName()};");
+                fields.Add(
+                    $"private readonly {delegateTo.FullTypeInfo.Name} {delegateTo.FullTypeInfo.Name.GetFieldName()};");
             }
 
             return string.Join(Environment.NewLine, fields);
         }
 
-        private string GetInheritsText(BuilderPart builder)
+        private string GetInheritsText(HasMembersBase builder)
         {
             if (builder.ImplementList.Count == 0) return String.Empty;
             var implementsString = builder
@@ -118,19 +251,20 @@ namespace {Namespace}
             return $" : {implementsString}";
         }
 
-        private string GetMethodsContent(BuilderPart builder)
+        private string GetMethodsContent(HasMembersBase builder)
         {
             var methodsToImplement = new List<MethodDescription>();
             var content            = string.Empty;
 
             foreach (var delegateTo in builder.DelegatesImplTo)
             {
-                foreach (var delegateMethodDesc in delegateTo.MethodDescriptions)
+                foreach (var delegateMethodDesc in delegateTo.Methods)
                 {
                     if (methodsToImplement.Any(z => z.Name == delegateMethodDesc.Name))
                         continue;
                     methodsToImplement.Add(delegateMethodDesc);
-                    content += Environment.NewLine + GetmethodContentViaDelegation(builder, delegateTo, delegateMethodDesc);
+                    content += Environment.NewLine +
+                               GetmethodContentViaDelegation(builder, delegateTo, delegateMethodDesc);
                 }
             }
 
@@ -145,36 +279,41 @@ namespace {Namespace}
                 }
             }
 
+            if (builder is ApiDefBuilder apiDefBuilder)
+            {
+                foreach (var methodDesc in apiDefBuilder.TalksTo.MethodDescriptions)
+                {
+                    content += $"[Post(\"{apiDefBuilder.TalksTo.GetUrl()}{methodDesc.Name.ToCamelCase()}\")]";
+                    content += Environment.NewLine;
+                    content +=
+                        $"{methodDesc.ReturnType.GetTypeName()} {methodDesc.Name}({GetParameterTextWithTypes(methodDesc.Parameters)});";
+                    content += Environment.NewLine;
+                }
+            }
+
+
             return content;
-
-
-
-            //throw new NotImplementedException("Figure out how to handle methods from DelegateTo and ImplementList");
-
-            var methodDescriptions = methodsToImplement
-                .Select(z => GetMethodContentViaNotImplemented(builder, z))
-                .ToList();
-
-            var methodsText = string.Join(Environment.NewLine + Environment.NewLine, methodDescriptions);
-            return methodsText;
         }
 
-        private object GetmethodContentViaDelegation(BuilderPart builder, IHasClassParts delegateTo, MethodDescription methodDescription)
+        private object GetmethodContentViaDelegation(
+            HasMembersBase     builder,
+            DelegatesToOptions delegatesToOptions,
+            MethodDescription  methodDescription)
         {
-            var returnType = methodDescription.ReturnType.GetTypeName();
-            var methodName = methodDescription.Name;
+            var returnType    = methodDescription.ReturnType.GetTypeName();
+            var methodName    = methodDescription.Name;
             var parameterText = GetParameterTextWithTypes(methodDescription.Parameters);
 
             return $@"public {returnType} {methodName}({parameterText})
 {{
-    return {delegateTo.Name.GetFieldName()}.{methodDescription.Name}({GetParameterTextWithoutTypes(methodDescription.Parameters)});
+    return {delegatesToOptions.FieldName}.{methodDescription.Name}({GetParameterTextWithoutTypes(methodDescription.Parameters)});
 }}";
         }
 
-        private string GetMethodContentViaNotImplemented(BuilderPart builder, MethodDescription methodDescription)
+        private string GetMethodContentViaNotImplemented(HasMembersBase builder, MethodDescription methodDescription)
         {
-            var returnType = methodDescription.ReturnType.GetTypeName();
-            var methodName = methodDescription.Name;
+            var returnType    = methodDescription.ReturnType.GetTypeName();
+            var methodName    = methodDescription.Name;
             var parameterText = GetParameterTextWithTypes(methodDescription.Parameters);
 
             return $@"public {returnType} {methodName}({parameterText})
@@ -211,10 +350,10 @@ namespace {Namespace}
             return $"{parameter.Name}";
         }
 
-        public string GetFilePath(BuilderPart builder)
+        public string GetFilePath(HasMembersBase builder)
         {
             var featurePath = GetFeaturePath(builder.ProjectBuilder, builder.FeatureBuilder);
-            var fileName = $"{builder.Name}.cs";
+            var fileName    = $"{builder.Name}.cs";
 
             var filePath = Path.Combine(featurePath, fileName);
             return filePath;
@@ -222,8 +361,8 @@ namespace {Namespace}
 
         public string GetFeaturePath(ProjectBuilder project, FeatureBuilder feature)
         {
-            var basePath = project.ProjectRoot;
-            var featureRoot = project.DefaultFeaturePath;
+            var basePath       = project.ProjectRoot;
+            var featureRoot    = project.DefaultFeaturePath;
             var featureSubPath = feature.Name.Split(new[] {"."}, StringSplitOptions.RemoveEmptyEntries);
 
             var pathParts = new List<string>() {basePath, featureRoot};
@@ -236,21 +375,27 @@ namespace {Namespace}
 
     public class MethodDescription
     {
-        public Type ReturnType { get; set; }
-        public string Name { get; set; }
+        public Type                        ReturnType { get; set; }
+        public string                      Name       { get; set; }
         public IList<ParameterDescription> Parameters { get; set; }
     }
 
     public class ParameterDescription
     {
-        public Type Type { get; set; }
+        public Type   Type { get; set; }
         public string Name { get; set; }
     }
 
     public class FileResult
     {
-        public string Path { get; set; }
+        public string Path     { get; set; }
         public string Contents { get; set; }
+
+        public void SaveToDisk()
+        {
+            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(Path));
+            File.WriteAllText(Path, Contents);
+        }
     }
 
     public class ConfigBuilder
@@ -263,9 +408,9 @@ namespace {Namespace}
             return project;
         }
 
-        public ReadObject ReadInterface(Type type)
+        public ReflectedType ReadInterface(Type type)
         {
-            var readObject = new ReadObject(type);
+            var readObject = new ReflectedType(type);
             Builders.Add(readObject);
             return readObject;
         }
@@ -290,31 +435,218 @@ namespace {Namespace}
             Builders.Add(builder);
             return builder;
         }
+
+        public ApiDefBuilder CreateApiDef(ProjectBuilder proj, FeatureBuilder feature)
+        {
+            var builder = new ApiDefBuilder(proj, feature);
+            Builders.Add(builder);
+            return builder;
+        }
+
+        public InterfaceBuilder CreateInterface(ProjectBuilder proj, FeatureBuilder feature)
+        {
+            var builder = new InterfaceBuilder(proj, feature);
+            Builders.Add(builder);
+            return builder;
+        }
     }
 
-    public class WebApiBuilder : BuilderPart
+    public class InterfaceBuilder : HasMembersBase
     {
         public string BaseTypeName { get; set; }
 
-        public WebApiBuilder(ProjectBuilder projectBuilder, FeatureBuilder feature)
+        public IList<ITypeNameAndType> TypeDescriptions { get; set; } = new List<ITypeNameAndType>();
+
+        public InterfaceBuilder(ProjectBuilder projectBuilder, FeatureBuilder feature)
+        {
+            ProjectBuilder = projectBuilder;
+            FeatureBuilder = feature;
+            TypeType       = TypeType.Interface;
+        }
+
+        public InterfaceBuilder HasBaseInterface(ITypeNameAndType typeNameAndType)
+        {
+            if (typeNameAndType.TypeType != TypeType.Interface)
+                throw new InvalidOperationException("Interface can only have other interfaces as base types.");
+
+            TypeDescriptions.Add(typeNameAndType);
+            return this;
+        }
+
+        public override void NamedBy(ITypeNameAndType reflectedType, string suffix)
+        {
+            base.NamedBy(reflectedType, suffix);
+            if (reflectedType.TypeType != TypeType.Interface && reflectedType.Name.StartsWith("I"))
+                BaseTypeName = "I" + BaseTypeName;
+        }
+    }
+
+    public class ApiDefBuilder : HasMembersBase
+    {
+        public string BaseTypeName { get; set; }
+
+        public WebApiBuilder TalksTo { get; set; }
+
+        public ApiDefBuilder(ProjectBuilder projectBuilder, FeatureBuilder feature)
+        {
+            ProjectBuilder = projectBuilder;
+            FeatureBuilder = feature;
+            TypeType       = TypeType.Interface;
+        }
+
+        public override List<MethodDescription> MethodDescriptions => TalksTo.MethodDescriptions;
+    }
+
+    public class WebApiBuilder : ClassBuilder
+    {
+        public string BaseTypeName { get; set; }
+
+        public string GetUrl()
+        {
+            return $"/api/{Name}/";
+        }
+
+        public WebApiBuilder(ProjectBuilder projectBuilder, FeatureBuilder feature) : base(projectBuilder, feature)
         {
             ProjectBuilder = projectBuilder;
             FeatureBuilder = feature;
         }
+
+        public override List<MethodDescription> MethodDescriptions
+        {
+            get
+            {
+                return DelegatesImplTo
+                    .SelectMany(z => z.Methods)
+                    .ToList();
+            }
+        }
     }
 
-    public class BuilderPart: IHasClassParts
+    public interface IAttributeBuilder
     {
-        public ConfigBuilder ConfigBuilder { get; set; }
+        string GetCode();
+    }
+
+    public class AttributeBuilderFromString : IAttributeBuilder
+    {
+        public string AttributeText { get; set; }
+
+        public AttributeBuilderFromString(string attributeText)
+        {
+            AttributeText = attributeText;
+        }
+
+        public string GetCode()
+        {
+            return AttributeText;
+        }
+    }
+
+    public enum TypeType
+    {
+        Unknown,
+        Class,
+        Interface
+    }
+
+    public interface ITypeNameAndType
+    {
+        public string   FullName { get; set; }
+        public string   Name     { get; set; }
+        public TypeType TypeType { get; set; }
+    }
+
+    public class TypeNameAndTypeFromType : ITypeNameAndType
+    {
+        public string   FullName { get; set; }
+        public string   Name     { get; set; }
+        public TypeType TypeType { get; set; }
+    }
+
+    public class TypeNameAndTypeFromString : ITypeNameAndType
+    {
+        public string   FullName { get; set; }
+        public string   Name     { get; set; }
+        public TypeType TypeType { get; set; }
+    }
+
+    public class TypeNameAndTypeFromHasMembers : ITypeNameAndType
+    {
+        public string   FullName { get; set; }
+        public string   Name     { get; set; }
+        public TypeType TypeType { get; set; }
+    }
+
+    public class DelegatesToOptions
+    {
+        public string                   FieldName       { get; set; }
+        public bool                     IsContructorArg { get; set; }
+        public IList<MethodDescription> Methods         { get; set; }
+        public IFullTypeInfo            FullTypeInfo    { get; set; }
+
+        public DelegatesToOptions(IFullTypeInfo fullTypeInfo)
+        {
+            FullTypeInfo    = fullTypeInfo;
+            FieldName       = fullTypeInfo.Name.ToUnderscoreCamelCase();
+            IsContructorArg = true;
+            Methods         = fullTypeInfo.MethodDescriptions.ToList();
+        }
+    }
+
+    public interface IFullTypeInfo : IHasMembers, ITypeNameAndType { }
+
+    public class HasMembersBase : IFullTypeInfo
+    {
+        private string        _name;
+        public  ConfigBuilder ConfigBuilder { get; set; }
 
         public ProjectBuilder ProjectBuilder { get; set; }
         public FeatureBuilder FeatureBuilder { get; set; }
-        public string Name { get; set; }
-        public IList<IHasClassParts> ImplementList { get; } = new List<IHasClassParts>();
+
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                SetFullName();
+            }
+        }
+
+        private void SetFullName()
+        {
+            FullName = GetNamespace() + "." + Name;
+        }
+
+        public string                    FullName           { get; set; }
+        public TypeType                  TypeType           { get; set; }
+        public IList<IFullTypeInfo>      ImplementList      { get; }      = new List<IFullTypeInfo>();
+        public IList<DelegatesToOptions> DelegatesImplTo    { get; set; } = new List<DelegatesToOptions>();
+        public IList<IHasMembers>        DelegatesImplToOld { get; set; } = new List<IHasMembers>();
+
+        public virtual List<MethodDescription> MethodDescriptions
+        {
+            get
+            {
+                var readObjectsMethods = ImplementList
+                    .Where(z => z is ReflectedType)
+                    .SelectMany(z => z.MethodDescriptions)
+                    .ToList();
+                return readObjectsMethods;
+            }
+        }
+
+        public void SetNames(string fullName)
+        {
+            Name     = fullName.Split(new[] {'.'}).Last();
+            FullName = fullName;
+        }
+
 
         public string GetNamespace()
         {
-            var projectNamespace = ProjectBuilder.ProjectName;
+            var projectNamespace     = ProjectBuilder.ProjectName;
             var featureNamespaceRoot = ProjectBuilder.DefaultFeaturePath;
             var featureNamespacePart = FeatureBuilder.Name;
 
@@ -328,51 +660,46 @@ namespace {Namespace}
         private string CreateNamespaceFromParts(string[] namespaceParts)
         {
             var nonEmptyParts = namespaceParts.Where(z => !string.IsNullOrWhiteSpace(z)).ToList();
-            var nameSpace = string.Join(".", nonEmptyParts);
+            var nameSpace     = string.Join(".", nonEmptyParts);
             return nameSpace;
         }
 
-        public void Implements(ReadObject readObject)
+        public void Implements(IFullTypeInfo reflectedType)
         {
-            ImplementList.Add(readObject);
-        }
-        public List<MethodDescription> MethodDescriptions
-        {
-            get
-            {
-                var readObjectsMethods = ImplementList
-                    .Where(z => z is ReadObject)
-                    .SelectMany(z => z.MethodDescriptions)
-                    .ToList();
-                return readObjectsMethods;
-            }
+            ImplementList.Add(reflectedType);
         }
 
-        public IList<IHasClassParts> DelegatesImplTo { get; set; } = new List<IHasClassParts>();
-
-        public void DelegatesTo(IHasClassParts builder)
+        public void DelegatesTo(IFullTypeInfo builder)
         {
-            DelegatesImplTo.Add(builder);
+            DelegatesImplTo.Add(new DelegatesToOptions(builder));
         }
 
-        public void NamedBy(ReadObject readObject, string suffix)
+
+        public void DelegatesToOld(IHasMembers builder)
         {
-            var baseName = readObject.Type.IsInterface && readObject.Type.Name.StartsWith("I")
-                ? readObject.Type.GetTypeName().Substring(1)
-                : readObject.Type.GetTypeName();
-            Name = $"{baseName}{suffix}";
+            DelegatesImplToOld.Add(builder);
+        }
+
+        public virtual void NamedBy(ITypeNameAndType reflectedType, string suffix)
+        {
+            var baseName = reflectedType.TypeType == TypeType.Interface && reflectedType.Name.StartsWith("I")
+                ? reflectedType.Name.Substring(1)
+                : reflectedType.Name;
+            var IOrNot = (TypeType == TypeType.Interface) ? "I" : String.Empty;
+            Name = $"{IOrNot}{baseName}{suffix}";
         }
     }
 
-    public class ClassBuilder : BuilderPart
+    public class ClassBuilder : HasMembersBase
     {
         public ClassBuilder(ConfigBuilder configBuilder, ProjectBuilder projectBuilder, FeatureBuilder featureBuilder,
-            string name)
+                            string        name)
         {
-            ConfigBuilder = configBuilder;
+            ConfigBuilder  = configBuilder;
             ProjectBuilder = projectBuilder;
             FeatureBuilder = featureBuilder;
-            Name = name;
+            SetNames(name);
+            TypeType = TypeType.Class;
         }
 
         public ClassBuilder(ProjectBuilder projectBuilder, FeatureBuilder featureBuilder)
@@ -381,13 +708,21 @@ namespace {Namespace}
             FeatureBuilder = featureBuilder;
         }
 
+        public HasMembersBase SetBaseType(IHasMembers hasMembers)
+        {
+            throw new NotImplementedException();
+        }
 
+        public void InheritsInterface(InterfaceBuilder stub)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class ImplementsBuilder
     {
-        public ReadObject ObjectToImplement { get; set; }
-        public bool ImplementWithNotImplementedException { get; set; }
+        public ReflectedType ObjectToImplement                    { get; set; }
+        public bool          ImplementWithNotImplementedException { get; set; }
     }
 
     public class FeatureBuilder
@@ -400,22 +735,29 @@ namespace {Namespace}
         }
     }
 
-    public interface IHasClassParts
+    public interface IHasMembers
     {
-        string Name { get; }
         List<MethodDescription> MethodDescriptions { get; }
     }
 
-    public class ReadObject : IHasClassParts
+    public class ReflectedType : IFullTypeInfo
     {
-        public Type Type { get; set; }
-        public string Name => Type.GetTypeName();
+        public Type                    Type               { get; set; }
+        public string                  Name               { get; set; }
+        public string                  FullName           { get; set; }
         public List<MethodDescription> MethodDescriptions { get; set; } = new List<MethodDescription>();
+        public TypeType                TypeType           { get; set; } = TypeType.Unknown;
 
-        public ReadObject(Type type)
+        public ReflectedType(Type type)
         {
             Type = type;
             GetMethods();
+
+            Name     = type.GetTypeName();
+            FullName = type.Namespace + "." + Name;
+
+            if (type.IsClass) TypeType     = TypeType.Class;
+            if (type.IsInterface) TypeType = TypeType.Interface;
         }
 
         private void GetMethods()
@@ -439,7 +781,7 @@ namespace {Namespace}
 
             var description = new MethodDescription()
             {
-                Name = method.Name,
+                Name       = method.Name,
                 ReturnType = method.ReturnType,
                 Parameters = parameters
             };
@@ -460,14 +802,14 @@ namespace {Namespace}
 
     public class ProjectBuilder
     {
-        public string ProjectRoot { get; set; }
-        public string ProjectName { get; set; }
+        public string ProjectRoot        { get; set; }
+        public string ProjectName        { get; set; }
         public string DefaultFeaturePath { get; set; }
 
         public ProjectBuilder(string projectRoot, string projectName, string featurePath = default)
         {
-            ProjectRoot = projectRoot;
-            ProjectName = projectName;
+            ProjectRoot        = projectRoot;
+            ProjectName        = projectName;
             DefaultFeaturePath = featurePath ?? string.Empty;
         }
     }
@@ -478,10 +820,10 @@ namespace {Namespace}
         {
             if (type.IsConstructedGenericType)
             {
-                var genericType = type.GetGenericTypeDefinition();
-                var genericArgs = type.GenericTypeArguments.ToList();
+                var genericType     = type.GetGenericTypeDefinition();
+                var genericArgs     = type.GenericTypeArguments.ToList();
                 var genericArgTexts = genericArgs.Select(z => z.GetTypeName()).ToList();
-                var genericArgText = string.Join(", ", genericArgTexts);
+                var genericArgText  = string.Join(", ", genericArgTexts);
 
                 var genericTypeName = type.Name.Split(new[] {'`'}).First();
 
@@ -492,7 +834,6 @@ namespace {Namespace}
                 return type.Name;
             }
         }
-
     }
 
     public static class StringExtensionMethods
@@ -501,6 +842,16 @@ namespace {Namespace}
         {
             name = name[0].ToString().ToLower() + name.Substring(1);
             return $"_{name}";
+        }
+
+        public static string GetNamespaceFromFullName(this string fullName)
+        {
+            var lastDotIndex = fullName.LastIndexOf(".");
+            if (lastDotIndex <= 0)
+                throw new InvalidOperationException(
+                    $"Needs a last dot in the name {fullName}. Last index of '.' was {lastDotIndex}");
+
+            return fullName.Substring(0, lastDotIndex);
         }
     }
 }

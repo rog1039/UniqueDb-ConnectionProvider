@@ -60,8 +60,19 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLay
      * fromDb.DelegatesTo(impl);
      *
      * var results = config.Apply
+     *
+     *
+     * HasBase(string)
+     * HasBase(Type)
+     * HasBase(IHasMembers)
+     *
+     * Type Description:
+     * - Actual Type
+     * - String name of type
+     * - Some IHasMembers
      * 
      */
+
 
     public interface IMyService
     {

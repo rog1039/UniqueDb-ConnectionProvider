@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
@@ -52,6 +53,24 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         public static bool InsensitiveContains(this string input, string part)
         {
             return CultureInfo.InvariantCulture.CompareInfo.IndexOf(input, part, CompareOptions.IgnoreCase) >= 0;
+        }
+
+        public static string ToUnderscoreCamelCase(this string s)
+        {
+            s = $"_" + s.ToCamelCase();
+            return s;
+        }
+
+        public static string ToCamelCase(this string s)
+        {
+            return s[0].ToString().ToLower() + s.Substring(1);
+        }
+
+        public static (string FullName, string Name) ToNameParts(this string s)
+        {
+            var name     = s.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries).Last();
+            var fullName = s.Trim();
+            return (fullName, name);
         }
     }
 }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace UniqueDb.ConnectionProvider
+namespace UniqueDb.ConnectionProvider.CollectionExts
 {
     public static class CollectionExtensions
     {

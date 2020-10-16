@@ -9,7 +9,8 @@ namespace UniqueDb.ConnectionProvider
 {
     public static class SqlConnectionProviderExtensionMethods
     {
-        public static SqlConnectionDbDeletingDisposable ToSelfDeletingDisposable(this ISqlConnectionProvider dbConnectionProvider)
+        public static SqlConnectionDbDeletingDisposable ToSelfDeletingDisposable(
+            this ISqlConnectionProvider dbConnectionProvider)
         {
             var disposable = new SqlConnectionDbDeletingDisposable(dbConnectionProvider);
             return disposable;
@@ -22,13 +23,15 @@ namespace UniqueDb.ConnectionProvider
             return new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
         }
 
-        public static UniqueDbConnectionProvider AndAutoDeleteDbOlderThan5Minutes(this UniqueDbConnectionProvider uniqueDbConnectionProvider)
+        public static UniqueDbConnectionProvider AndAutoDeleteDbOlderThan5Minutes(
+            this UniqueDbConnectionProvider uniqueDbConnectionProvider)
         {
             OldDatabaseDeleter.DeleteOldDatabases(uniqueDbConnectionProvider, TimeSpan.FromMinutes(5));
             return uniqueDbConnectionProvider;
         }
 
-        public static UniqueDbConnectionProvider AndAutoDeleteDbOlderThan(this UniqueDbConnectionProvider uniqueDbConnectionProvider, TimeSpan olderThan)
+        public static UniqueDbConnectionProvider AndAutoDeleteDbOlderThan(
+            this UniqueDbConnectionProvider uniqueDbConnectionProvider, TimeSpan olderThan)
         {
             OldDatabaseDeleter.DeleteOldDatabases(uniqueDbConnectionProvider, olderThan);
             return uniqueDbConnectionProvider;
@@ -57,7 +60,7 @@ namespace UniqueDb.ConnectionProvider
             var connectionStringBuilder = connectionProvider.GetSqlConnectionStringBuilder();
             connectionStringBuilder.InitialCatalog = "master";
             var connectionString = connectionStringBuilder.ConnectionString;
-            var connection = new SqlConnection(connectionString);
+            var connection       = new SqlConnection(connectionString);
             connection.Open();
             return connection;
         }
@@ -65,7 +68,7 @@ namespace UniqueDb.ConnectionProvider
         public static bool DoesDatabaseExist(this ISqlConnectionProvider connectionProvider, string databaseName = null)
         {
             databaseName = databaseName ?? connectionProvider.DatabaseName;
-            var connection = CreateSqlConnectionOnMasterDatabase(connectionProvider);
+            var connection                 = CreateSqlConnectionOnMasterDatabase(connectionProvider);
             var doesDatabaseExistTextQuery = $"SELECT 1 WHERE db_id('{databaseName}') IS NOT NULL";
             var doesDatabaseExist = connection
                 .Query<int>(doesDatabaseExistTextQuery)
@@ -87,10 +90,11 @@ namespace UniqueDb.ConnectionProvider
             var connection = connectionProvider.GetSqlConnection();
             connection.Open();
             var command = new SqlCommand(sqlCommand, connection);
-            var result = ConvertFromDBVal<T>(command.ExecuteScalar());
+            var result  = ConvertFromDBVal<T>(command.ExecuteScalar());
             connection.Dispose();
             return result;
         }
+
         public static T ConvertFromDBVal<T>(object obj)
         {
             if (obj == null || obj == DBNull.Value)
@@ -99,31 +103,41 @@ namespace UniqueDb.ConnectionProvider
             }
             else
             {
-                return (T)obj;
+                return (T) obj;
             }
         }
 
         public static string GenerateClassFromQuery(this ISqlConnectionProvider sqlConnectionProvider, string sqlQuery,
-            string className)
+                                                    string                      className)
         {
-            return CSharpClassGeneratorFromQueryViaSqlDescribeResultSet.GenerateClass(sqlConnectionProvider, sqlQuery, className);
+            return CSharpClassGeneratorFromQueryViaSqlDescribeResultSet.GenerateClass(
+                sqlConnectionProvider, sqlQuery, className);
         }
-        
-        public static string GenerateClassFromTable(this ISqlConnectionProvider sqlConnectionProvider, string schemaname, string tableName,
-            string className = null)
+
+        public static string GenerateClassFromTable(this ISqlConnectionProvider sqlConnectionProvider,
+                                                    string                      schemaname, string tableName,
+                                                    string                      className = null)
         {
             className = className ?? tableName;
             var sqlTableReference = new SqlTableReference(sqlConnectionProvider, schemaname, tableName);
-            var sqlTable = SqlTableFactory.Create(sqlTableReference);
+            var sqlTable          = SqlTableFactory.Create(sqlTableReference);
             return CSharpClassGeneratorFromSqlTable.GenerateClass(sqlTable, className);
         }
 
-        public static ISqlConnectionProvider ChangeDatabase(this ISqlConnectionProvider sqlConnectionProvider, string databaseName)
+        public static ISqlConnectionProvider ChangeDatabase(this ISqlConnectionProvider sqlConnectionProvider,
+                                                            string                      databaseName)
         {
             var oldScp = sqlConnectionProvider;
-            var newScp = new StaticSqlConnectionProvider(oldScp.ServerName, databaseName, 
-                                                         oldScp.UserName, oldScp.Password);
-            return newScp;
+
+            if (oldScp.UseIntegratedAuthentication)
+            {
+                return new StaticSqlConnectionProvider(oldScp.ServerName, databaseName);
+            }
+            else
+            {
+                return new StaticSqlConnectionProvider(oldScp.ServerName, databaseName,
+                                                       oldScp.UserName, oldScp.Password);
+            }
         }
     }
 }

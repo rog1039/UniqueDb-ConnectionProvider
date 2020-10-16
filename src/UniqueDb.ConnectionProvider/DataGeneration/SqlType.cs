@@ -51,7 +51,11 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         {
             if (SqlTypes.IsCharType(TypeName))
             {
-                return TypeName + (MaximumCharLength.HasValue ? $"({MaximumCharLength.Value})" : string.Empty);
+                var charLength = MaximumCharLength.HasValue && MaximumCharLength.Value > 0
+                    ? MaximumCharLength.Value.ToString()
+                    : "MAX";
+
+                return $"{TypeName}({charLength})";
             }
             if (SqlTypes.IsApproximateNumeric(TypeName))
             {

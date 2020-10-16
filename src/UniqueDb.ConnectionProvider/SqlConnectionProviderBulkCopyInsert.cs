@@ -64,7 +64,7 @@ namespace UniqueDb.ConnectionProvider
             return row;
         }
 
-        private static void ExecuteBulkCopy(ISqlConnectionProvider sqlConnectionProvider, string schemaName, string tableName, DataTable dataTable)
+        public static void ExecuteBulkCopy(ISqlConnectionProvider sqlConnectionProvider, string schemaName, string tableName, DataTable dataTable)
         {
             using (var sqlBulkCopy = new SqlBulkCopy(sqlConnectionProvider.GetSqlConnectionString()))
             {
@@ -72,7 +72,7 @@ namespace UniqueDb.ConnectionProvider
                 SetColumnMappings(sqlBulkCopy, dataTable);
                 sqlBulkCopy.BulkCopyTimeout      = 480;
                 sqlBulkCopy.BatchSize            = 35000;
-                sqlBulkCopy.DestinationTableName = $"{schemaName}.{tableName}";
+                sqlBulkCopy.DestinationTableName = $"[{schemaName}].[{tableName}]";
                 sqlBulkCopy.WriteToServer(dataTable);
                 sqlBulkCopy.Close();
             }

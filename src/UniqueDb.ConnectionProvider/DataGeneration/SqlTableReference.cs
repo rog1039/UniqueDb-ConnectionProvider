@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using FluentAssertions;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
@@ -13,9 +14,9 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         {
             SqlConnectionProvider = sqlConnectionProvider;
             var names = qualifiedTableName.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
-            names.Length.Should().Be(2, "a schema and table name is expected -- use form similar to Schema.Table");
-            SchemaName = names[0];
-            TableName = names[1];
+            names.Length.Should().BeGreaterOrEqualTo(2, "a schema and table name is expected -- use form similar to Schema.Table");
+            SchemaName = names[0].Debracketize();
+            TableName = string.Join(".", names.Skip(1)).Debracketize();
         }
 
         public SqlTableReference(ISqlConnectionProvider sqlConnectionProvider, string schemaName, string tableName)

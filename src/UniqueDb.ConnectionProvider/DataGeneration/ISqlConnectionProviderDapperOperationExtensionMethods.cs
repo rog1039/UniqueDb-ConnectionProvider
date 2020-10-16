@@ -10,9 +10,9 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             sqlConnectionProvider.GetSqlConnection().Execute(script);
         }
 
-        public static IEnumerable<T> Query<T>(this ISqlConnectionProvider sqlConnectionProvider, string script)
+        public static IEnumerable<T> Query<T>(this ISqlConnectionProvider sqlConnectionProvider, string script, object param = null)
         {
-            return sqlConnectionProvider.GetSqlConnection().Query<T>(script);
+            return sqlConnectionProvider.GetSqlConnection().Query<T>(script, param);
         }
 
         public static void BulkInsert<T>(this ISqlConnectionProvider sqlConnectionProvider, IList<T> list,
