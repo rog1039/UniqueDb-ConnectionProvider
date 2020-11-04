@@ -16,7 +16,7 @@ namespace UniqueDb.ConnectionProvider
         {
             if (list.Count == 0) return;
             var dataTable = CreateDataTable(list);
-            ExecuteBulkCopy(sqlConnectionProvider, schemaName, tableName.BracketizeSafe(), dataTable);
+            ExecuteBulkCopy(sqlConnectionProvider, schemaName, tableName, dataTable);
         }
 
         private static DataTable CreateDataTable<T>(IList<T> list)
@@ -68,11 +68,14 @@ namespace UniqueDb.ConnectionProvider
         {
             using (var sqlBulkCopy = new SqlBulkCopy(sqlConnectionProvider.GetSqlConnectionString()))
             {
+                schemaName = schemaName.BracketizeSafe();
+                tableName  = tableName.BracketizeSafe();
+                
                 VerifyDataTableColumnsMatchDbTableSchema(sqlConnectionProvider, schemaName, tableName, dataTable);
                 SetColumnMappings(sqlBulkCopy, dataTable);
                 sqlBulkCopy.BulkCopyTimeout      = 480;
                 sqlBulkCopy.BatchSize            = 35000;
-                sqlBulkCopy.DestinationTableName = $"[{schemaName}].[{tableName}]";
+                sqlBulkCopy.DestinationTableName = $"{schemaName}.{tableName}";
                 sqlBulkCopy.WriteToServer(dataTable);
                 sqlBulkCopy.Close();
             }
@@ -99,7 +102,7 @@ namespace UniqueDb.ConnectionProvider
             if (columnsInDataTableButMissingInDbTable.Count > 0)
             {
                 var message =
-                    $"SqlBulkInsert will fail because the following columns are present in the DataTable but not in the Sql Database table: {string.Join(", ", columnsInDataTableButMissingInDbTable)}";
+                    $"SqlBulkInsert will fail because the following columns are present in the DataTable but not in Sql Database table {schemaName}.{tableName}: {string.Join(", ", columnsInDataTableButMissingInDbTable)}";
 
                 throw new InvalidDataException(message);
             }

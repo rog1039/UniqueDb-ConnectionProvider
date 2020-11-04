@@ -22,8 +22,8 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
         public SqlTableReference(ISqlConnectionProvider sqlConnectionProvider, string schemaName, string tableName)
         {
             SqlConnectionProvider = sqlConnectionProvider;
-            SchemaName = schemaName;
-            TableName = tableName;
+            SchemaName = schemaName.Debracketize();
+            TableName = tableName.Debracketize();
         }
     }
 }

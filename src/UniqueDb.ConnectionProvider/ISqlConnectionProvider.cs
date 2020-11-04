@@ -18,4 +18,12 @@ namespace UniqueDb.ConnectionProvider
         string JustInstanceName { get; }
         string JustServerName { get; }
     }
+
+    public static class SqlConnectionProviderExtensions
+    {
+        public static string ServerNameWithDbName(this ISqlConnectionProvider sqlConnectionProvider)
+        {
+            return $"{sqlConnectionProvider.ServerName}.{sqlConnectionProvider.DatabaseName}";
+        }
+    }
 }
