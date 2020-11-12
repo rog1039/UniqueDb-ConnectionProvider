@@ -12,7 +12,11 @@ namespace UniqueDb.ConnectionProvider
 {
     public static class SqlConnectionProviderBulkCopyInsert
     {
-        public static void BulkInsert<T>(ISqlConnectionProvider sqlConnectionProvider, IList<T> list, string tableName, string schemaName ="dbo")
+        public static void BulkInsert<T>(ISqlConnectionProvider sqlConnectionProvider, 
+                                         IList<T> list, 
+                                         string tableName, 
+                                         string schemaName ="dbo"
+                                         )
         {
             if (list.Count == 0) return;
             var dataTable = CreateDataTable(list);
@@ -64,7 +68,10 @@ namespace UniqueDb.ConnectionProvider
             return row;
         }
 
-        public static void ExecuteBulkCopy(ISqlConnectionProvider sqlConnectionProvider, string schemaName, string tableName, DataTable dataTable)
+        public static void ExecuteBulkCopy(ISqlConnectionProvider sqlConnectionProvider, 
+                                           string schemaName, 
+                                           string tableName, 
+                                           DataTable dataTable)
         {
             using (var sqlBulkCopy = new SqlBulkCopy(sqlConnectionProvider.GetSqlConnectionString()))
             {

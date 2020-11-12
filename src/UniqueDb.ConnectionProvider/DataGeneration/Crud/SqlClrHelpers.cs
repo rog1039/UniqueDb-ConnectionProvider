@@ -44,6 +44,14 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
             // return !shouldSkip;
         }
 
+        private static bool IsNotMapped(PropertyInfo arg)
+        {
+            var isNotMapped = arg
+                .CustomAttributes
+                .Any(a => a.AttributeType == typeof(NotMappedAttribute));
+            return isNotMapped;
+        }
+
         private static bool IsPropertyDatabaseGenerated(PropertyInfo arg)
         {
             var isDatabaseGenerated = arg
@@ -54,7 +62,13 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
 
         private static bool IsColumnIgnored(PropertyInfo arg, IEnumerable<string> columnsToIgnore)
         {
-            return columnsToIgnore?.Contains(arg.Name) == true;
+            var onIgnoreList = columnsToIgnore?.Contains(arg.Name) == true;
+            if (onIgnoreList) return true;
+
+            var isNotMapped = IsNotMapped(arg);
+            if (isNotMapped) return true;
+
+            return false;
         }
 
         public static IList<PropertyInfo> GetPropertiesFromObject<T>(T obj, Expression<Func<T, object>> keyProperties)
