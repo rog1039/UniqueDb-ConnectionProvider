@@ -6,17 +6,28 @@ using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
 {
-    public static class SqlDmlCreateTableFromInformationSchemaGenerator
+    public enum CreateIfExistsModification
     {
-        public static string GenerateCreateTableScript(string schemaName, string tableName,
-                                                       IList<InformationSchemaColumn> columns)
+        CreateAnyway,
+        DropAndRecreate,
+        PreventCreation
+    }
+
+    public static class InfSchemaToSqlDmlCreateStatementGenerator
+    {
+        public static string GenerateCreateTableScript(string                         schemaName, string tableName,
+                                                       IList<InformationSchemaColumn> columns,
+                                                       CreateIfExistsModification ifExists =
+                                                           CreateIfExistsModification.CreateAnyway)
         {
             string createScript = string.Empty;
-            createScript = CreateTableScript(schemaName, tableName, columns);
+            createScript = CreateTableScript(schemaName, tableName, columns, ifExists);
             return createScript;
         }
 
-        public static string GenerateCreateTableScript(InformationSchemaTableDefinition tableDefinition)
+        public static string GenerateCreateTableScript(InformationSchemaTableDefinition tableDefinition,
+                                                       CreateIfExistsModification createIfExistsModification =
+                                                           CreateIfExistsModification.CreateAnyway)
         {
             if (tableDefinition.InformationSchemaTable.TABLE_TYPE != TableTypes.BaseTable &&
                 tableDefinition.InformationSchemaTable.TABLE_TYPE != TableTypes.View)
@@ -29,23 +40,25 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
             string createScript = string.Empty;
 
             if (tableDefinition.InformationSchemaTable.TABLE_TYPE == TableTypes.BaseTable)
-                createScript = CreateTableScript(tableDefinition);
+                createScript = CreateTableScript(tableDefinition, createIfExistsModification);
             if (tableDefinition.InformationSchemaTable.TABLE_TYPE == TableTypes.View)
                 throw new NotImplementedException("Have not implemented View creation yet.");
 
             return createScript;
         }
 
-        private static string CreateTableScript(InformationSchemaTableDefinition tableDefinition)
+        private static string CreateTableScript(InformationSchemaTableDefinition tableDefinition,
+                                                CreateIfExistsModification       ifExists)
         {
             var infSchColumns = tableDefinition.InformationSchemaColumns;
-            var infSchTable   = tableDefinition.InformationSchemaTable;
-            var script        = CreateTableScript(infSchTable.TABLE_SCHEMA, infSchTable.TABLE_NAME, infSchColumns);
+            var infSchTable = tableDefinition.InformationSchemaTable;
+            var script = CreateTableScript(infSchTable.TABLE_SCHEMA, infSchTable.TABLE_NAME, infSchColumns, ifExists);
             return script;
         }
 
         public static string CreateTableScript(string                         schemaName, string tableName,
-                                               IList<InformationSchemaColumn> columns)
+                                               IList<InformationSchemaColumn> columns,
+                                               CreateIfExistsModification     ifExists)
         {
             var fullTableName = GetTableName(schemaName, tableName);
 
@@ -53,7 +66,38 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
             sb.AppendFormat("CREATE TABLE {0} (\r\n", fullTableName);
             AddColumnDefinitionsToCreateTableStringBuilder(sb, columns);
             sb.AppendLine(");");
-            return sb.ToString();
+            var createTablePortion = sb.ToString();
+
+            var dbTableName       = new DbTableName(schemaName, tableName);
+            var totalCreateScript = AddExistingTableHandling(ifExists, dbTableName, createTablePortion);
+            return totalCreateScript;
+        }
+
+        private static string AddExistingTableHandling(CreateIfExistsModification createIfExistsModification,
+                                                       DbTableName dbTableName, 
+                                                       string createTablePortion)
+        {
+            switch (createIfExistsModification)
+            {
+                case CreateIfExistsModification.CreateAnyway:
+                    return createTablePortion;
+
+                case CreateIfExistsModification.DropAndRecreate:
+                    return $@"
+DROP TABLE IF EXISTS {dbTableName};
+{createTablePortion}";
+
+                case CreateIfExistsModification.PreventCreation:
+                    return $@"
+IF (OBJECT_ID('{dbTableName}', 'U')) IS NULL
+BEGIN
+    {createTablePortion}
+END
+";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(createIfExistsModification),
+                                                          createIfExistsModification, null);
+            }
         }
 
         private static string GetTableName(string tableSchema, string tableName)
@@ -138,6 +182,14 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
 
         private static string GetStringForPrecisionNumberDataType(InformationSchemaColumn informationSchemaColumn)
         {
+            if (informationSchemaColumn.DATA_TYPE.InsensitiveEquals("float"))
+            {
+                var text2 = string.Format("{0} ({1})",
+                                          informationSchemaColumn.DATA_TYPE,
+                                          informationSchemaColumn.NUMERIC_PRECISION);
+                return text2;
+            }
+
             var text = string.Format("{0} ({1}, {2})",
                                      informationSchemaColumn.DATA_TYPE,
                                      informationSchemaColumn.NUMERIC_PRECISION,

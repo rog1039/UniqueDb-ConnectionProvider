@@ -6,8 +6,8 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
     {
         public static void CopyTable(SqlTableReference sourceTable, SqlTableReference targetTable)
         {
-            var infschTable = InformationSchemaMetadataExplorer.GetInformationSchemaTableDefinition(sourceTable);
-            var createTableScript = SqlDmlCreateTableFromInformationSchemaGenerator.GenerateCreateTableScript(infschTable);
+            var infschTable       = InformationSchemaMetadataExplorer.GetInformationSchemaTableDefinition(sourceTable);
+            var createTableScript = InfSchemaToSqlDmlCreateStatementGenerator.GenerateCreateTableScript(infschTable);
             targetTable.SqlConnectionProvider.Execute(createTableScript);
         }
 

@@ -8,7 +8,7 @@ using UniqueDb.ConnectionProvider.DataGeneration.Crud;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation
 {
-    public static class CreateTableScriptProvider
+    public static class ClrTypeToSqlDmlCreateStatementGenerator
     {
         public static string GetCreateTableScript<T>(string schemaName = "dbo", string tableName = null)
         {

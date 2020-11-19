@@ -33,7 +33,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         public void TestSampleCreateTableScript()
         {
             var tableDefinition = InformationSchemaTableDefinitionFromJson.SampleTable();
-            var script = SqlDmlCreateTableFromInformationSchemaGenerator.GenerateCreateTableScript(tableDefinition);
+            var script = InfSchemaToSqlDmlCreateStatementGenerator.GenerateCreateTableScript(tableDefinition);
             Console.WriteLine(script);
         }
     }

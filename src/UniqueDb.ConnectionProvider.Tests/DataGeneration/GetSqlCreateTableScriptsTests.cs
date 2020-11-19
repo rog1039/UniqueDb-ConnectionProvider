@@ -16,7 +16,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         [Trait("Category", "Instant")]
         public void CreateScriptFromCSharpClass()
         {
-            var response = CreateTableScriptProvider.GetCreateTableScript<DescribeResultSetRow>();
+            var response = ClrTypeToSqlDmlCreateStatementGenerator.GetCreateTableScript<DescribeResultSetRow>();
             Console.WriteLine(response);
         }
 
@@ -24,7 +24,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         [Trait("Category", "Instant")]
         public void TestWithSimpleClass()
         {
-            var response = CreateTableScriptProvider.GetCreateTableScript<SampleClassToCreateTableFor>();
+            var response = ClrTypeToSqlDmlCreateStatementGenerator.GetCreateTableScript<SampleClassToCreateTableFor>();
             Console.WriteLine(response);
         }
 

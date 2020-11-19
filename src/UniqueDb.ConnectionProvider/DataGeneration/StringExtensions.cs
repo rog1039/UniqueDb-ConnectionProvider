@@ -38,7 +38,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             }
             return sb.ToString();
         }
-        public static bool InsensitiveEquals(this string s1, string s2)
+        internal static bool InsensitiveEquals(this string s1, string s2)
         {
             var oneIsNullOtherIsnt = (s1 == null && s2 != null) || (s1 != null && s2 == null);
             if (oneIsNullOtherIsnt)

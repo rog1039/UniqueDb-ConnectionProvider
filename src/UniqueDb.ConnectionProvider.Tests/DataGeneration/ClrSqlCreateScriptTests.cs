@@ -5,13 +5,13 @@ using Xunit.Abstractions;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
 {
-    public class SqlCreateScriptTests : UnitTestBaseWithConsoleRedirection
+    public class ClrSqlCreateScriptTests : UnitTestBaseWithConsoleRedirection
     {
         [Fact()]
         [Trait("Category", "Instant")]
         public void TestClassATest()
         {
-            var script = CreateTableScriptProvider.GetCreateTableScript<TestClassA>();
+            var script = ClrTypeToSqlDmlCreateStatementGenerator.GetCreateTableScript<TestClassA>();
             Console.WriteLine(script);
         }
         
@@ -20,11 +20,11 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
         public void TestClassATestUsingRuntimeType()
         {
             var type = new TestClassA().GetType();
-            var script = CreateTableScriptProvider.GetCreateTableScript(type);
+            var script = ClrTypeToSqlDmlCreateStatementGenerator.GetCreateTableScript(type);
             Console.WriteLine(script);
         }
         
-        public SqlCreateScriptTests(ITestOutputHelper outputHelperHelper) : base(outputHelperHelper)
+        public ClrSqlCreateScriptTests(ITestOutputHelper outputHelperHelper) : base(outputHelperHelper)
         {
         }
     }
