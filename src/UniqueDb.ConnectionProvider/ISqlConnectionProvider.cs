@@ -13,6 +13,7 @@ namespace UniqueDb.ConnectionProvider
 
         SqlConnectionStringBuilder GetSqlConnectionStringBuilder();
         SqlConnection GetSqlConnection();
+        SqlConnection GetSqlConnectionWithTimeout(int timeout);
         string GetSqlConnectionString();
 
         string JustInstanceName { get; }
