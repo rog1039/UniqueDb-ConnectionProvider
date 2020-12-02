@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System;
+using Microsoft.Data.SqlClient;
 
 namespace UniqueDb.ConnectionProvider
 {
@@ -16,6 +17,12 @@ namespace UniqueDb.ConnectionProvider
         public abstract SqlConnectionStringBuilder GetSqlConnectionStringBuilder();
         
         public virtual SqlConnection GetSqlConnection() => new SqlConnection(GetSqlConnectionString());
+        public virtual SqlConnection GetSqlConnectionWithTimeout(int timeout)
+        {
+            var builder = GetSqlConnectionStringBuilder();
+            builder.ConnectTimeout = Int32.MaxValue;
+            return new SqlConnection(builder.ConnectionString);
+        }
 
         public string JustInstanceName => GetInstanceName();
 
