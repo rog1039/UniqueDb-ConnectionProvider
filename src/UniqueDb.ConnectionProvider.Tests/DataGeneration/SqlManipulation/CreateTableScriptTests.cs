@@ -1,3 +1,4 @@
+using System;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.DesignTimeDataGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
@@ -24,11 +25,10 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration.SqlManipulation
             var createOnlyIfNotExistsScript =
                 InfSchemaToSqlDmlCreateStatementGenerator.GenerateCreateTableScript(
                     tableDef, CreateIfExistsModification.PreventCreation);
-            
-            createAnywayScript.ToConsole();
-            dropAndRecreateScript.ToConsole();
-            createOnlyIfNotExistsScript.ToConsole();
-            
+
+            Console.WriteLine(createAnywayScript);
+            Console.WriteLine(dropAndRecreateScript);
+            Console.WriteLine(createOnlyIfNotExistsScript);
         } 
 
         public SchemaTableDefCreateTableScriptTests(ITestOutputHelper outputHelperHelper) : base(outputHelperHelper) { }

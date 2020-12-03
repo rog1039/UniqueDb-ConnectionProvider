@@ -321,12 +321,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Rogero.Common\src\Rogero.Common\Rogero.Common\Rogero.Common.csproj">
-      <Project>{f129bccc-a9c3-49d0-a039-4263320a3d8a}</Project>
-      <Name>Rogero.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Analyzer Include="..\..\..\Woeber.Logistics\src\Woeber.Logistics\packages\Microsoft.CodeAnalysis.Analyzers.3.3.1\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\..\..\Woeber.Logistics\src\Woeber.Logistics\packages\Microsoft.CodeAnalysis.Analyzers.3.3.1\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
