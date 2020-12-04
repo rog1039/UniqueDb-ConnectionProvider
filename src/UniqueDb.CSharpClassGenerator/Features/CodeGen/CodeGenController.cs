@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using Rogero.ReactiveProperty;
+using Reactive.Bindings;
 using UniqueDb.ConnectionProvider;
 using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 using UniqueDb.CSharpClassGenerator.Infrastructure;
@@ -43,7 +43,7 @@ namespace UniqueDb.CSharpClassGenerator.Features.CodeGen
             try
             {
                 var sqlConnectionProvider = SelectedSqlConnection.Value.SqlConnectionProvider;
-                var cSharpClass = CSharpClassGeneratorFromAdoDataReader.GenerateClass(sqlConnectionProvider, SqlQuery, ClassName.Value);
+                var cSharpClass = CSharpClassGeneratorFromAdoDataReader.GenerateClass(sqlConnectionProvider, SqlQuery.Value, ClassName.Value);
                 GeneratedCode.Value = cSharpClass;
             }
             catch (Exception e)

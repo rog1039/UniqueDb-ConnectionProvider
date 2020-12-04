@@ -7,7 +7,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
     {
         public static string GenerateClass(ISqlConnectionProvider sqlConnectionProvider, string sqlQuery, string className, CSharpClassTextGeneratorOptions options = null)
         {
-            options = options ?? CSharpClassTextGeneratorOptions.Default;
+            options ??= CSharpClassTextGeneratorOptions.Default;
             var cSharpProperties = CSharpPropertyFactoryFromAdoDataReader.FromQuery(sqlConnectionProvider, sqlQuery);
             var cSharpClass = CSharpClassTextGenerator.GenerateClassText(className, cSharpProperties, options);
             return cSharpClass;
@@ -15,7 +15,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
 
         public static string GenerateClass(DbConnection connection, string sqlQuery, string className, CSharpClassTextGeneratorOptions options = null)
         {
-            options = options ?? CSharpClassTextGeneratorOptions.Default;
+            options ??= CSharpClassTextGeneratorOptions.Default;
             var cSharpProperties = CSharpPropertyFactoryFromAdoDataReader.FromQuery(connection, sqlQuery);
             var cSharpClass = CSharpClassTextGenerator.GenerateClassText(className, cSharpProperties, options);
             return cSharpClass;

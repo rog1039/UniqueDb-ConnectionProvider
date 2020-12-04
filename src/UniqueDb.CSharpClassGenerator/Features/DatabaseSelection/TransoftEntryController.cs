@@ -4,13 +4,13 @@ using System.Data.Common;
 using System.Data.Odbc;
 using System.Linq;
 using DevExpress.Mvvm;
-using Rogero.ReactiveProperty;
+using Reactive.Bindings;
 
 namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection
 {
     public class TransoftEntryController
     {
-        public ReactiveProperty<string> ConnectionName { get; } = new ReactiveProperty<string>();
+        public ReactiveProperty<string> ConnectionName   { get; } = new ReactiveProperty<string>();
         public ReactiveProperty<string> ConnectionString { get; } = new ReactiveProperty<string>();
 
         public ObservableCollection<OdbcDsnDto> SavedConnections => _databaseConnectionStorage.OdbcDsnDtos;
@@ -46,7 +46,7 @@ namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection
             SelectedConnection.Value = connectionDto;
         }
 
-        private OdbcDsnDto GetConnectionDto() => new OdbcDsnDto() {ConnectionName = ConnectionName, DsnName = ConnectionString};
+        private OdbcDsnDto GetConnectionDto() => new OdbcDsnDto() {ConnectionName = ConnectionName.Value, DsnName = ConnectionString.Value};
 
         private void Delete()
         {
@@ -69,7 +69,7 @@ namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection
 
         private DbConnection GetConnection(TimeSpan testConnectionTimeout)
         {
-            var odbcBuilder = new OdbcConnectionStringBuilder {Dsn = ConnectionString};
+            var odbcBuilder = new OdbcConnectionStringBuilder {Dsn = ConnectionString.Value};
             var connectionString = odbcBuilder.ConnectionString;
             var odbcConn = new OdbcConnection(connectionString) {};
             return odbcConn;

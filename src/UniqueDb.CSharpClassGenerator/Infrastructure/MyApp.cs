@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows;
-using Autofac;
 using UniqueDb.CSharpClassGenerator.Features.MainShell;
 
 namespace UniqueDb.CSharpClassGenerator.Infrastructure
@@ -27,21 +26,6 @@ namespace UniqueDb.CSharpClassGenerator.Infrastructure
             {
                 MessageBox.Show(e.ToString());
             }
-
-            //var controller = new CodeGenController();
-            //var window = new Window() {Content = new CodeGenView()};
-            //window.DataContext = controller;
-            //window.Width = 800;
-            //window.Height = 1200;
-            //window.Show();
-        }
-    }
-
-    public class ContainerProvider
-    {
-        public IContainer Get()
-        {
-            throw new NotImplementedException();
         }
     }
 }

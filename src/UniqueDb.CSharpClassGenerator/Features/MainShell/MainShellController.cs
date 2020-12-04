@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows;
 using DevExpress.Mvvm;
 using Newtonsoft.Json;
-using Rogero.ReactiveProperty;
+using Reactive.Bindings;
 using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.DesignTimeDataGeneration;
 using UniqueDb.CSharpClassGenerator.Features.DatabaseSelection;
@@ -19,7 +19,7 @@ namespace UniqueDb.CSharpClassGenerator.Features.MainShell
         public DatabaseSelectionController DatabaseSelectionController { get; } = new DatabaseSelectionController();
 
         public ReactiveProperty<string> ClassName { get; } = new ReactiveProperty<string>();
-        public ReactiveProperty<string> SqlQuery { get; } = new ReactiveProperty<string>();
+        public ReactiveProperty<string> SqlQuery  { get; } = new ReactiveProperty<string>();
 
         public ReactiveProperty<string> GeneratedCSharpText { get; } = new ReactiveProperty<string>();
         public ReactiveProperty<DataTable> Datatable { get; } = new ReactiveProperty<DataTable>();
@@ -52,7 +52,7 @@ namespace UniqueDb.CSharpClassGenerator.Features.MainShell
             try
             {
                 var sw = Stopwatch.StartNew();
-                var dataTable = DatabaseSelectionController.GetDataTable(SqlQuery);
+                var dataTable = DatabaseSelectionController.GetDataTable(SqlQuery.Value);
                 var elapsedTime = sw.Elapsed;
                 var customJson = dataTable.ToCustomJson(Formatting.None);
                 DataSize.Value = customJson.Length;
@@ -102,8 +102,8 @@ namespace UniqueDb.CSharpClassGenerator.Features.MainShell
         {
             try
             {
-                var json = DatabaseSelectionController.GetQueryResultsAsJson(SqlQuery);
-                DesignTimeDataCode.Value = DesignTimeDataCodeTemplate.CreateCode(ClassName, json, GeneratedCSharpText);
+                var json = DatabaseSelectionController.GetQueryResultsAsJson(SqlQuery.Value);
+                DesignTimeDataCode.Value = DesignTimeDataCodeTemplate.CreateCode(ClassName.Value, json, GeneratedCSharpText.Value);
             }
             catch (Exception e)
             {
@@ -114,8 +114,8 @@ namespace UniqueDb.CSharpClassGenerator.Features.MainShell
         private bool CanExecuteQuery()
         {
             var canExecute = DatabaseSelectionController.HasDbConnectionFactory() && 
-                             !string.IsNullOrWhiteSpace(ClassName) && 
-                             !string.IsNullOrWhiteSpace(SqlQuery);
+                             !string.IsNullOrWhiteSpace(ClassName.Value) && 
+                             !string.IsNullOrWhiteSpace(SqlQuery.Value);
             return canExecute;
         }
 

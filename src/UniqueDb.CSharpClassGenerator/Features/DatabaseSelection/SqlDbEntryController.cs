@@ -4,7 +4,7 @@ using System.Data.Common;
 using System.Linq;
 using DevExpress.Mvvm;
 using Microsoft.Data.SqlClient;
-using Rogero.ReactiveProperty;
+using Reactive.Bindings;
 
 namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection
 {
@@ -16,12 +16,12 @@ namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection
 
     public class SqlDbEntryController 
     {
-        public ReactiveProperty<string> ConnectionName { get; } = new ReactiveProperty<string>();
-        public ReactiveProperty<string> ServerName { get; } = new ReactiveProperty<string>();
-        public ReactiveProperty<string> DatabaseName { get; } = new ReactiveProperty<string>();
-        public ReactiveProperty<bool> UseIntegratedAuth { get; } = new ReactiveProperty<bool>();
-        public ReactiveProperty<string> UserName { get; } = new ReactiveProperty<string>();
-        public ReactiveProperty<string> Password { get; } = new ReactiveProperty<string>();
+        public ReactiveProperty<string> ConnectionName    { get; } = new ReactiveProperty<string>();
+        public ReactiveProperty<string> ServerName        { get; } = new ReactiveProperty<string>();
+        public ReactiveProperty<string> DatabaseName      { get; } = new ReactiveProperty<string>();
+        public ReactiveProperty<bool>   UseIntegratedAuth { get; } = new ReactiveProperty<bool>();
+        public ReactiveProperty<string> UserName          { get; } = new ReactiveProperty<string>();
+        public ReactiveProperty<string> Password          { get; } = new ReactiveProperty<string>();
 
         public ObservableCollection<SqlRecordDto> SavedConnections => _databaseConnectionStorage.SqlRecordDtos;
         public ReactiveProperty<SqlRecordDto> SelectedConnection { get; } = new ReactiveProperty<SqlRecordDto>();
@@ -60,12 +60,12 @@ namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection
         {
             var dto = new SqlRecordDto()
             {
-                ServerName = ServerName,
-                Password = Password,
-                DatabaseName = DatabaseName,
-                UseIntegratedAuth = UseIntegratedAuth,
-                ConnectionName = ConnectionName,
-                Username = UserName
+                ServerName = ServerName.Value,
+                Password = Password.Value,
+                DatabaseName = DatabaseName.Value,
+                UseIntegratedAuth = UseIntegratedAuth.Value,
+                ConnectionName = ConnectionName.Value,
+                Username = UserName.Value
             };
             return dto;
         }
@@ -89,17 +89,17 @@ namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection
             connectionTimeout = connectionTimeout == default(TimeSpan) ? AppSettings.DefaultConnectionTimeout : connectionTimeout;
             var builder = new SqlConnectionStringBuilder();
             builder.ConnectTimeout = connectionTimeout.Seconds;
-            builder.DataSource = ServerName;
-            builder.InitialCatalog = DatabaseName;
-            if (UseIntegratedAuth)
+            builder.DataSource = ServerName.Value;
+            builder.InitialCatalog = DatabaseName.Value;
+            if (UseIntegratedAuth.Value)
             {
                 builder.IntegratedSecurity = true;
             }
             else
             {
                 builder.IntegratedSecurity = false;
-                builder.UserID = UserName;
-                builder.Password = Password;
+                builder.UserID = UserName.Value;
+                builder.Password = Password.Value;
             }
 
             return new SqlConnection(builder.ConnectionString);
