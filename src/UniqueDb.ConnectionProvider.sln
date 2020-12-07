@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniqueDb.ConnectionProvider
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniqueDb.ConnectionProviderNetStandard.Tests", "UniqueDb.ConnectionProviderNetStandard.Tests\UniqueDb.ConnectionProviderNetStandard.Tests.csproj", "{A2F29842-0E66-4D22-BE49-631256153D53}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniqueDb.CSharpClassGeneratorNet5", "UniqueDb.CSharpClassGeneratorNet5\UniqueDb.CSharpClassGeneratorNet5.csproj", "{3752AAA8-E77E-4526-97F6-3EC539CF147E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{A2F29842-0E66-4D22-BE49-631256153D53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2F29842-0E66-4D22-BE49-631256153D53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2F29842-0E66-4D22-BE49-631256153D53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3752AAA8-E77E-4526-97F6-3EC539CF147E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3752AAA8-E77E-4526-97F6-3EC539CF147E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3752AAA8-E77E-4526-97F6-3EC539CF147E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3752AAA8-E77E-4526-97F6-3EC539CF147E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
