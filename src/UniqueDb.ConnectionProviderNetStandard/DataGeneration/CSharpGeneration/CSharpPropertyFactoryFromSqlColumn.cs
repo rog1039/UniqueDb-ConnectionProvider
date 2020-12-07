@@ -1,5 +1,3 @@
-using UniqueDb.ConnectionProvider.CollectionExts;
-
 namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
 {
     public static class CSharpPropertyFactoryFromSqlColumn

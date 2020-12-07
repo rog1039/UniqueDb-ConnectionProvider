@@ -1,6 +1,6 @@
 using System;
 
-namespace UniqueDb.ConnectionProviderNetStandard
+namespace UniqueDb.ConnectionProvider
 {
     public static class AttributeTesting
     {

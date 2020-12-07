@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using UniqueDb.ConnectionProviderNetStandard;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {

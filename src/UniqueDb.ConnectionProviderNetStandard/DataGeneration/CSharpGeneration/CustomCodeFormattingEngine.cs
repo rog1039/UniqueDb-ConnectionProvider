@@ -1,4 +1,10 @@
 using System;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Formatting;
+using Microsoft.CodeAnalysis.Formatting;
+using Microsoft.CodeAnalysis.Options;
+using Microsoft.CodeAnalysis.Text;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
 {

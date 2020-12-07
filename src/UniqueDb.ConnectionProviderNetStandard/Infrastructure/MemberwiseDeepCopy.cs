@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
-using System.ArrayExtensions;
+using UniqueDb.ConnectionProvider.Infrastructure.ArrayExtensions;
 
-namespace System
+namespace UniqueDb.ConnectionProvider.Infrastructure
 {
     public static class ObjectExtensions
     {
@@ -69,16 +70,15 @@ namespace System
         }
     }
 
-    public class ReferenceEqualityComparer : EqualityComparer<Object>
+    public class ReferenceEqualityComparer : EqualityComparer<object>
     {
-        public override bool Equals(object x, object y)
+        public override bool Equals(object? x, object? y)
         {
             return ReferenceEquals(x, y);
         }
-        public override int GetHashCode(object obj)
+        public override int GetHashCode(object? obj)
         {
-            if (obj == null) return 0;
-            return obj.GetHashCode();
+            return obj == null ? 0 : obj.GetHashCode();
         }
     }
 
