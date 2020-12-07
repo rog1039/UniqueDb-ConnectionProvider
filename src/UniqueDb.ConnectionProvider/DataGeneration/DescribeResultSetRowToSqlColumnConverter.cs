@@ -1,8 +1,4 @@
-using System;
-using System.Data;
-using System.Diagnostics;
 using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
-using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {

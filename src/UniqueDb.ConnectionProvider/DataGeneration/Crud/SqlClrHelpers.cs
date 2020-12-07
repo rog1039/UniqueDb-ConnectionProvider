@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -48,7 +47,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
         {
             var isNotMapped = arg
                 .CustomAttributes
-                .Any(a => a.AttributeType == typeof(NotMappedAttribute));
+                .Any(a => a.AttributeType.IsNotMappedAttribute());
             return isNotMapped;
         }
 
@@ -56,7 +55,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
         {
             var isDatabaseGenerated = arg
                 .CustomAttributes
-                .Any(a => a.AttributeType == typeof(DatabaseGeneratedAttribute));
+                .Any(a => a.AttributeType.IsDatabaseGeneratedAttribute());
             return isDatabaseGenerated;
         }
 

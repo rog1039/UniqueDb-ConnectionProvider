@@ -198,10 +198,12 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             switch (textType)
             {
                 case TextType.NonUnicode:
-                    value.Should().BeInRange(1, 8000);
+                    if (value < 1 || value > 8000)
+                        throw new ArgumentException("Value must be between 1 and 8000.", nameof(value));
                     break;
                 case TextType.Unicode:
-                    value.Should().BeInRange(1, 4000);
+                    if (value < 1 || value > 4000)
+                        throw new ArgumentException("Value must be between 1 and 4000.", nameof(value));
                     break;
             }
         }

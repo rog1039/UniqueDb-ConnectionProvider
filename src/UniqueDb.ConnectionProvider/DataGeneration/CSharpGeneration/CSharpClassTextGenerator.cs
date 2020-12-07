@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using UniqueDb.ConnectionProvider.Infrastructure;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
 {

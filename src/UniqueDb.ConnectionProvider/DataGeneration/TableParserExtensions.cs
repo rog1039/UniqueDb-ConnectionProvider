@@ -143,21 +143,22 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
             Console.WriteLine(values.ToStringTable(valueSelectors));
         }
 
-        private static PropertyInfo GetProperty<T>(Expression<Func<T, object>> expresstion)
+        private static PropertyInfo GetProperty<T>(Expression<Func<T, object>> expression)
         {
-            if (expresstion.Body is UnaryExpression)
+            if (expression.Body is UnaryExpression unaryExpression)
             {
-                if ((expresstion.Body as UnaryExpression).Operand is MemberExpression)
+                if (unaryExpression.Operand is MemberExpression memberExpression)
                 {
-                    return ((expresstion.Body as UnaryExpression).Operand as MemberExpression).Member as PropertyInfo;
+                    return memberExpression.Member as PropertyInfo ?? throw new InvalidOperationException("Unable to extract PropertyInfo from MemberExpression.");
                 }
             }
 
-            if ((expresstion.Body is MemberExpression))
+            if ((expression.Body is MemberExpression body))
             {
-                return (expresstion.Body as MemberExpression).Member as PropertyInfo;
+                return body.Member as PropertyInfo ?? throw new InvalidOperationException("Unable to extract PropertyInfo from MemberExpression");
             }
-            return null;
+
+            throw new InvalidOperationException("Unable to extract PropertyInfo from expression.");
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace UniqueDb.ConnectionProvider.DataGeneration
+﻿namespace UniqueDb.ConnectionProvider.DataGeneration
 {
     public static class AmbigiousSqlTypeToSqlTypeConverter
     {

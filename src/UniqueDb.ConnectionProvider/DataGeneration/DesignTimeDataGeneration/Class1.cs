@@ -1,7 +1,4 @@
-﻿using System.Text;
-using System.Threading.Tasks;
-
-namespace UniqueDb.ConnectionProvider.DataGeneration.DesignTimeDataGeneration
+﻿namespace UniqueDb.ConnectionProvider.DataGeneration.DesignTimeDataGeneration
 {
     public static class DesignTimeDataCodeTemplate
     {

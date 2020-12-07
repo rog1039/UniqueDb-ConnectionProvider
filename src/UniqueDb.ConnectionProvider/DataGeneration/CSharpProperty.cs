@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 

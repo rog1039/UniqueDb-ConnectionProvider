@@ -1,4 +1,3 @@
-using System.Reflection;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
