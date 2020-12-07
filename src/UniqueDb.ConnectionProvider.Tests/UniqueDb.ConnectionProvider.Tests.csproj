@@ -92,6 +92,7 @@
     <Compile Include="DesignTimeData\DesignTimeTemplateOutputTest.cs" />
     <Compile Include="DesignTimeData\DesiredOutputSample.cs" />
     <Compile Include="EnsureTableExistsTests.cs" />
+    <Compile Include="GenerateAttributeCheckingCode.cs" />
     <Compile Include="Infrastructure\GenericExtensionMethods.cs" />
     <Compile Include="OldDatabaseDeleterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
