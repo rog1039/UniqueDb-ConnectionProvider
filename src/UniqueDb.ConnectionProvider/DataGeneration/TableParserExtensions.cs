@@ -8,7 +8,7 @@ using System.Text;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
-    public static class TableParserExtensions
+    internal static class TableParserExtensions
     {
         public static void PrintStringTable<T>(this IEnumerable<T> values)
         {

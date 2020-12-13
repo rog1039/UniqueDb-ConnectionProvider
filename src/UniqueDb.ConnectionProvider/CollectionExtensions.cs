@@ -4,7 +4,7 @@ namespace UniqueDb.ConnectionProvider
 {
     public static class CollectionExtensions
     {
-        public static void AddRange<T>(this IList<T> list, IEnumerable<T> itemsToAdd)
+        internal static void AddRange<T>(this IList<T> list, IEnumerable<T> itemsToAdd)
         {
             foreach (var item in itemsToAdd)
             {
