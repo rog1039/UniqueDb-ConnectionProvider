@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-
-namespace UniqueDb.ConnectionProvider.DataGeneration
+﻿namespace UniqueDb.ConnectionProvider.DataGeneration
 {
     public class SqlColumn
     {

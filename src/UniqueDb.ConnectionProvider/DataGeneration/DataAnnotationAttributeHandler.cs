@@ -11,10 +11,10 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         private static void HandleStringLengthAnnotation(NullableSqlType nullableSqlType, object attribute)
         {
-            if (!(attribute is StringLengthAttribute))
-                return;
-            var stringLengthAttribute = (StringLengthAttribute) attribute;
-            nullableSqlType.SqlType.MaximumCharLength = stringLengthAttribute.MaximumLength;
+            if (attribute is StringLengthAttribute stringLengthAttribute)
+            {
+                nullableSqlType.SqlType.MaximumCharLength = stringLengthAttribute.MaximumLength;
+            }
         }
     }
 }

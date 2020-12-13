@@ -3,8 +3,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using DevExpress.Xpf.CodeView;
 using Newtonsoft.Json;
+using UniqueDb.ConnectionProvider;
 
 namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection
 {

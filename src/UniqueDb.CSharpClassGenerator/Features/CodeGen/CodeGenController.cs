@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using DevExpress.Mvvm;
 using Reactive.Bindings;
 using UniqueDb.ConnectionProvider;
 using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
-using UniqueDb.CSharpClassGenerator.Infrastructure;
 
 namespace UniqueDb.CSharpClassGenerator.Features.CodeGen
 {

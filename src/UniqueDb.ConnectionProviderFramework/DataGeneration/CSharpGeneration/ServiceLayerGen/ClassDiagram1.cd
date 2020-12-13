@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.ConfigRealizer" Collapsed="true">
+    <Position X="13.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAOAAAIBAAAABAAAAAAAEABAAIAAgAAAACAARAAgAQA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.MethodDescription" Collapsed="true">
+    <Position X="15.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAIAAAAAEAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.ParameterDescription" Collapsed="true">
+    <Position X="17.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.FileResult" Collapsed="true">
+    <Position X="12" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.ConfigBuilder" Collapsed="true">
+    <Position X="12" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAgAAAAAACAAAEAAAAAAABAECAAAAAAAACAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.InterfaceBuilder">
+    <Position X="8" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAgAAAAAAAAAAAAAAAAAEAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.ApiDefBuilder">
+    <Position X="1" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAEAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.WebApiBuilder">
+    <Position X="5.75" Y="8" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAEAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.AttributeBuilderFromString" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAACAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.TypeNameAndTypeFromType" BaseTypeListCollapsed="true">
+    <Position X="1.5" Y="17.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAACQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.TypeNameAndTypeFromString" BaseTypeListCollapsed="true">
+    <Position X="3.75" Y="17.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAACQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.TypeNameAndTypeFromHasMembers" BaseTypeListCollapsed="true">
+    <Position X="6" Y="17.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAACQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.DelegatesToOptions" Collapsed="true">
+    <Position X="15.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAACAEAAAAAAAAAAAAEA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.HasMembersBase">
+    <Position X="4.25" Y="2.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>CAEAMAAAwECAAIAAAAgAACQAAgAAIAAIAAiACAAACAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.ClassBuilder">
+    <Position X="3.25" Y="8" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.ImplementsBuilder" Collapsed="true">
+    <Position X="13.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.FeatureBuilder" Collapsed="true">
+    <Position X="10.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.ReflectedType" BaseTypeListCollapsed="true">
+    <Position X="8.5" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QEAAAAAAAEAAAIAAAAAAACQAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.Directory2" Collapsed="true">
+    <Position X="17.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.ProjectBuilder" Collapsed="true">
+    <Position X="10.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAAACAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.TypeExtensionMethods" Collapsed="true">
+    <Position X="15.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.StringExtensionMethods" Collapsed="true">
+    <Position X="13.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.IAttributeBuilder" Collapsed="true">
+    <Position X="10.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.ITypeNameAndType">
+    <Position X="2.25" Y="13" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAACQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.IFullTypeInfo">
+    <Position X="3.75" Y="15.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.IHasMembers">
+    <Position X="5.25" Y="13" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen.TypeType">
+    <Position X="2.25" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAJAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>DataGeneration\CSharpGeneration\ServiceLayerGen\ClassDescription2.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="8.86" />
+</ClassDiagram>

@@ -3,13 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniqueDb.ConnectionProvider", "UniqueDb.ConnectionProvider\UniqueDb.ConnectionProvider.csproj", "{81AF3803-5037-40E0-9671-E1BD7FB53775}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniqueDb.ConnectionProviderFramework", "UniqueDb.ConnectionProviderFramework\UniqueDb.ConnectionProviderFramework.csproj", "{81AF3803-5037-40E0-9671-E1BD7FB53775}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniqueDb.ConnectionProvider.Tests", "UniqueDb.ConnectionProvider.Tests\UniqueDb.ConnectionProvider.Tests.csproj", "{C9742500-0AAB-4C7F-96E8-D6D196CD3A22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniqueDb.ConnectionProviderFramework.Tests", "UniqueDb.ConnectionProviderFramework.Tests\UniqueDb.ConnectionProviderFramework.Tests.csproj", "{C9742500-0AAB-4C7F-96E8-D6D196CD3A22}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B396218E-C026-45F1-8E38-DD813308CF9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniqueDb.CSharpClassGenerator", "UniqueDb.CSharpClassGenerator\UniqueDb.CSharpClassGenerator.csproj", "{A646C2E6-791F-4A51-B88D-8EBBF2E835DE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniqueDb.CSharpClassGeneratorFramework", "UniqueDb.CSharpClassGeneratorFramework\UniqueDb.CSharpClassGeneratorFramework.csproj", "{A646C2E6-791F-4A51-B88D-8EBBF2E835DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniqueDb.ConnectionProvider", "UniqueDb.ConnectionProvider\UniqueDb.ConnectionProvider.csproj", "{4E1A5DC0-1FC4-4082-9BBF-389437C8F1C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniqueDb.ConnectionProvider.Tests", "UniqueDb.ConnectionProvider.Tests\UniqueDb.ConnectionProvider.Tests.csproj", "{A2F29842-0E66-4D22-BE49-631256153D53}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniqueDb.CSharpClassGenerator", "UniqueDb.CSharpClassGenerator\UniqueDb.CSharpClassGenerator.csproj", "{3752AAA8-E77E-4526-97F6-3EC539CF147E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{FB9727F3-07C4-4BD2-A04B-840258B8479A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,11 +37,28 @@ Global
 		{A646C2E6-791F-4A51-B88D-8EBBF2E835DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A646C2E6-791F-4A51-B88D-8EBBF2E835DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A646C2E6-791F-4A51-B88D-8EBBF2E835DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E1A5DC0-1FC4-4082-9BBF-389437C8F1C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E1A5DC0-1FC4-4082-9BBF-389437C8F1C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E1A5DC0-1FC4-4082-9BBF-389437C8F1C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E1A5DC0-1FC4-4082-9BBF-389437C8F1C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2F29842-0E66-4D22-BE49-631256153D53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2F29842-0E66-4D22-BE49-631256153D53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2F29842-0E66-4D22-BE49-631256153D53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2F29842-0E66-4D22-BE49-631256153D53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3752AAA8-E77E-4526-97F6-3EC539CF147E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3752AAA8-E77E-4526-97F6-3EC539CF147E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3752AAA8-E77E-4526-97F6-3EC539CF147E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3752AAA8-E77E-4526-97F6-3EC539CF147E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F8F7F3E3-84D4-4577-8346-812C5E0D0FB9}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{81AF3803-5037-40E0-9671-E1BD7FB53775} = {FB9727F3-07C4-4BD2-A04B-840258B8479A}
+		{C9742500-0AAB-4C7F-96E8-D6D196CD3A22} = {FB9727F3-07C4-4BD2-A04B-840258B8479A}
+		{A646C2E6-791F-4A51-B88D-8EBBF2E835DE} = {FB9727F3-07C4-4BD2-A04B-840258B8479A}
 	EndGlobalSection
 EndGlobal

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
 {
@@ -9,12 +8,18 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
 
         public static string GetClrDataType(string sqlDataType)
         {
+            if (string.IsNullOrWhiteSpace(sqlDataType))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(sqlDataType));
+            
             string dataTypeName = ConvertSqlTypeNameToClrTypeName(sqlDataType);
             return dataTypeName;
         }
 
         private static string ConvertSqlTypeNameToClrTypeName(string sqlDataType)
         {
+            if (string.IsNullOrWhiteSpace(sqlDataType))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(sqlDataType));
+            
             if (sqlDataType == "int")
             {
                 return "int";
@@ -176,8 +181,10 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
     {
         public SqlColumnDeclaration(string name, NullableSqlType nullableSqlType)
         {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(name));
             Name = name;
-            NullableSqlType = nullableSqlType;
+            NullableSqlType = nullableSqlType ?? throw new ArgumentNullException(nameof(nullableSqlType));
         }
 
         public string Name { get; set; }
@@ -198,7 +205,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration
     {
         public NullableSqlType(SqlType sqlType, bool isNullable)
         {
-            SqlType = sqlType;
+            SqlType    = sqlType ?? throw new ArgumentNullException(nameof(sqlType));
             IsNullable = isNullable;
         }
 

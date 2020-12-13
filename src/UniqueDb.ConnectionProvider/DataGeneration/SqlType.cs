@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration
