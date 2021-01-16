@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using UniqueDb.ConnectionProvider.DataGeneration.DesignTimeDataGeneration;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen
 {
@@ -12,6 +13,16 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLay
         {
             var fileResults = RealizeFileResults(builder).ToList();
             return fileResults;
+        }
+
+        public static void WriteFileResultsToDisk(IEnumerable<FileResult> fileResults)
+        {
+            foreach (var fileResult in fileResults)
+            {
+                var a = Path.GetDirectoryName(fileResult.Path);
+                Directory.CreateDirectory(a);
+                File.WriteAllText(fileResult.Path, fileResult.Contents);
+            }
         }
 
         public IEnumerable<FileResult> RealizeFileResults(ConfigBuilder builder)
@@ -54,8 +65,9 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLay
             var inheritsText = string.IsNullOrWhiteSpace(builder.BaseTypeName)
                 ? string.Empty
                 : $" : {builder.BaseTypeName}";
-            var methodsCode = GetMethodsContent(builder);
-            var fieldsText  = GetFieldsText(builder);
+            var methodsCode      = GetMethodsContent(builder);
+            var fieldsText       = GetFieldsText(builder);
+            var additionalUsings = GetAdditionalUsings(builder);
 
             var classContents = $@"
 //ApiDefBuilder
@@ -63,6 +75,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Refit;
+{additionalUsings}
 
 namespace {Namespace}
 {{
@@ -72,6 +85,14 @@ namespace {Namespace}
     }}
 }}";
             return CustomCodeFormattingEngine.Format(classContents);
+        }
+
+        private string GetAdditionalUsings(HasMembersBase builder)
+        {
+            return builder
+                .AdditionalUsingStatements
+                .Select(z => $"using {z};")
+                .StringJoin(Environment.NewLine);
         }
 
         private FileResult Build(InterfaceBuilder builder)
@@ -90,22 +111,41 @@ namespace {Namespace}
             var inheritsText = string.IsNullOrWhiteSpace(builder.BaseTypeName)
                 ? string.Empty
                 : $" : {builder.BaseTypeName}";
-            var methodsCode = GetMethodsContent(builder);
+            var methodsCode = GetMethodSignatures(builder);
             var fieldsText  = GetFieldsText(builder);
+            var additionalUsings = GetAdditionalUsings(builder);
 
             var classContents = $@"
 //InterfaceBuilder
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+{additionalUsings}
 
 namespace {Namespace}
 {{
     public interface {builder.Name}{inheritsText}
     {{
+        {methodsCode}
     }}
 }}";
             return CustomCodeFormattingEngine.Format(classContents);
+        }
+
+        private string GetMethodSignatures(InterfaceBuilder builder)
+        {
+            var methods = builder
+                .MethodDescriptions
+                .Where(z => z.IsPublic)
+                .Where(z => !BaseObjectMethods.Contains((string) z.Name))
+                .Select(z =>
+                {
+                    var parametersString = GetParameterTextWithTypes(z.Parameters);
+                    return $"{z.ReturnType.GetTypeName()} {z.Name}({parametersString});";
+                })
+                .ToList()
+                .StringJoin(Environment.NewLine);
+            return methods;
         }
 
 
@@ -123,12 +163,13 @@ namespace {Namespace}
         {
             var Namespace = builder.GetNamespace();
             var inheritsText = string.IsNullOrWhiteSpace(builder.BaseTypeName)
-                ? string.Empty
+                ? " : MyControllerBase"
                 : $" : {builder.BaseTypeName}";
             var methodsCode     = GetMethodsContent(builder);
             var fieldsText      = GetFieldsText(builder);
             var constructorText = GetConstructorsText(builder);
             var usingStatements = GetUsingStatements(builder);
+            var additionalUsings = GetAdditionalUsings(builder);
 
             var classContents = $@"
 //WebApiBuilder
@@ -136,6 +177,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 {usingStatements}
+{additionalUsings}
 
 namespace {Namespace}
 {{
@@ -169,6 +211,7 @@ namespace {Namespace}
             var fieldsText       = GetFieldsText(builder);
             var constructorsText = GetConstructorsText(builder);
             var usingStatements  = GetUsingStatements(builder);
+            var additionalUsings = GetAdditionalUsings(builder);
 
             var classContents = $@"
 //ClassBuilder
@@ -176,6 +219,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 {usingStatements}
+{additionalUsings}
 
 namespace {Namespace}
 {{
@@ -197,13 +241,13 @@ namespace {Namespace}
             var namespaces = builder.ImplementList
                 .Select(z => z.FullName.GetNamespaceFromFullName())
                 .Concat(builder.DelegatesImplTo
-                    .Select(z => z.FullTypeInfo.FullName.GetNamespaceFromFullName()))
-        .Distinct();
+                            .Select(z => z.FullTypeInfo.FullName.GetNamespaceFromFullName()))
+                .Distinct();
 
             var usingStatements = namespaces
                 .Select(@namespace => $"using {@namespace};")
                 .StringJoin(Environment.NewLine);
-            
+
             return usingStatements;
         }
 
@@ -249,6 +293,9 @@ public {builder.Name}({args})
             return $" : {implementsString}";
         }
 
+        public static readonly IReadOnlyList<string> BaseObjectMethods = new List<string>()
+            {"ToString", "GetType", "GetHashCode", "Equals"};
+
         private string GetMethodsContent(HasMembersBase builder)
         {
             var methodsToImplement = new List<MethodDescription>();
@@ -256,13 +303,36 @@ public {builder.Name}({args})
 
             foreach (var delegateTo in builder.DelegatesImplTo)
             {
-                foreach (var delegateMethodDesc in delegateTo.Methods)
+                if (builder.GetType() == typeof(WebApiBuilder))
                 {
-                    if (methodsToImplement.Any(z => z.Name == delegateMethodDesc.Name))
-                        continue;
-                    methodsToImplement.Add(delegateMethodDesc);
-                    content += Environment.NewLine +
-                               GetmethodContentViaDelegation(builder, delegateTo, delegateMethodDesc);
+                    foreach (var delegateMethodDesc in delegateTo
+                        .Methods
+                        .Where(z => z.IsPublic)
+                        .ExceptObjectBaseMethods()
+                    )
+                    {
+                        if (methodsToImplement.Any(z => z.Name == delegateMethodDesc.Name))
+                            continue;
+                        methodsToImplement.Add(delegateMethodDesc);
+                        content += $"[HttpPost(\"{delegateMethodDesc.Name.ToLower()}\")]";
+                        content += Environment.NewLine +
+                                   GetmethodContentViaDelegation(builder, delegateTo, delegateMethodDesc);
+                    }
+                }
+                else
+                {
+                    foreach (var delegateMethodDesc in delegateTo
+                        .Methods
+                        .Where(z => z.IsPublic)
+                        .ExceptObjectBaseMethods()
+                    )
+                    {
+                        if (methodsToImplement.Any(z => z.Name == delegateMethodDesc.Name))
+                            continue;
+                        methodsToImplement.Add(delegateMethodDesc);
+                        content += Environment.NewLine +
+                                   GetmethodContentViaDelegation(builder, delegateTo, delegateMethodDesc);
+                    }
                 }
             }
 
@@ -279,7 +349,11 @@ public {builder.Name}({args})
 
             if (builder is ApiDefBuilder apiDefBuilder)
             {
-                foreach (var methodDesc in apiDefBuilder.TalksTo.MethodDescriptions)
+                foreach (var methodDesc in apiDefBuilder
+                    .TalksTo
+                    .MethodDescriptions
+                    .Where(z => z.IsPublic)
+                    .ExceptObjectBaseMethods())
                 {
                     content += $"[Post(\"{apiDefBuilder.TalksTo.GetUrl()}{methodDesc.Name.ToCamelCase()}\")]";
                     content += Environment.NewLine;
@@ -376,6 +450,7 @@ public {builder.Name}({args})
         public Type                        ReturnType { get; set; }
         public string                      Name       { get; set; }
         public IList<ParameterDescription> Parameters { get; set; }
+        public bool                        IsPublic   { get; set; }
     }
 
     public class ParameterDescription
@@ -406,7 +481,7 @@ public {builder.Name}({args})
             return project;
         }
 
-        public ReflectedType ReadInterface(Type type)
+        public ReflectedType ReadType(Type type)
         {
             var readObject = new ReflectedType(type);
             Builders.Add(readObject);
@@ -477,6 +552,15 @@ public {builder.Name}({args})
             if (reflectedType.TypeType != TypeType.Interface && reflectedType.Name.StartsWith("I"))
                 BaseTypeName = "I" + BaseTypeName;
         }
+
+        public void ExtractPublicNonObjectMethodsFrom(ReflectedType partTranSearchFromDb)
+        {
+            var methodDescriptions = partTranSearchFromDb.MethodDescriptions
+                .Where(z => z.IsPublic)
+                .Where(z => !ConfigRealizer.BaseObjectMethods.Contains(z.Name))
+                .ToList();
+            MethodDescriptions.AddRange(methodDescriptions);
+        }
     }
 
     public class ApiDefBuilder : HasMembersBase
@@ -501,9 +585,18 @@ public {builder.Name}({args})
 
         public string GetUrl()
         {
-            return $"/api/{Name}/";
+            return $"/api/{GetNameWithoutControllerSuffix()}/";
         }
+        
+        private string GetNameWithoutControllerSuffix()
+        {
+            if (!Name.EndsWith("Controller"))
+                throw new Exception($"Expected controller name to end with Controller, instead had name of {Name}");
 
+            return Name.Remove(Name.Length - 10);
+
+        }
+        
         public WebApiBuilder(ProjectBuilder projectBuilder, FeatureBuilder feature) : base(projectBuilder, feature)
         {
             ProjectBuilder = projectBuilder;
@@ -602,6 +695,8 @@ public {builder.Name}({args})
         public ProjectBuilder ProjectBuilder { get; set; }
         public FeatureBuilder FeatureBuilder { get; set; }
 
+        public IList<string> AdditionalUsingStatements { get; set; } = new List<string>();
+
         public string Name
         {
             get => _name;
@@ -630,6 +725,14 @@ public {builder.Name}({args})
                 var readObjectsMethods = ImplementList
                     .Where(z => z is ReflectedType)
                     .SelectMany(z => z.MethodDescriptions)
+                    .Where(z =>
+                    {
+                        return TypeType switch
+                        {
+                            TypeType.Interface => !ConfigRealizer.BaseObjectMethods.Contains(z.Name),
+                            _                  => true
+                        };
+                    })
                     .ToList();
                 return readObjectsMethods;
             }
@@ -773,7 +876,7 @@ public {builder.Name}({args})
                 .Select(parameter => new ParameterDescription()
                 {
                     Name = parameter.Name,
-                    Type = parameter.ParameterType
+                    Type = parameter.ParameterType,
                 })
                 .ToList();
 
@@ -781,7 +884,8 @@ public {builder.Name}({args})
             {
                 Name       = method.Name,
                 ReturnType = method.ReturnType,
-                Parameters = parameters
+                Parameters = parameters,
+                IsPublic   = method.IsPublic
             };
 
             return description;
@@ -800,15 +904,15 @@ public {builder.Name}({args})
 
     public class ProjectBuilder
     {
-        public string ProjectRoot        { get; set; }
-        public string ProjectName        { get; set; }
-        public string DefaultFeaturePath { get; set; }
+        public string  ProjectRoot        { get; set; }
+        public string  ProjectName        { get; set; }
+        public string? DefaultFeaturePath { get; set; }
 
-        public ProjectBuilder(string projectRoot, string projectName, string featurePath = default)
+        public ProjectBuilder(string projectRoot, string projectName, string? featurePath = default)
         {
             ProjectRoot        = projectRoot;
             ProjectName        = projectName;
-            DefaultFeaturePath = featurePath ?? string.Empty;
+            DefaultFeaturePath = featurePath;
         }
     }
 
@@ -850,6 +954,16 @@ public {builder.Name}({args})
                     $"Needs a last dot in the name {fullName}. Last index of '.' was {lastDotIndex}");
 
             return fullName.Substring(0, lastDotIndex);
+        }
+    }
+
+    public static class BuilderExtensionMethods
+    {
+        public static IEnumerable<MethodDescription> ExceptObjectBaseMethods(
+            this IEnumerable<MethodDescription> methodDescriptions)
+        {
+            return methodDescriptions
+                .Where(methodDescription => !ConfigRealizer.BaseObjectMethods.Contains(methodDescription.Name));
         }
     }
 }

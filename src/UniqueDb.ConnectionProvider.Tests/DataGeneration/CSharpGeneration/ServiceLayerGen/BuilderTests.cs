@@ -21,7 +21,7 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration.CSharpGeneration.Serv
             var coreFeature = builder.CreateFeature("MainFeature.SubFeature1");
             var webApiFeature = builder.CreateFeature("Controllers.SubFeature1");
 
-            var origInterface = builder.ReadInterface(typeof(IMyTestService));
+            var origInterface = builder.ReadType(typeof(IMyTestService));
             origInterface.FullName = "CodeGenTestSol1.Project1.Features.MainFeature.SubFeature1.IMyTestService";
 
             var impl = builder.CreateClass(domainProj, coreFeature);
@@ -62,6 +62,8 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration.CSharpGeneration.Serv
                 fileResult.SaveToDisk();
             }
         }
+
+
 
         [Fact()]
         [Trait("Category", "Instant")]
