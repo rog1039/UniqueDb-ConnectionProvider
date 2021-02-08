@@ -7,6 +7,7 @@ namespace UniqueDb.ConnectionProvider
     {
         public static void DeleteDatabase(ISqlConnectionProvider sqlConnectionProvider)
         {
+            LoggerHelper.Log($"Deleting database: {sqlConnectionProvider}");
             var deleteDbSqlText = CreateSqlTextToDeleteDatabase(sqlConnectionProvider);
             var sqlConnection   = sqlConnectionProvider.ConnectionAsMaster();
             sqlConnection.Open();

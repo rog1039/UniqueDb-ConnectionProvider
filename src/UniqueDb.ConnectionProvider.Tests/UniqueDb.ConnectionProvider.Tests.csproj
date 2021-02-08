@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="AutoFixture" Version="4.14.0" />
+      <PackageReference Include="AutoFixture" Version="4.15.0" />
       <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
       <PackageReference Include="Microsoft.SqlServer.Types" Version="14.0.1016.290" />
       <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
