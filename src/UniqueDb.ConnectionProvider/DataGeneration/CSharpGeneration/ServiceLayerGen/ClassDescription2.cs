@@ -87,12 +87,14 @@ namespace {Namespace}
             return CustomCodeFormattingEngine.Format(classContents);
         }
 
-        private string GetAdditionalUsings(HasMembersBase builder)
+        private List<string> GetAdditionalUsings(HasMembersBase builder)
         {
             return builder
                 .AdditionalUsingStatements
                 .Select(z => $"using {z};")
-                .StringJoin(Environment.NewLine);
+                .OrderBy(z => z)
+                .Distinct()
+                .ToList();
         }
 
         private FileResult Build(InterfaceBuilder builder)
@@ -165,27 +167,36 @@ namespace {Namespace}
             var inheritsText = string.IsNullOrWhiteSpace(builder.BaseTypeName)
                 ? " : MyControllerBase"
                 : $" : {builder.BaseTypeName}";
-            var methodsCode     = GetMethodsContent(builder);
-            var fieldsText      = GetFieldsText(builder);
-            var constructorText = GetConstructorsText(builder);
-            var usingStatements = GetUsingStatements(builder);
+            var methodsCode      = GetMethodsContent(builder);
+            var fieldsText       = GetFieldsText(builder);
+            var constructorText  = GetConstructorsText(builder);
+            var usingStatements  = GetUsingStatements(builder);
             var additionalUsings = GetAdditionalUsings(builder);
+            var allUsingStatements = usingStatements.Concat(additionalUsings)
+                .Concat(new []{"using System;"})
+                .Distinct()
+                .OrderBy(z => z)
+                .ToList();
+            var usingText = string.Join(Environment.NewLine, allUsingStatements);
+                
+            var overrideBasePath = string.IsNullOrWhiteSpace(builder.BasePath)
+                ? string.Empty
+                : $"[Route(\"{builder.BasePath})]";
 
             var classContents = $@"
 //WebApiBuilder
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-{usingStatements}
-{additionalUsings}
+{usingText}
+
 
 namespace {Namespace}
 {{
+    {overrideBasePath}
     public class {builder.Name}{inheritsText}
     {{
         {fieldsText}
 
         {constructorText}
+
 
         {methodsCode}
     }}
@@ -236,7 +247,7 @@ namespace {Namespace}
             return CustomCodeFormattingEngine.Format(classContents);
         }
 
-        private string GetUsingStatements(ClassBuilder builder)
+        private IList<string> GetUsingStatements(ClassBuilder builder)
         {
             var namespaces = builder.ImplementList
                 .Select(z => z.FullName.GetNamespaceFromFullName())
@@ -246,7 +257,7 @@ namespace {Namespace}
 
             var usingStatements = namespaces
                 .Select(@namespace => $"using {@namespace};")
-                .StringJoin(Environment.NewLine);
+                .ToList();
 
             return usingStatements;
         }
@@ -464,10 +475,42 @@ public {builder.Name}({args})
         public string Path     { get; set; }
         public string Contents { get; set; }
 
+        public FileResult()
+        {
+            
+        }
+
+        public FileResult(string path, string contents)
+        {
+            Path     = path;
+            Contents = contents;
+        }
+
         public void SaveToDisk()
         {
-            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(Path));
-            File.WriteAllText(Path, Contents);
+            var directoryName = System.IO.Path.GetDirectoryName(Path);
+            try
+            {
+                Directory.CreateDirectory(directoryName);
+                File.WriteAllText(Path, Contents);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Unable to write to {Path} with directory: {directoryName}");
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+    }
+
+    public static class FileResultExtensions
+    {
+        public static void WriteAll(this IEnumerable<FileResult> fileResults)
+        {
+            foreach (var fileResult in fileResults)
+            {
+                fileResult.SaveToDisk();
+            }
         }
     }
 
@@ -612,6 +655,8 @@ public {builder.Name}({args})
                     .ToList();
             }
         }
+
+        public string BasePath { get; set; } = String.Empty;
     }
 
     public interface IAttributeBuilder

@@ -5,7 +5,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
 {
     public static class SqlValueEncoder
     {
-        public static string ConvertPropertyToSqlString(object o, PropertyInfo x)
+        public static string ConvertPropertyToSqlLength(object o, PropertyInfo x)
         {
             object value = x.GetValue(o, null);
             if (x.PropertyType.IsGenericType && x.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))

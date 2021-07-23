@@ -7,21 +7,14 @@ namespace UniqueDb.ConnectionProvider
     {
         private UniqueDbConnectionProviderOptions(){}
         
-        public UniqueDbConnectionProviderOptions(string sqlServerName, string databaseNamePrefix)
+        private const string DefaultTimeStampFormat = "yyMMdd.HHmmss.fff";
+
+        public UniqueDbConnectionProviderOptions(string sqlServerName, string databaseNamePrefix, bool includeTimeStamp = true, string timeStampFormat = DefaultTimeStampFormat)
         {
             SqlServerName = sqlServerName;
             DatabaseNamePrefix = databaseNamePrefix;
-            IncludeTimeStamp = true;
-            TimeStampFormat = "yyMMdd.HHmmss.fff";
-            UseIntegratedSecurity = true;
-        }
-
-        public UniqueDbConnectionProviderOptions(string sqlServerName, string databaseNamePrefix, bool includeTimeStamp, string timeStampFormat)
-        {
-            SqlServerName = sqlServerName;
             IncludeTimeStamp = includeTimeStamp;
             TimeStampFormat = timeStampFormat;
-            DatabaseNamePrefix = databaseNamePrefix;
             UseIntegratedSecurity = true;
         }
 
@@ -48,12 +41,12 @@ namespace UniqueDb.ConnectionProvider
             Password = password;
         }
 
-        public bool IncludeTimeStamp { get; private set; }
-        public string TimeStampFormat { get; private set; }
-        public string SqlServerName { get; private set; }
-        public string DatabaseNamePrefix { get; private set; }
-        public bool UseIntegratedSecurity { get; private set; }
-        public string UserName { get; private set; }
-        public string Password { get; private set; }
+        public bool    IncludeTimeStamp      { get; private set; }
+        public string  TimeStampFormat       { get; private set; }
+        public string  SqlServerName         { get; private set; }
+        public string  DatabaseNamePrefix    { get; private set; }
+        public bool    UseIntegratedSecurity { get; private set; }
+        public string? UserName              { get; private set; }
+        public string? Password              { get; private set; }
     }
 }
