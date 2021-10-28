@@ -1,4 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System.Data;
+using System.Data.Common;
+using Microsoft.Data.SqlClient;
 
 namespace UniqueDb.ConnectionProvider
 {
@@ -12,7 +14,7 @@ namespace UniqueDb.ConnectionProvider
         string Password { get; }
 
         SqlConnectionStringBuilder GetSqlConnectionStringBuilder();
-        SqlConnection GetSqlConnection();
+        DbConnection GetSqlConnection();
         SqlConnection GetSqlConnectionWithTimeout(int timeout);
         string GetSqlConnectionString();
 
@@ -26,5 +28,13 @@ namespace UniqueDb.ConnectionProvider
         {
             return $"{sqlConnectionProvider.ServerName}.{sqlConnectionProvider.DatabaseName}";
         }
+
+        public static SqlConnection ToSqlConnection(this ISqlConnectionProvider provider) =>
+            provider.GetSqlConnection().ToSqlConnection();
+    }
+
+    public static class IDbConnectionExtensions
+    {
+        public static SqlConnection ToSqlConnection(this IDbConnection connection) => (SqlConnection) connection;
     }
 }

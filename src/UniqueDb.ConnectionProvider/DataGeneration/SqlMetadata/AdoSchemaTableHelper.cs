@@ -16,7 +16,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata
 
         private static SqlDataReader GetDataReaderFromQuery(ISqlConnectionProvider sqlConnectionProvider, string sqlQuery)
         {
-            var connection = sqlConnectionProvider.GetSqlConnection();
+            var connection = sqlConnectionProvider.ToSqlConnection();
             connection.Open();
             var query = new SqlCommand(sqlQuery, connection);
             return query.ExecuteReader();

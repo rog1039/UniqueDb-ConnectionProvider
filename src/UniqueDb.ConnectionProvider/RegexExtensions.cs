@@ -11,7 +11,7 @@ namespace UniqueDb.ConnectionProvider
 {
     public static class RegexExtensions
     {
-        public static GroupCollection GetMatches(this string input, string regexPattern)
+        internal static GroupCollection GetMatches(this string input, string regexPattern)
         {
             var regex = new Regex(regexPattern);
             var matches = regex.Match(input);

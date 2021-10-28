@@ -12,7 +12,8 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
                                   string tableName = null,
                                   string schemaName = null,
                                   IEnumerable<string> columnsToIgnore = null,
-                                  bool processColumnNames = true)
+                                  bool processColumnNames = true,
+                                  bool useIdentityInsert = false)
         {
             tableName = SqlTextFunctions.GetTableName(obj.GetType(), tableName, schemaName);
 
@@ -20,7 +21,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
             if (propertyInfos.Count == 0)
                 return;
 
-            using (var myConnection = sqlConnectionProvider.GetSqlConnection())
+            using (var myConnection = sqlConnectionProvider.GetSqlConnectionWithTimeout(60))
             {
                 using (var myCommand = new SqlCommand {Connection = myConnection})
                 {
@@ -31,6 +32,8 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
                     myConnection.Open();
                     SqlLogger.LogSqlCommand(myCommand);
 
+                    // if (useIdentityInsert)
+                    //     myConnection.Execute("set identity_insert on;");
                     myCommand.ExecuteNonQuery();
                     myConnection.Close();
                 }

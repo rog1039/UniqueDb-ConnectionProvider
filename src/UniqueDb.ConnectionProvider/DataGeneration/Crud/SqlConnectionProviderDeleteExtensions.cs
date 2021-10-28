@@ -12,7 +12,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
         {
             tableName = SqlTextFunctions.GetTableName(objToDelete.GetType(), tableName, schemaName);
             
-            using (var myConnection = sqlConnectionProvider.GetSqlConnection())
+            using (var myConnection = sqlConnectionProvider.ToSqlConnection())
             {
                 using (var myCommand = new SqlCommand() { Connection = myConnection })
                 {

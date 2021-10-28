@@ -29,10 +29,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="DevExpress.Mvvm" Version="21.1.4" />
-      <PackageReference Include="DevExpress.Wpf.Grid" Version="21.1.4" />
-      <PackageReference Include="DevExpress.Wpf.LayoutControl" Version="21.1.4" />
-      <PackageReference Include="ReactiveProperty" Version="7.11.0" />
+      <PackageReference Include="DevExpress.WindowsDesktop.Mvvm" Version="20.2.4" />
+      <PackageReference Include="DevExpress.WindowsDesktop.Wpf.Grid" Version="20.2.4" />
+      <PackageReference Include="DevExpress.WindowsDesktop.Wpf.LayoutControl" Version="20.2.4" />
+      <PackageReference Include="ReactiveProperty" Version="7.5.1" />
     </ItemGroup>
 
     <ItemGroup>

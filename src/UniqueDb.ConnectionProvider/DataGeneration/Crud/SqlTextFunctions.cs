@@ -30,7 +30,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.Crud
 
             if (!SqlTypes.IsClrTypeASqlSystemType(typeOfParameter))
             {
-                Console.WriteLine($"*****UDT Type: {obj.GetType()} - {propertyInfo} - {propertyInfo.Name} ");
+                LoggerHelper.Log($"*****UDT Type: {obj.GetType()} - {propertyInfo} - {propertyInfo.Name} ");
                 sqlParameter.UdtTypeName = propertyInfo.PropertyType.Name;
             }
             if (propertyInfo.PropertyType == typeof(XElement))

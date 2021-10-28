@@ -78,7 +78,7 @@ namespace UniqueDb.ConnectionProvider
 
         public static void ExecuteNonDapper(this ISqlConnectionProvider connectionProvider, string sqlCommand)
         {
-            var connection = connectionProvider.GetSqlConnection();
+            var connection = connectionProvider.ToSqlConnection();
             connection.Open();
             var command = new SqlCommand(sqlCommand, connection);
             command.ExecuteNonQuery();
@@ -87,7 +87,7 @@ namespace UniqueDb.ConnectionProvider
 
         public static T ExecuteScalar<T>(this ISqlConnectionProvider connectionProvider, string sqlCommand)
         {
-            var connection = connectionProvider.GetSqlConnection();
+            var connection = connectionProvider.ToSqlConnection();
             connection.Open();
             var command = new SqlCommand(sqlCommand, connection);
             var result  = ConvertFromDBVal<T>(command.ExecuteScalar());
