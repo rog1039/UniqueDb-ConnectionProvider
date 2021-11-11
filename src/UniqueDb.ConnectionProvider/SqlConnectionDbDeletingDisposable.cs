@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace UniqueDb.ConnectionProvider;
+﻿namespace UniqueDb.ConnectionProvider;
 
 public class SqlConnectionDbDeletingDisposable : IDisposable
 {

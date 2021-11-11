@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using Xunit;
 using Xunit.Abstractions;

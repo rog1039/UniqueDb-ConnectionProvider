@@ -1,5 +1,3 @@
-using System;
-
 namespace UniqueDb.ConnectionProvider.DataGeneration;
 
 public static class SqlTypeStringToClrTypeStringConverter

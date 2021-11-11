@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
+﻿namespace UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 
 public class DescribeResultSetRow
 {

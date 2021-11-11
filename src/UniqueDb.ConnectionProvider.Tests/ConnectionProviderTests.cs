@@ -1,5 +1,4 @@
-﻿using System;
-using Xbehave;
+﻿using Xbehave;
 
 namespace UniqueDb.ConnectionProvider.Tests;
 

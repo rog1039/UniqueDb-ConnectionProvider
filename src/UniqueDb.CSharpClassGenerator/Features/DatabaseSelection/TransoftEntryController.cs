@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Data.Common;
 using System.Data.Odbc;
-using System.Linq;
 using DevExpress.Mvvm;
 using Reactive.Bindings;
 

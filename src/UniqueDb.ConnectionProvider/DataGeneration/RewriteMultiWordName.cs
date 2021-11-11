@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace UniqueDb.ConnectionProvider.DataGeneration;
+﻿namespace UniqueDb.ConnectionProvider.DataGeneration;
 
 public class RewriteMultiWordName : PropertyNameRewrite
 {

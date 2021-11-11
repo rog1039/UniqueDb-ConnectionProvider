@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using FluentAssertions;
+﻿using FluentAssertions;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using Xunit;
 

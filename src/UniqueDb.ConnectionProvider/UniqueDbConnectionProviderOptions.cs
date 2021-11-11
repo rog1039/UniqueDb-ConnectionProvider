@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace UniqueDb.ConnectionProvider;
+﻿namespace UniqueDb.ConnectionProvider;
 
 [Serializable]
 public class UniqueDbConnectionProviderOptions

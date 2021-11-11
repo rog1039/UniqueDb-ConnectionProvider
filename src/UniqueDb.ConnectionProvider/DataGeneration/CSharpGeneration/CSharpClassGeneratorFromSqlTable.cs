@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
+﻿namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 
 public static class CSharpClassGeneratorFromSqlTable
 {

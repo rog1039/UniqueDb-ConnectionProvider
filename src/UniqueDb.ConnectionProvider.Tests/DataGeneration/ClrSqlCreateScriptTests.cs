@@ -1,4 +1,3 @@
-using System;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
 using Xunit;
 using Xunit.Abstractions;

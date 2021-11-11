@@ -1,5 +1,3 @@
-using System;
-
 namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 
 public class DateRange : GenericRange<DateTime>

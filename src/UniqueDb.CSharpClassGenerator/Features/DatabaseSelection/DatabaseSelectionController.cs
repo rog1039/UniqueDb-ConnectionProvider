@@ -1,8 +1,6 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Data.Common;
 using System.Data.Odbc;
-using System.Linq;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Newtonsoft.Json;

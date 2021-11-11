@@ -1,4 +1,3 @@
-using System;
 using UniqueDb.ConnectionProvider.Tracing.Hashing;
 
 namespace UniqueDb.ConnectionProvider.Tracing;

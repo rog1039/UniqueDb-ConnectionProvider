@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
+﻿using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 

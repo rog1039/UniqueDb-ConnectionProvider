@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Dapper;
+﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;

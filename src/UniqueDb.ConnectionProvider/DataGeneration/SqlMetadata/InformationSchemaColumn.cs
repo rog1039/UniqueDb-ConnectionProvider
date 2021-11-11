@@ -1,5 +1,3 @@
-using System.IO;
-
 namespace UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 
 public class InformationSchemaColumn

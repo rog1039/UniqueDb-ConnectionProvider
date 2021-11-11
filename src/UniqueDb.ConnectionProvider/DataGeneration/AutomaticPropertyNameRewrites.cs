@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace UniqueDb.ConnectionProvider.DataGeneration;
+﻿namespace UniqueDb.ConnectionProvider.DataGeneration;
 
 public static class AutomaticPropertyNameRewrites
 {

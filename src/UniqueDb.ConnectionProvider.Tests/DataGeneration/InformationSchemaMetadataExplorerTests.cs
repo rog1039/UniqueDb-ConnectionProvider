@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using Xunit;
 

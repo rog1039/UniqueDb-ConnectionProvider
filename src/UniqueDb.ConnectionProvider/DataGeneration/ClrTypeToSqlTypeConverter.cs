@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace UniqueDb.ConnectionProvider.DataGeneration;
 
 public static class ClrTypeToSqlTypeConverter

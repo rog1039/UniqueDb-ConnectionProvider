@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics.Contracts;
 using FluentAssertions;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;

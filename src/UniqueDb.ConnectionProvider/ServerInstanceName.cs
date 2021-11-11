@@ -1,5 +1,3 @@
-using System;
-
 namespace UniqueDb.ConnectionProvider;
 
 public class ServerInstanceName

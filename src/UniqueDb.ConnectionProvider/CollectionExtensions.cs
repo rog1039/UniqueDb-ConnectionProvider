@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace UniqueDb.ConnectionProvider;
 
 public static class CollectionExtensions

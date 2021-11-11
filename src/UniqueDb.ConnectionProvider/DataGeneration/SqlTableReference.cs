@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-
 namespace UniqueDb.ConnectionProvider.DataGeneration;
 
 public class SqlTableReference

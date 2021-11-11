@@ -1,4 +1,3 @@
-using System;
 using FluentAssertions;
 using Xbehave;
 using Xunit;

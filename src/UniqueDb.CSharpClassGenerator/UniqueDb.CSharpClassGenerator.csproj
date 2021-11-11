@@ -1,42 +1,48 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <OutputType>WinExe</OutputType>
-        <TargetFramework>net6.0-windows</TargetFramework>
-        <UseWPF>true</UseWPF>
-        <RootNamespace>UniqueDb.CSharpClassGenerator</RootNamespace>
-    </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>UniqueDb.CSharpClassGenerator</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  
+  <ItemGroup>
+<!--    Remove conflicting WinForms usings-->
+    <Using Remove="System.Windows.Forms" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <Page Update="Features\CodeGen\CodeGenView.xaml">
-        <SubType>Designer</SubType>
-      </Page>
-      <Page Update="Features\DatabaseSelection\SqlDbEntryView.xaml">
-        <SubType>Designer</SubType>
-      </Page>
-      <Page Update="Features\DatabaseSelection\SqlDbEntryView2.xaml">
-        <SubType>Designer</SubType>
-      </Page>
-      <Page Update="Features\DatabaseSelection\TransoftDbEntryView.xaml">
-        <SubType>Designer</SubType>
-      </Page>
-      <Page Update="Features\MainShell\MainShell.xaml">
-        <SubType>Designer</SubType>
-      </Page>
-      <Page Update="Features\MainShell\Window1.xaml">
-        <SubType>Designer</SubType>
-      </Page>
-    </ItemGroup>
+  <ItemGroup>
+    <Page Update="Features\CodeGen\CodeGenView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Features\DatabaseSelection\SqlDbEntryView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Features\DatabaseSelection\SqlDbEntryView2.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Features\DatabaseSelection\TransoftDbEntryView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Features\MainShell\MainShell.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Features\MainShell\Window1.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="DevExpress.Mvvm" Version="21.2.3" />
-      <PackageReference Include="DevExpress.Wpf.Grid" Version="21.2.3" />
-      <PackageReference Include="DevExpress.Wpf.LayoutControl" Version="21.2.3" />
-      <PackageReference Include="ReactiveProperty" Version="8.0.0" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DevExpress.Mvvm" Version="21.2.3"/>
+    <PackageReference Include="DevExpress.Wpf.Grid" Version="21.2.3"/>
+    <PackageReference Include="DevExpress.Wpf.LayoutControl" Version="21.2.3"/>
+    <PackageReference Include="ReactiveProperty" Version="8.0.0"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\UniqueDb.ConnectionProvider\UniqueDb.ConnectionProvider.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UniqueDb.ConnectionProvider\UniqueDb.ConnectionProvider.csproj"/>
+  </ItemGroup>
 
 </Project>

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using UniqueDb.ConnectionProvider.DataGeneration;
+﻿using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.Crud;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
 using Xbehave;

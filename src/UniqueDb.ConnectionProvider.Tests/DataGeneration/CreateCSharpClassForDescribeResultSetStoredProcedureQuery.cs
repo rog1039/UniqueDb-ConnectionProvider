@@ -1,4 +1,3 @@
-using System;
 using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 using Xunit;
 

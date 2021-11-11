@@ -1,4 +1,3 @@
-using System;
 using FluentAssertions;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using Xunit;

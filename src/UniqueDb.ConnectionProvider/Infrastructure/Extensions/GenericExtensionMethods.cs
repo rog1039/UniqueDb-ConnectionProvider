@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace UniqueDb.ConnectionProvider.Infrastructure.Extensions;
+﻿namespace UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 
 internal static class GenericExtensionMethods
 {

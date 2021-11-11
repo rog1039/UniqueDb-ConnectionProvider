@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
+﻿namespace UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
 
 public static class ExtensionMethods
 {

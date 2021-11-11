@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Dapper;
+﻿using Dapper;
 using Newtonsoft.Json;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;

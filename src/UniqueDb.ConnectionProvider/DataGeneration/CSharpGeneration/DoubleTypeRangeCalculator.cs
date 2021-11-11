@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;

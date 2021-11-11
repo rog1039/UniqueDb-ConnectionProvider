@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace UniqueDb.ConnectionProvider.Tracing.Hashing;
 
 internal static class ByteArrayToHexConverter

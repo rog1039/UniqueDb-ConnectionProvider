@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 
 public class DataAnnotationFactory
