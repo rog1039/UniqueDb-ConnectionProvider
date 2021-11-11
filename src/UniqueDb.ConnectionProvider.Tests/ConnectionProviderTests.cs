@@ -1,28 +1,27 @@
 ﻿using System;
 using Xbehave;
 
-namespace UniqueDb.ConnectionProvider.Tests
+namespace UniqueDb.ConnectionProvider.Tests;
+
+public class UniqueDbConnectionProviderTests
 {
-    public class UniqueDbConnectionProviderTests
+    [Scenario]
+    public void GetConnectionString()
     {
-        [Scenario]
-        public void GetConnectionString()
-        {
-            var options = new UniqueDbConnectionProviderOptions("server", "database");
-            var connectionProvider = new UniqueDbConnectionProvider(options);
+        var options            = new UniqueDbConnectionProviderOptions("server", "database");
+        var connectionProvider = new UniqueDbConnectionProvider(options);
 
-            var connectionString = connectionProvider.GetSqlConnectionString();
-            Console.WriteLine(connectionString);
-        }
+        var connectionString = connectionProvider.GetSqlConnectionString();
+        Console.WriteLine(connectionString);
+    }
 
-        [Scenario]
-        public void GetConnectionString_WithUserNameAndPassword()
-        {
-            var options = new UniqueDbConnectionProviderOptions("server", "database", "user", "password");
-            var connectionProvider = new UniqueDbConnectionProvider(options);
+    [Scenario]
+    public void GetConnectionString_WithUserNameAndPassword()
+    {
+        var options            = new UniqueDbConnectionProviderOptions("server", "database", "user", "password");
+        var connectionProvider = new UniqueDbConnectionProvider(options);
 
-            var connectionString = connectionProvider.GetSqlConnectionString();
-            Console.WriteLine(connectionString);
-        }
+        var connectionString = connectionProvider.GetSqlConnectionString();
+        Console.WriteLine(connectionString);
     }
 }

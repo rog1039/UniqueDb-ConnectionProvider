@@ -1,8 +1,7 @@
-namespace UniqueDb.ConnectionProvider
+namespace UniqueDb.ConnectionProvider;
+
+public enum SearchNotFoundOption
 {
-    public enum SearchNotFoundOption
-    {
-        ReturnEmpty,
-        ReturnAllText
-    }
+    ReturnEmpty,
+    ReturnAllText
 }

@@ -1,11 +1,10 @@
-﻿namespace UniqueDb.ConnectionProvider.DataGeneration
+﻿namespace UniqueDb.ConnectionProvider.DataGeneration;
+
+public enum ClrAccessModifier
 {
-    public enum ClrAccessModifier
-    {
-        Public,
-        Private,
-        Protected,
-        Internal,
-        ProtectedInternal
-    }
+    Public,
+    Private,
+    Protected,
+    Internal,
+    ProtectedInternal
 }

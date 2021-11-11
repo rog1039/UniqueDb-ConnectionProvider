@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection
+namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection;
+
+/// <summary>
+/// Interaction logic for TransoftDbEntryView.xaml
+/// </summary>
+public partial class TransoftDbEntryView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for TransoftDbEntryView.xaml
-    /// </summary>
-    public partial class TransoftDbEntryView : UserControl
+    public TransoftDbEntryView()
     {
-        public TransoftDbEntryView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

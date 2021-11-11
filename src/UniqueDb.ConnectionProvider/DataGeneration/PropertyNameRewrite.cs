@@ -1,8 +1,7 @@
-﻿namespace UniqueDb.ConnectionProvider.DataGeneration
+﻿namespace UniqueDb.ConnectionProvider.DataGeneration;
+
+public abstract class PropertyNameRewrite
 {
-    public abstract class PropertyNameRewrite
-    {
-        public abstract bool ShouldRewrite(string originalName);
-        public abstract string Rewrite(string originalName);
-    }
+    public abstract bool   ShouldRewrite(string originalName);
+    public abstract string Rewrite(string       originalName);
 }

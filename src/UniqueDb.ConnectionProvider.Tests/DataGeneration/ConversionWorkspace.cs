@@ -1,7 +1,6 @@
-namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
+namespace UniqueDb.ConnectionProvider.Tests.DataGeneration;
+
+public class ConversionWorkspace
 {
-    public class ConversionWorkspace
-    {
         
-    }
 }

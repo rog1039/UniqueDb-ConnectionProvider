@@ -1,8 +1,8 @@
-﻿namespace UniqueDb.ConnectionProvider.DataGeneration.DesignTimeDataGeneration
+﻿namespace UniqueDb.ConnectionProvider.DataGeneration.DesignTimeDataGeneration;
+
+public static class DesignTimeDataCodeTemplate
 {
-    public static class DesignTimeDataCodeTemplate
-    {
-        public const string TemplateText = @"
+    public const string TemplateText = @"
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -34,13 +34,12 @@ namespace DesignTimeData
 }
             ";
 
-        public static string CreateCode(string className, string json, string classDeclaration)
-        {
-            var text = TemplateText.Replace($"%ClassName%", className);
-            var escapedJson = json.EscapeJson();
-            text = text.Replace("%Json%", escapedJson);
-            text = text.Replace($"%ClassDeclaration%", classDeclaration);
-            return text;
-        }
+    public static string CreateCode(string className, string json, string classDeclaration)
+    {
+        var text        = TemplateText.Replace($"%ClassName%", className);
+        var escapedJson = json.EscapeJson();
+        text = text.Replace("%Json%",              escapedJson);
+        text = text.Replace($"%ClassDeclaration%", classDeclaration);
+        return text;
     }
 }

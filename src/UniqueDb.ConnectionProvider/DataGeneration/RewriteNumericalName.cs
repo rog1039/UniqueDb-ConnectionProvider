@@ -1,19 +1,18 @@
-﻿namespace UniqueDb.ConnectionProvider.DataGeneration
-{
-    public class RewriteNumericalName : PropertyNameRewrite
-    {
-        public override bool ShouldRewrite(string originalName)
-        {
-            if (char.IsDigit(originalName[0]))
-            {
-                return true;
-            }
-            return false;
-        }
+﻿namespace UniqueDb.ConnectionProvider.DataGeneration;
 
-        public override string Rewrite(string originalName)
+public class RewriteNumericalName : PropertyNameRewrite
+{
+    public override bool ShouldRewrite(string originalName)
+    {
+        if (char.IsDigit(originalName[0]))
         {
-            return "_" + originalName;
+            return true;
         }
+        return false;
+    }
+
+    public override string Rewrite(string originalName)
+    {
+        return "_" + originalName;
     }
 }

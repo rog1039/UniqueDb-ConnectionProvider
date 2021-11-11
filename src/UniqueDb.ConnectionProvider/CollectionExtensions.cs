@@ -1,15 +1,14 @@
 using System.Collections.Generic;
 
-namespace UniqueDb.ConnectionProvider
+namespace UniqueDb.ConnectionProvider;
+
+public static class CollectionExtensions
 {
-    public static class CollectionExtensions
+    internal static void AddRange<T>(this IList<T> list, IEnumerable<T> itemsToAdd)
     {
-        internal static void AddRange<T>(this IList<T> list, IEnumerable<T> itemsToAdd)
+        foreach (var item in itemsToAdd)
         {
-            foreach (var item in itemsToAdd)
-            {
-                list.Add(item);
-            }
+            list.Add(item);
         }
     }
 }

@@ -1,15 +1,14 @@
 using System.IO;
 using Newtonsoft.Json;
 
-namespace UniqueDb.ConnectionProvider.DataGeneration
+namespace UniqueDb.ConnectionProvider.DataGeneration;
+
+public static class InformationSchemaTableDefinitionFromJson
 {
-    public static class InformationSchemaTableDefinitionFromJson
+    public static InformationSchemaTableDefinition SampleTable()
     {
-        public static InformationSchemaTableDefinition SampleTable()
-        {
-            var text = File.ReadAllText("SampleTable_InformationSchemaTableDefinition_Json.txt");
-            var tableDefinition = JsonConvert.DeserializeObject<InformationSchemaTableDefinition>(text);
-            return tableDefinition;
-        }            
-    }
+        var text            = File.ReadAllText("SampleTable_InformationSchemaTableDefinition_Json.txt");
+        var tableDefinition = JsonConvert.DeserializeObject<InformationSchemaTableDefinition>(text);
+        return tableDefinition;
+    }            
 }

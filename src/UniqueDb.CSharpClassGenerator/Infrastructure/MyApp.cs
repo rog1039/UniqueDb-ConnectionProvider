@@ -2,30 +2,29 @@
 using System.Windows;
 using UniqueDb.CSharpClassGenerator.Features.MainShell;
 
-namespace UniqueDb.CSharpClassGenerator.Infrastructure
+namespace UniqueDb.CSharpClassGenerator.Infrastructure;
+
+public class MyApp
 {
-    public class MyApp
+    public void Start()
     {
-        public void Start()
+        try
         {
-            try
+            var shell = new MainShell()
             {
-                var shell = new MainShell()
-                {
-                    DataContext = new MainShellController()
-                };
-                var window2 = new Window()
-                {
-                    Width = 800,
-                    Height = 1200,
-                    Content = shell
-                };
-                window2.Show();
-            }
-            catch (Exception e)
+                DataContext = new MainShellController()
+            };
+            var window = new Window()
             {
-                MessageBox.Show(e.ToString());
-            }
+                Width   = 800,
+                Height  = 1200,
+                Content = shell
+            };
+            window.Show();
+        }
+        catch (Exception e)
+        {
+            MessageBox.Show(e.ToString());
         }
     }
 }

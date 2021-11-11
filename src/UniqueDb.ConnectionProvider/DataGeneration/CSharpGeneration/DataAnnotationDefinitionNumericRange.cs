@@ -1,26 +1,25 @@
-namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
+namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
+
+public class DataAnnotationDefinitionNumericRange : DataAnnotationDefinitionBase
 {
-    public class DataAnnotationDefinitionNumericRange : DataAnnotationDefinitionBase
+    private NumericRange numericRange;
+
+    public double UpperBound => numericRange.UpperBound;
+    public double LowerBound => numericRange.LowerBound;
+
+    private DataAnnotationDefinitionNumericRange()
     {
-        private NumericRange numericRange;
+    }
 
-        public double UpperBound => numericRange.UpperBound;
-        public double LowerBound => numericRange.LowerBound;
+    public static DataAnnotationDefinitionNumericRange FromRange(double lowerBound, double upperBound)
+    {
+        return new DataAnnotationDefinitionNumericRange() {numericRange = new NumericRange(lowerBound, upperBound)};
+    }
 
-        private DataAnnotationDefinitionNumericRange()
-        {
-        }
-
-        public static DataAnnotationDefinitionNumericRange FromRange(double lowerBound, double upperBound)
-        {
-            return new DataAnnotationDefinitionNumericRange() {numericRange = new NumericRange(lowerBound, upperBound)};
-        }
-
-        public override string ToAttributeString()
-        {
-            return $"[Range({LowerBound}, {UpperBound})]";
-        }
+    public override string ToAttributeString()
+    {
+        return $"[Range({LowerBound}, {UpperBound})]";
+    }
 
         
-    }
 }

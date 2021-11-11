@@ -1,19 +1,18 @@
 ﻿using System;
 
-namespace UniqueDb.ConnectionProvider
+namespace UniqueDb.ConnectionProvider;
+
+public class SqlConnectionDbDeletingDisposable : IDisposable
 {
-    public class SqlConnectionDbDeletingDisposable : IDisposable
+    private readonly ISqlConnectionProvider _dbConnectionProvider;
+
+    public SqlConnectionDbDeletingDisposable(ISqlConnectionProvider dbConnectionProvider)
     {
-        private readonly ISqlConnectionProvider _dbConnectionProvider;
+        _dbConnectionProvider = dbConnectionProvider;
+    }
 
-        public SqlConnectionDbDeletingDisposable(ISqlConnectionProvider dbConnectionProvider)
-        {
-            _dbConnectionProvider = dbConnectionProvider;
-        }
-
-        public void Dispose()
-        {
-            DatabaseDeleter.DeleteDatabase(_dbConnectionProvider);
-        }
+    public void Dispose()
+    {
+        DatabaseDeleter.DeleteDatabase(_dbConnectionProvider);
     }
 }

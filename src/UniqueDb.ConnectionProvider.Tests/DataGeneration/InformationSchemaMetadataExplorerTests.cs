@@ -3,19 +3,18 @@ using System.Linq;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using Xunit;
 
-namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
+namespace UniqueDb.ConnectionProvider.Tests.DataGeneration;
+
+public class InformationSchemaMetadataExplorerTests
 {
-    public class InformationSchemaMetadataExplorerTests
+    [Fact()]
+    [Trait("Category", "Integration")]
+    public void GetInformationSchemaTablesForAllTables()
     {
-        [Fact()]
-        [Trait("Category", "Integration")]
-        public void GetInformationSchemaTablesForAllTables()
-        {
-            var schemaTables = InformationSchemaMetadataExplorer
-                .GetInformationSchemaTables(SqlConnectionProviders.AdventureWorksDb)
-                .OrderBy(x => x.TABLE_SCHEMA)
-                .ThenBy(x => x.TABLE_NAME);
-            Console.WriteLine(schemaTables.ToStringTable());
-        }
+        var schemaTables = InformationSchemaMetadataExplorer
+            .GetInformationSchemaTables(SqlConnectionProviders.AdventureWorksDb)
+            .OrderBy(x => x.TABLE_SCHEMA)
+            .ThenBy(x => x.TABLE_NAME);
+        Console.WriteLine(schemaTables.ToStringTable());
     }
 }

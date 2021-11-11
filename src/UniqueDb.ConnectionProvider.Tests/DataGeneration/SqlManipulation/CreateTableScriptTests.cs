@@ -5,32 +5,31 @@ using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace UniqueDb.ConnectionProvider.Tests.DataGeneration.SqlManipulation
+namespace UniqueDb.ConnectionProvider.Tests.DataGeneration.SqlManipulation;
+
+public class SchemaTableDefCreateTableScriptTests : UnitTestBaseWithConsoleRedirection
 {
-    public class SchemaTableDefCreateTableScriptTests : UnitTestBaseWithConsoleRedirection
+    [Fact()]
+    [Trait("Category", "Instant")]
+    public void CreateIfTests()
     {
-        [Fact()]
-        [Trait("Category", "Instant")]
-        public void CreateIfTests()
-        {
-            var tableDef = InformationSchemaTableDefinitionFromJson.SampleTable();
-            var createAnywayScript =
-                InfSchemaToSqlDmlCreateStatementGenerator.GenerateCreateTableScript(
-                    tableDef, CreateIfExistsModification.CreateAnyway);
+        var tableDef = InformationSchemaTableDefinitionFromJson.SampleTable();
+        var createAnywayScript =
+            InfSchemaToSqlDmlCreateStatementGenerator.GenerateCreateTableScript(
+                tableDef, CreateIfExistsModification.CreateAnyway);
             
-            var dropAndRecreateScript =
-                InfSchemaToSqlDmlCreateStatementGenerator.GenerateCreateTableScript(
-                    tableDef, CreateIfExistsModification.DropAndRecreate);
+        var dropAndRecreateScript =
+            InfSchemaToSqlDmlCreateStatementGenerator.GenerateCreateTableScript(
+                tableDef, CreateIfExistsModification.DropAndRecreate);
 
-            var createOnlyIfNotExistsScript =
-                InfSchemaToSqlDmlCreateStatementGenerator.GenerateCreateTableScript(
-                    tableDef, CreateIfExistsModification.PreventCreation);
+        var createOnlyIfNotExistsScript =
+            InfSchemaToSqlDmlCreateStatementGenerator.GenerateCreateTableScript(
+                tableDef, CreateIfExistsModification.PreventCreation);
 
-            Console.WriteLine(createAnywayScript);
-            Console.WriteLine(dropAndRecreateScript);
-            Console.WriteLine(createOnlyIfNotExistsScript);
-        } 
+        Console.WriteLine(createAnywayScript);
+        Console.WriteLine(dropAndRecreateScript);
+        Console.WriteLine(createOnlyIfNotExistsScript);
+    } 
 
-        public SchemaTableDefCreateTableScriptTests(ITestOutputHelper outputHelperHelper) : base(outputHelperHelper) { }
-    }
+    public SchemaTableDefCreateTableScriptTests(ITestOutputHelper outputHelperHelper) : base(outputHelperHelper) { }
 }

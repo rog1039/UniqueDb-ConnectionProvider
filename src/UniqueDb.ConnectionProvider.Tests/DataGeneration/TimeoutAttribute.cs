@@ -1,21 +1,20 @@
 using System;
 using System.Collections;
 
-namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
+namespace UniqueDb.ConnectionProvider.Tests.DataGeneration;
+
+public class TimeoutAttribute : Attribute
 {
-    public class TimeoutAttribute : Attribute
+    private IDictionary _properties;
+
+    public TimeoutAttribute(int timeout)
     {
-        private IDictionary _properties;
+        _properties            = new Hashtable();
+        _properties["Timeout"] = timeout;
+    }
 
-        public TimeoutAttribute(int timeout)
-        {
-            _properties = new Hashtable();
-            _properties["Timeout"] = timeout;
-        }
-
-        public IDictionary Properties
-        {
-            get { return _properties; }
-        }
+    public IDictionary Properties
+    {
+        get { return _properties; }
     }
 }

@@ -1,7 +1,6 @@
-namespace UniqueDb.ConnectionProvider.DataGeneration
+namespace UniqueDb.ConnectionProvider.DataGeneration;
+
+public abstract class DataAnnotationDefinitionBase
 {
-    public abstract class DataAnnotationDefinitionBase
-    {
-        public abstract string ToAttributeString();
-    }
+    public abstract string ToAttributeString();
 }

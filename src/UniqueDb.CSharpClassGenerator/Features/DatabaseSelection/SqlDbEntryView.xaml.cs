@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection
+namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection;
+
+/// <summary>
+/// Interaction logic for SqlDbEntryView.xaml
+/// </summary>
+public partial class SqlDbEntryView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for SqlDbEntryView.xaml
-    /// </summary>
-    public partial class SqlDbEntryView : UserControl
+    public SqlDbEntryView()
     {
-        public SqlDbEntryView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

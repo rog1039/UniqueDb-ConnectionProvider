@@ -1,8 +1,7 @@
-﻿namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection
+﻿namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection;
+
+public class OdbcDsnDto
 {
-    public class OdbcDsnDto
-    {
-        public string ConnectionName { get; set; }
-        public string DsnName { get; set; }
-    }
+    public string ConnectionName { get; set; }
+    public string DsnName        { get; set; }
 }

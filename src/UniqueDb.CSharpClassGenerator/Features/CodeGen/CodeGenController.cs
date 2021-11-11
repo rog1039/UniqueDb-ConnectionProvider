@@ -8,90 +8,89 @@ using Reactive.Bindings;
 using UniqueDb.ConnectionProvider;
 using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 
-namespace UniqueDb.CSharpClassGenerator.Features.CodeGen
+namespace UniqueDb.CSharpClassGenerator.Features.CodeGen;
+
+public class CodeGenController
 {
-    public class CodeGenController
+    public ReactiveProperty<SqlConnectionHolder> SelectedSqlConnection { get; } = new ReactiveProperty<SqlConnectionHolder>();
+    public ObservableCollection<SqlConnectionHolder> SqlConnections { get; } = new ObservableCollection<SqlConnectionHolder>(SqlConnectionHolders.All);
+    public ReactiveProperty<string> ClassName { get; } = new ReactiveProperty<string>();
+    public ReactiveProperty<string> SqlQuery { get; } = new ReactiveProperty<string>();
+    public ReactiveProperty<string> GeneratedCode { get; } = new ReactiveProperty<string>();
+
+    public DelegateCommand GenerateCodeCommand { get; private set; }
+    public DelegateCommand CopyCodeCommand     { get; private set; }
+
+    public CodeGenController()
     {
-        public ReactiveProperty<SqlConnectionHolder> SelectedSqlConnection { get; } = new ReactiveProperty<SqlConnectionHolder>();
-        public ObservableCollection<SqlConnectionHolder> SqlConnections { get; } = new ObservableCollection<SqlConnectionHolder>(SqlConnectionHolders.All);
-        public ReactiveProperty<string> ClassName { get; } = new ReactiveProperty<string>();
-        public ReactiveProperty<string> SqlQuery { get; } = new ReactiveProperty<string>();
-        public ReactiveProperty<string> GeneratedCode { get; } = new ReactiveProperty<string>();
+        CopyCodeCommand             = new DelegateCommand(CopyCode,     CanCopyCode);
+        GenerateCodeCommand         = new DelegateCommand(GenerateCode, CanGenerateCode);
+        SelectedSqlConnection.Value = SqlConnections.Skip(1).First();
+    }
 
-        public DelegateCommand GenerateCodeCommand { get; private set; }
-        public DelegateCommand CopyCodeCommand { get; private set; }
+    private void CopyCode()
+    {
+        Clipboard.SetText(GeneratedCode.Value);
+    }
 
-        public CodeGenController()
+    private bool CanCopyCode()
+    {
+        return !string.IsNullOrWhiteSpace(GeneratedCode.Value);
+    }
+
+    private void GenerateCode()
+    {
+        try
         {
-            CopyCodeCommand = new DelegateCommand(CopyCode, CanCopyCode);
-            GenerateCodeCommand = new DelegateCommand(GenerateCode, CanGenerateCode);
-            SelectedSqlConnection.Value = SqlConnections.Skip(1).First();
+            var sqlConnectionProvider = SelectedSqlConnection.Value.SqlConnectionProvider;
+            var cSharpClass = CSharpClassGeneratorFromAdoDataReader.GenerateClass(sqlConnectionProvider, SqlQuery.Value, ClassName.Value);
+            GeneratedCode.Value = cSharpClass;
         }
-
-        private void CopyCode()
+        catch (Exception e)
         {
-            Clipboard.SetText(GeneratedCode.Value);
-        }
-
-        private bool CanCopyCode()
-        {
-            return !string.IsNullOrWhiteSpace(GeneratedCode.Value);
-        }
-
-        private void GenerateCode()
-        {
-            try
-            {
-                var sqlConnectionProvider = SelectedSqlConnection.Value.SqlConnectionProvider;
-                var cSharpClass = CSharpClassGeneratorFromAdoDataReader.GenerateClass(sqlConnectionProvider, SqlQuery.Value, ClassName.Value);
-                GeneratedCode.Value = cSharpClass;
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(string.Join(Environment.NewLine, e.Message, e.StackTrace, e.ToString()));
-            }
-        }
-
-        private bool CanGenerateCode()
-        {
-            return SelectedSqlConnection.Value != null 
-                && !string.IsNullOrWhiteSpace(ClassName.Value) 
-                && !string.IsNullOrWhiteSpace(SqlQuery.Value);
+            MessageBox.Show(string.Join(Environment.NewLine, e.Message, e.StackTrace, e.ToString()));
         }
     }
 
-    public class SqlConnectionHolder
+    private bool CanGenerateCode()
     {
-        public string Name { get; set; }
-        public ISqlConnectionProvider SqlConnectionProvider { get; set; }
+        return SelectedSqlConnection.Value != null 
+            && !string.IsNullOrWhiteSpace(ClassName.Value) 
+            && !string.IsNullOrWhiteSpace(SqlQuery.Value);
     }
+}
 
-    public class SqlConnectionHolders
+public class SqlConnectionHolder
+{
+    public string                 Name                  { get; set; }
+    public ISqlConnectionProvider SqlConnectionProvider { get; set; }
+}
+
+public class SqlConnectionHolders
+{
+
+    public static SqlConnectionHolder Epicor905Test = new SqlConnectionHolder()
     {
-
-        public static SqlConnectionHolder Epicor905Test = new SqlConnectionHolder()
-        {
-            Name = "Epicor905 Test",
-            SqlConnectionProvider = new StaticSqlConnectionProvider("epicor905", "EpicorTest905")
-        };
-        public static SqlConnectionHolder PbsiDatabase = new SqlConnectionHolder()
-        {
-            Name = "PBSI Database",
-            SqlConnectionProvider = new StaticSqlConnectionProvider("ws2012sqlexp1\\sqlexpress", "PbsiDatabase")
-        };
-        public static SqlConnectionHolder PbsiCopy = new SqlConnectionHolder()
-        {
-            Name = "PBSI Copy",
-            SqlConnectionProvider = new StaticSqlConnectionProvider("ws2012sqlexp1\\sqlexpress", "PbsiCopy")
-        };
-        public static SqlConnectionHolder PbsiSyncMetadata = new SqlConnectionHolder()
-        {
-            Name = "PBSI Sync Metadata",
-            SqlConnectionProvider = new StaticSqlConnectionProvider("ws2016sql", "PbsiSyncMetadata")
-        };
-        public static IList<SqlConnectionHolder> All = new List<SqlConnectionHolder>()
-        {
-            Epicor905Test, PbsiDatabase, PbsiCopy, PbsiSyncMetadata
-        };
-    }
+        Name                  = "Epicor905 Test",
+        SqlConnectionProvider = new StaticSqlConnectionProvider("epicor905", "EpicorTest905")
+    };
+    public static SqlConnectionHolder PbsiDatabase = new SqlConnectionHolder()
+    {
+        Name                  = "PBSI Database",
+        SqlConnectionProvider = new StaticSqlConnectionProvider("ws2012sqlexp1\\sqlexpress", "PbsiDatabase")
+    };
+    public static SqlConnectionHolder PbsiCopy = new SqlConnectionHolder()
+    {
+        Name                  = "PBSI Copy",
+        SqlConnectionProvider = new StaticSqlConnectionProvider("ws2012sqlexp1\\sqlexpress", "PbsiCopy")
+    };
+    public static SqlConnectionHolder PbsiSyncMetadata = new SqlConnectionHolder()
+    {
+        Name                  = "PBSI Sync Metadata",
+        SqlConnectionProvider = new StaticSqlConnectionProvider("ws2016sql", "PbsiSyncMetadata")
+    };
+    public static IList<SqlConnectionHolder> All = new List<SqlConnectionHolder>()
+    {
+        Epicor905Test, PbsiDatabase, PbsiCopy, PbsiSyncMetadata
+    };
 }

@@ -1,6 +1,5 @@
-﻿namespace UniqueDb.ConnectionProvider.Tests.DataGeneration
+﻿namespace UniqueDb.ConnectionProvider.Tests.DataGeneration;
+
+public class DataAnnotationGenerationTests
 {
-    public class DataAnnotationGenerationTests
-    {
-    }
 }

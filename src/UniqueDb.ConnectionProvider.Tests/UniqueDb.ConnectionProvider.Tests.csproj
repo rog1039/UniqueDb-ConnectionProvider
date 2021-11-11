@@ -1,16 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <RootNamespace>UniqueDb.ConnectionProvider.Tests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="AutoFixture" Version="4.17.0" />
-      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
       <PackageReference Include="Microsoft.SqlServer.Types" Version="14.0.1016.290" />
       <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-      <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+      <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
       <PackageReference Include="Xbehave" Version="2.4.1" />
     </ItemGroup>
 

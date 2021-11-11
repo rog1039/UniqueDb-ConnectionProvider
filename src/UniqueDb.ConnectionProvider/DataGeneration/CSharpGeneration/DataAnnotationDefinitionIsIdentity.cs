@@ -1,10 +1,9 @@
-namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration
+namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
+
+public class DataAnnotationDefinitionIsIdentity : DataAnnotationDefinitionBase
 {
-    public class DataAnnotationDefinitionIsIdentity : DataAnnotationDefinitionBase
+    public override string ToAttributeString()
     {
-        public override string ToAttributeString()
-        {
-            return "[DatabaseGenerated(DatabaseGeneratedOption.Identity)]";
-        }
+        return "[DatabaseGenerated(DatabaseGeneratedOption.Identity)]";
     }
 }

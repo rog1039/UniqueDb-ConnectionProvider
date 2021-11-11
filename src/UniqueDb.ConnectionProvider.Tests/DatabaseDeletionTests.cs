@@ -1,26 +1,25 @@
 using Xbehave;
 
-namespace UniqueDb.ConnectionProvider.Tests
+namespace UniqueDb.ConnectionProvider.Tests;
+
+public class DatabaseDeletionTests
 {
-    public class DatabaseDeletionTests
+    [Scenario]
+    public void ShouldDispose()
     {
-        [Scenario]
-        public void ShouldDispose()
-        {
-            var options = new UniqueDbConnectionProviderOptions("ws2012sqlexp1\\sqlexpress", "autodisposedatabase");
-            var connectionProvider = new UniqueDbConnectionProvider(options);
+        var options            = new UniqueDbConnectionProviderOptions("ws2012sqlexp1\\sqlexpress", "autodisposedatabase");
+        var connectionProvider = new UniqueDbConnectionProvider(options);
 
-            "After creating a database"
-                ._(() => connectionProvider.CreateDatabase());
+        "After creating a database"
+            ._(() => connectionProvider.CreateDatabase());
 
-            "Disposing of the disposable provided by the ToSelfDeletingDisposable extension method should delete the database"
-                ._(() =>
+        "Disposing of the disposable provided by the ToSelfDeletingDisposable extension method should delete the database"
+            ._(() =>
+            {
+                using (var lifecycle = connectionProvider.ToSelfDeletingDisposable())
                 {
-                    using (var lifecycle = connectionProvider.ToSelfDeletingDisposable())
-                    {
-                        var result = connectionProvider.ExecuteScalar<int>("SELECT 1 ");
-                    }
-                });
-        }
+                    var result = connectionProvider.ExecuteScalar<int>("SELECT 1 ");
+                }
+            });
     }
 }
