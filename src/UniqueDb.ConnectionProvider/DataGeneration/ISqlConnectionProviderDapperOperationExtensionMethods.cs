@@ -1,4 +1,5 @@
 using Dapper;
+using Microsoft.Data.SqlClient;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration;
 
@@ -36,9 +37,12 @@ public static class ISqlConnectionProviderDapperOperationExtensionMethods
 
     }
 
-    public static void BulkInsert<T>(this ISqlConnectionProvider sqlConnectionProvider, IList<T> list,
-                                     string                      tableName,             string   schemaName = "dbo")
+    public static void BulkInsert<T>(this ISqlConnectionProvider sqlConnectionProvider, 
+                                     IList<T> list,
+                                     string                      tableName,
+                                     string   schemaName = "dbo",
+                                     SqlBulkCopyOptions options = SqlBulkCopyOptions.Default)
     {
-        SqlConnectionProviderBulkCopyInsert.BulkInsert(sqlConnectionProvider, list, tableName, schemaName);
+        SqlConnectionProviderBulkCopyInsert.BulkInsert(sqlConnectionProvider, list, tableName, schemaName, options);
     }
 }

@@ -26,6 +26,11 @@ public class InformationSchemaColumn
     public string DOMAIN_SCHEMA            { get; set; }
     public string DOMAIN_NAME              { get; set; }
 
+    public string GetSqlDataTypeStringWithNullable()
+    {
+        return GetSqlDataTypeString() + (IS_NULLABLE== "NO" ? " NOT NULL" : " NULL");
+    }
+
     public string GetSqlDataTypeString()
     {
         switch (DATA_TYPE.ToLower())

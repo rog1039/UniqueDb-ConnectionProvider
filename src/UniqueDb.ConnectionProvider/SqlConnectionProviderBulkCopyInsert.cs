@@ -11,12 +11,14 @@ public static class SqlConnectionProviderBulkCopyInsert
     public static void BulkInsert<T>(ISqlConnectionProvider sqlConnectionProvider, 
                                      IList<T>               list, 
                                      string                 tableName, 
-                                     string                 schemaName ="dbo"
+                                     string                 schemaName ="dbo", 
+                                     SqlBulkCopyOptions options = SqlBulkCopyOptions.Default
     )
     {
         if (list.Count == 0) return;
         var dataTable = CreateDataTable(list);
-        ExecuteBulkCopy(sqlConnectionProvider, schemaName, tableName, dataTable);
+        ExecuteBulkCopy(sqlConnectionProvider, schemaName, tableName, dataTable, options);
+        Console.WriteLine($"Insert {dataTable.Rows.Count} rows.");
     }
 
     private static DataTable CreateDataTable<T>(IList<T> list)
@@ -67,9 +69,10 @@ public static class SqlConnectionProviderBulkCopyInsert
     public static void ExecuteBulkCopy(ISqlConnectionProvider sqlConnectionProvider, 
                                        string                 schemaName, 
                                        string                 tableName, 
-                                       DataTable              dataTable)
+                                       DataTable              dataTable,
+                                       SqlBulkCopyOptions bulkCopyOptions = SqlBulkCopyOptions.Default)
     {
-        using (var sqlBulkCopy = new SqlBulkCopy(sqlConnectionProvider.GetSqlConnectionString()))
+        using (var sqlBulkCopy = new SqlBulkCopy(sqlConnectionProvider.GetSqlConnectionString(), bulkCopyOptions))
         {
             schemaName = schemaName.BracketizeSafe();
             tableName  = tableName.BracketizeSafe();
