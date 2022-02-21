@@ -14,8 +14,6 @@ public abstract class BaseSqlConnectionProvider : ISqlConnectionProvider, IEquat
 
     public virtual string GetSqlConnectionString() => GetSqlConnectionStringBuilder().ConnectionString;
 
-    public abstract SqlConnectionStringBuilder GetSqlConnectionStringBuilder();
-
     public virtual DbConnection GetSqlConnection()
     {
         var builder = GetSqlConnectionStringBuilder();
@@ -113,4 +111,33 @@ public abstract class BaseSqlConnectionProvider : ISqlConnectionProvider, IEquat
     }
 
     public static IEqualityComparer<ISqlConnectionProvider> DatabaseNameServerNameComparer { get; } = new DatabaseNameServerNameEqualityComparer();
+
+    public virtual SqlConnectionStringBuilder GetSqlConnectionStringBuilder()
+    {
+        var builder = new SqlConnectionStringBuilder
+        {
+            DataSource          = ""+ServerName,
+            InitialCatalog      = DatabaseName,
+            IntegratedSecurity  = UseIntegratedAuthentication,
+            IPAddressPreference =SqlConnectionIPAddressPreference.IPv4First,
+            ConnectTimeout      = 6,
+            /*
+             * Added these pooling parameters because it seems in the .net 6 release we might not be pooling??
+             * Update: This seems to have helped from what I can tell. I no longer have random queries taking
+             * 1-7 seconds per exeuction. I did about 100 calls per endpoint by clicking around part search
+             * and none were high. I think P99 was 660 ms whereas before this change P99 was 4,000 ms.
+             */
+            Pooling     = true,
+            MinPoolSize = 10,
+            // CommandTimeout = 3,
+            Encrypt = false
+        };
+
+        if (UseIntegratedAuthentication) return builder;
+
+        builder.UserID   = UserName;
+        builder.Password = Password;
+
+        return builder;
+    }
 }

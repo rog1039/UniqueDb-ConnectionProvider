@@ -39,24 +39,24 @@ public class UniqueDbConnectionProvider : BaseSqlConnectionProvider
         return generatedName;
     }
 
-    /// <summary>
-    /// Returns the SqlConnectionStringBuilder for this unique Db.
-    /// </summary>
-    /// <returns></returns>
-    public override SqlConnectionStringBuilder GetSqlConnectionStringBuilder()
-    {
-        var connString = new SqlConnectionStringBuilder();
-        connString.DataSource     = Options.SqlServerName;
-        connString.InitialCatalog = DatabaseName;
-        if (Options.UseIntegratedSecurity)
-        {
-            connString.IntegratedSecurity = true;
-        }
-        else
-        {
-            connString.UserID   = Options.UserName;
-            connString.Password = Options.Password.ToString();
-        }
-        return connString;
-    }
+    // /// <summary>
+    // /// Returns the SqlConnectionStringBuilder for this unique Db.
+    // /// </summary>
+    // /// <returns></returns>
+    // public override SqlConnectionStringBuilder GetSqlConnectionStringBuilder()
+    // {
+    //     var connString = new SqlConnectionStringBuilder();
+    //     connString.DataSource     = Options.SqlServerName;
+    //     connString.InitialCatalog = DatabaseName;
+    //     if (Options.UseIntegratedSecurity)
+    //     {
+    //         connString.IntegratedSecurity = true;
+    //     }
+    //     else
+    //     {
+    //         connString.UserID   = Options.UserName;
+    //         connString.Password = Options.Password.ToString();
+    //     }
+    //     return connString;
+    // }
 }

@@ -38,8 +38,11 @@ public static class SqlConnectionProviderInsertExtensions
         }
     }
 
-    private static void BuildOutMyCommand(object     obj,       string tableName, IList<PropertyInfo> propertyInfos,
-                                          SqlCommand myCommand, bool   processColumnNames = true)
+    private static void BuildOutMyCommand(object     obj,       
+                                          string tableName,
+                                          IList<PropertyInfo> propertyInfos,
+                                          SqlCommand myCommand, 
+                                          bool   processColumnNames = true)
     {
         var columnList        = string.Join(", ", propertyInfos.Select(SqlTextFunctions.GetColumnNameFromPropertyInfo));
         var sqlParameterNames = string.Join(", ", propertyInfos.Select(SqlTextFunctions.GetParameterName));

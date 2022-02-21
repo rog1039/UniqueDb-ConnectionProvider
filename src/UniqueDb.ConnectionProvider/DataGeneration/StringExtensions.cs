@@ -48,7 +48,7 @@ public static class StringExtensions
 
         return s1.Length == s2.Length && s1.IndexOf(s2, StringComparison.InvariantCultureIgnoreCase) == 0;
     }
-    public static bool InsensitiveContains(this string input, string part)
+    public static bool UnDBInsensitiveContains(this string input, string part)
     {
         return CultureInfo.InvariantCulture.CompareInfo.IndexOf(input, part, CompareOptions.IgnoreCase) >= 0;
     }

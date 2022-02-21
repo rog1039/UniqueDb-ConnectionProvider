@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using UniqueDb.ConnectionProvider.Tracing.Hashing;
 
 namespace UniqueDb.ConnectionProvider.Tracing;
@@ -6,20 +7,20 @@ public class SqlExecutionTimingDto
 {
     public int Id { get; set; }
 
-    public DateTime                   StartTimestamp  { get; set; }
-    public DateTime?                  EndTimestamp    { get; set; }
-    public TimeSpan?                  Duration        => EndTimestamp - StartTimestamp;
-    public string                     CommandText     { get; set; }
-    public string                     CommandTextHash { get; set; }
-    public QueryExecutionRecordStatus QueryStatus     { get; set; }
+    public DateTime  StartTimestamp  { get; set; }
+    public DateTime? EndTimestamp    { get; set; }
+    
+    public TimeSpan? Duration        => EndTimestamp - StartTimestamp;
+    public string    CommandText     { get; set; }
+    [StringLength(512)]
+    public string    CommandTextHash { get; set; }
+
+    public QueryExecutionRecordStatus QueryStatus { get; set; }
 
     public string WindowsUser { get; set; }
     public string MachineName { get; set; }
 
-    public SqlExecutionTimingDto()
-    {
-            
-    }
+    public SqlExecutionTimingDto() { }
 
     public SqlExecutionTimingDto(QueryExecutionRecord @record)
     {

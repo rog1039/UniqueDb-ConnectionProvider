@@ -2,58 +2,72 @@ using StackExchange.Profiling.Internal;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration;
 
-public record FullTableName(string? SchemaName, string TableName);
+public record QualifiedTableName
+{
+    public string? SchemaName { get; init; }
+    public string  TableName  { get; init; }
+
+    public QualifiedTableName(string? schemaName, string tableName)
+    {
+        SchemaName = schemaName.IsNullOrWhiteSpace() ? null : schemaName;
+        TableName  = tableName;
+    }
+
+    public void Deconstruct(out string? SchemaName, out string TableName)
+    {
+        SchemaName = this.SchemaName;
+        TableName  = this.TableName;
+    }
+
+    public static QualifiedTableName Parse(string input) => FullTableNameParser.ParseFullTableName(input);
+
+    public string ToStringBrackets()   => $"[{SchemaName}].[{TableName}]";
+    public string ToStringNoBrackets() => $"{SchemaName}.{TableName}";
+};
 
 public class FullTableNameParser
 {
-    public static FullTableName ParseFullTableName(string input)
+    public static QualifiedTableName ParseFullTableName(string input)
     {
-        var    chars       = input.AsSpan();
-        var    inBracket   = false;
+        var chars = input.AsSpan();
+
+        bool insideBrackets    = false,
+             seenSeparatingDot = false;
+
         string name1       = String.Empty,
                name2       = String.Empty,
                currentName = String.Empty;
-        ;
+
         for (int i = 0; i < chars.Length; i++)
         {
             char current = chars[i];
-            if (current == '.')
+            switch (current)
             {
-                if (!inBracket)
+                case '.' when !insideBrackets:
                 {
+                    if (seenSeparatingDot) throw new Exception("Seen more than 1 separating dot in name: {input}");
+
                     //We are not in a bracket, so let's skip.
-                    name1 = currentName;
-                    currentName = String.Empty;
-                    continue;
+                    name1             = currentName;
+                    currentName       = String.Empty;
+                    seenSeparatingDot = true;
+                    break;
                 }
+                case '[':
+                    insideBrackets = true;
+                    break;
+                case ']':
+                    insideBrackets = false;
+                    break;
+                default:
+                    currentName += current;
+                    break;
             }
-
-            if (current == '[')
-            {
-                inBracket = true;
-                continue;
-            }
-
-            if (current == ']')
-            {
-                inBracket = false;
-                continue;
-            }
-
-            currentName += current;
         }
 
-        if (!name1.IsNullOrWhiteSpace())
-        {
-            name2 = currentName;
-            return new FullTableName(name1, name2);
-        }
+        if (name1.IsNullOrWhiteSpace()) return new QualifiedTableName(null, currentName);
 
-        return new FullTableName(null, currentName);
-    }
-
-    public enum ParserStatus
-    {
-        ReadingName,
+        name2 = currentName;
+        return new QualifiedTableName(name1, name2);
     }
 }

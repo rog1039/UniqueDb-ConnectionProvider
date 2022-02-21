@@ -56,6 +56,11 @@ public static class ExtensionMethods
         TruncateTable(tableReference.SqlConnectionProvider, tableReference.SchemaName, tableReference.TableName);
     }
 
+    public static void TruncateTable(this ISqlConnectionProvider sqlConnectionProvider, QualifiedTableName qualifiedTableName)
+    {
+        var truncateScript = $"TRUNCATE TABLE {qualifiedTableName.ToStringBrackets()}";
+        sqlConnectionProvider.Execute(truncateScript);
+    }
     public static void TruncateTable(this ISqlConnectionProvider sqlConnectionProvider, string schema, string table)
     {
         var truncateScript = $"TRUNCATE TABLE {schema}.{table}";

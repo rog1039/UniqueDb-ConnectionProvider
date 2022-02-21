@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using Serilog;
 using UniqueDb.ConnectionProvider.DataGeneration.Crud;
 
 namespace UniqueDb.ConnectionProvider.Tracing;
@@ -8,10 +9,13 @@ namespace UniqueDb.ConnectionProvider.Tracing;
 /// </summary>
 public class QueryExecutionPersistence
 {
+    private readonly ILogger                                  _logger;
     private readonly ISqlConnectionProvider                   _sqlConnectionProvider;
     private readonly string                                   _tableName;
     private readonly string                                   _schemaName;
     private readonly BlockingCollection<QueryExecutionRecord> _queryExecutionRecordBlockingCollection = new(8000);
+
+    private static readonly string[] ColumnsToIgnore = { "Id" };
 
     private SqlClientEventSourceListener? _listener;
     private bool                          _shouldProcessRecords;
@@ -19,8 +23,12 @@ public class QueryExecutionPersistence
     private readonly string WindowsUserName = Environment.UserName;
     private readonly string Machine         = Environment.MachineName;
 
-    public QueryExecutionPersistence(ISqlConnectionProvider sqlConnectionProvider, string tableName, string schemaName)
+    public QueryExecutionPersistence(ILogger                logger,
+                                     ISqlConnectionProvider sqlConnectionProvider,
+                                     string                 tableName,
+                                     string                 schemaName)
     {
+        _logger                = logger;
         _sqlConnectionProvider = sqlConnectionProvider;
         _tableName             = tableName;
         _schemaName            = schemaName;
@@ -73,12 +81,12 @@ public class QueryExecutionPersistence
                 insertRecord,
                 _tableName,
                 _schemaName,
-                columnsToIgnore: new []{"Id"}
+                ColumnsToIgnore
             );
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            _logger.Error(e, $"Error trying to save {nameof(SqlExecutionTimingDto)}");
         }
     }
 }

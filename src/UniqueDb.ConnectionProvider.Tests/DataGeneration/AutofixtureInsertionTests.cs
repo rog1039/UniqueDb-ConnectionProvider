@@ -218,7 +218,7 @@ public class TestInsertDeleteCaseResult
     }
     private static bool SkipException(Exception e)
     {
-        return e.Message.InsensitiveContains("constraint") || e.Message.InsensitiveContains("updatable");
+        return e.Message.UnDBInsensitiveContains("constraint") || e.Message.UnDBInsensitiveContains("updatable");
     }
 }
 
