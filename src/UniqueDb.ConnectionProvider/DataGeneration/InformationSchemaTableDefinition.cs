@@ -9,6 +9,14 @@ public class InformationSchemaTableDefinition
     public IList<InformationSchemaColumn> InformationSchemaColumns { get; set; }
     public IList<TableConstraintInfoDto>  TableConstraints         { get; set; }
 
+    public IList<InformationSchemaColumn> GetPrimaryKeyColumns()
+    {
+        return InformationSchemaColumns
+            .Where(IsColumnPrimaryKey)
+            .ToList();
+    }
+
+
     public bool IsColumnPrimaryKey(InformationSchemaColumn col)
     {
         if (col.TABLE_SCHEMA != InformationSchemaTable.TABLE_SCHEMA ||
@@ -82,14 +90,14 @@ public class DbTableName : IEquatable<DbTableName>
 
         var schema = names[0];
         var table  = string.Join(".", names.Skip(1));
-        Schema = StringExtensions.Debracketize(schema);
-        Name   = StringExtensions.Debracketize(table);
+        Schema = schema.Debracketize();
+        Name   = table.Debracketize();
     }
 
     public DbTableName(string schema, string name)
     {
-        Schema = StringExtensions.Debracketize(schema);
-        Name   = StringExtensions.Debracketize(name);
+        Schema = schema.Debracketize();
+        Name   = name.Debracketize();
     }
 
     public override string ToString()

@@ -4,14 +4,27 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 
 public static class CSharpClassGeneratorFromInformationSchema
 {
-    public static string CreateCSharpClass(SqlTableReference sqlTableReference, string className = default(string))
+    public static string CreateCSharpClass(SqlTableReference sqlTableReference, string? className = default(string))
     {
+        var tableName = className ?? sqlTableReference.TableName;
         var schemaColumns    = InformationSchemaMetadataExplorer.GetInformationSchemaColumns(sqlTableReference);
+        
+        return CreateCSharpClass(schemaColumns, tableName, CSharpClassTextGeneratorOptions.Default);
+    }
+
+    public static string CreateCSharpClass(IEnumerable<InformationSchemaColumn> schemaColumns, 
+                                           string tableName,
+                                           CSharpClassTextGeneratorOptions generatorOptions)
+    {
+        generatorOptions ??= CSharpClassTextGeneratorOptions.Default;
+        
         var sqlColumns       = schemaColumns.Select(InformationSchemaColumnToSqlColumn).ToList();
         var cSharpProperties = sqlColumns.Select(CSharpPropertyFactoryFromSqlColumn.ToCSharpProperty).ToList();
 
-        var tableName = className ?? sqlTableReference.TableName;
-        var classText = CSharpClassTextGenerator.GenerateClassText(tableName, cSharpProperties, CSharpClassTextGeneratorOptions.Default);
+        var classText =
+            CSharpClassTextGenerator.GenerateClassText(tableName, 
+                cSharpProperties, 
+                generatorOptions);
         return classText.Trim();
     }
 

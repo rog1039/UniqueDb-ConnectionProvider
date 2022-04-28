@@ -30,7 +30,7 @@ public static class InformationSchemaMetadataExplorer
         return informationSchemaColumns;
     }
 
-    public static IList<InformationSchemaTable> GetInformationSchemaTables(
+    public static IList<InformationSchemaTable> GetInformationSchemaTablesOnly(
         ISqlConnectionProvider sqlConnectionProvider)
     {
         var informationSchemaTables = sqlConnectionProvider

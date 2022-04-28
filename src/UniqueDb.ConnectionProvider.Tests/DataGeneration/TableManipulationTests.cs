@@ -51,7 +51,7 @@ public class TableManipulationTests
                 ._(() =>
                 {
                     var tableSchemas =
-                        InformationSchemaMetadataExplorer.GetInformationSchemaTables(targetSqlConnectionProvider);
+                        InformationSchemaMetadataExplorer.GetInformationSchemaTablesOnly(targetSqlConnectionProvider);
                     tableSchemas.Count.Should().Be(1);
                     tableSchemas[0].TABLE_NAME.Should().Be("Person");
                 });
@@ -82,7 +82,7 @@ public class TableManipulationTests
                     targetSqlConnectionProvider, "dbo.Person");
                 TableManipulation.CopyTable(sourceSqlTableReference, targetSqlTableReference);
                 var tableSchemas =
-                    InformationSchemaMetadataExplorer.GetInformationSchemaTables(targetSqlConnectionProvider);
+                    InformationSchemaMetadataExplorer.GetInformationSchemaTablesOnly(targetSqlConnectionProvider);
                 tableSchemas.Count.Should().Be(1);
                 tableSchemas[0].TABLE_NAME.Should().Be("Person");
             });
@@ -99,7 +99,7 @@ public class TableManipulationTests
                 ._(() =>
                 {
                     var tableSchemas =
-                        InformationSchemaMetadataExplorer.GetInformationSchemaTables(targetSqlConnectionProvider);
+                        InformationSchemaMetadataExplorer.GetInformationSchemaTablesOnly(targetSqlConnectionProvider);
                     tableSchemas.Count.Should().Be(0);
                 });
         }

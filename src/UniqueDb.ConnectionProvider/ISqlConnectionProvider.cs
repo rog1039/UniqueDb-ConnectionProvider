@@ -26,7 +26,7 @@ public static class SqlConnectionProviderExtensions
 {
     public static string ServerNameWithDbName(this ISqlConnectionProvider sqlConnectionProvider)
     {
-        return $"{sqlConnectionProvider.ServerName}.{sqlConnectionProvider.DatabaseName}";
+        return $"{sqlConnectionProvider.ServerName}\\{sqlConnectionProvider.DatabaseName}";
     }
 
     public static SqlConnection ToSqlConnection(this ISqlConnectionProvider provider) =>

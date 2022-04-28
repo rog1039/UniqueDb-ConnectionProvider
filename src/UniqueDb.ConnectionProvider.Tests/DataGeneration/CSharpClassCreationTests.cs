@@ -1,10 +1,12 @@
 ﻿using FluentAssertions;
+using NUnit.Framework;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 using Xunit;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration;
 
+[TestFixture]
 public class CSharpClassCreationUsingInformationSchemaTests
 {
     private const string TableName = "HumanResources.Employee";
@@ -82,6 +84,7 @@ public class CSharpClassCreationUsingSqlDescribeResultSetTests
     }
 }
 
+[TestFixture]
 public class CSharpClassCreationTests
 {
 
@@ -268,5 +271,60 @@ GROUP BY pb.Company
                 Console.WriteLine("Failures:  {0}", errorCount);
                 errorCount.Should().Be(0);
             });
+    }
+
+    [TestCase()]
+    public async Task BuildClassesForEntirePbsiDatabase()
+    {
+        /*
+         * Two properties to tweak:
+         *  - Do we include the ValidFrom/ValidTo temporal columns
+         *  - Do we include the StringLength, Range, etc. attributes
+         */
+        var includeTemporalColumns = true;
+        var includeAttributes      = false;
+        
+        var scp = new StaticSqlConnectionProvider("WS2016Sql",
+            "PbsiS2STargetTemporal2");
+        
+        await GeneratePbsiDatabaseTypes(scp, includeAttributes, includeTemporalColumns);
+    }
+
+    private static async Task GeneratePbsiDatabaseTypes(StaticSqlConnectionProvider scp,
+                                                        bool includeAttributes, bool includeTemporalColumns)
+    {
+        var generatorOptions = new CSharpClassTextGeneratorOptions()
+            {IncludePropertyAnnotationAttributes = includeAttributes};
+
+        var tableDefinitions = await InformationSchemaMetadataExplorer.GetInformationSchemaTableDefinitions(scp);
+        foreach (var tableDefinition in tableDefinitions)
+        {
+            if (string.Equals(tableDefinition.InformationSchemaTable.TABLE_SCHEMA, "PbsiSf",
+                    StringComparison.CurrentCultureIgnoreCase))
+                continue;
+
+            var columns = tableDefinition.InformationSchemaColumns;
+            if (!includeTemporalColumns)
+            {
+                columns = columns.Where(z => !z.COLUMN_NAME.InsensitiveEquals("validto")
+                                          && !z.COLUMN_NAME.InsensitiveEquals("validfrom")
+                    )
+                    .ToList();
+            }
+
+            var tableName = tableDefinition.InformationSchemaTable.TABLE_NAME
+                .Replace(".", "")
+                .Replace("$", "_");
+
+            if (tableName.EndsWith("_History", StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            var cSharpClass = CSharpClassGeneratorFromInformationSchema.CreateCSharpClass(
+                columns,
+                tableName,
+                generatorOptions
+            );
+            Console.WriteLine(cSharpClass);
+        }
     }
 }

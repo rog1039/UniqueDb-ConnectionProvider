@@ -10,7 +10,7 @@ public class InformationSchemaMetadataExplorerTests
     public void GetInformationSchemaTablesForAllTables()
     {
         var schemaTables = InformationSchemaMetadataExplorer
-            .GetInformationSchemaTables(SqlConnectionProviders.AdventureWorksDb)
+            .GetInformationSchemaTablesOnly(SqlConnectionProviders.AdventureWorksDb)
             .OrderBy(x => x.TABLE_SCHEMA)
             .ThenBy(x => x.TABLE_NAME);
         Console.WriteLine(schemaTables.ToStringTable());
