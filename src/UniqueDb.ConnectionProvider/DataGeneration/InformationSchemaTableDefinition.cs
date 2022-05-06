@@ -42,9 +42,9 @@ public class InformationSchemaTableDefinition
     }
 }
 
-public class DbTableName : IEquatable<DbTableName>
+public class DbTableName3 : IEquatable<DbTableName3>
 {
-    public bool Equals(DbTableName? other)
+    public bool Equals(DbTableName3? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
@@ -57,7 +57,7 @@ public class DbTableName : IEquatable<DbTableName>
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return Equals((DbTableName) obj);
+        return Equals((DbTableName3) obj);
     }
 
     public override int GetHashCode()
@@ -68,12 +68,12 @@ public class DbTableName : IEquatable<DbTableName>
         return hashCode.ToHashCode();
     }
 
-    public static bool operator ==(DbTableName? left, DbTableName? right)
+    public static bool operator ==(DbTableName3? left, DbTableName3? right)
     {
         return Equals(left, right);
     }
 
-    public static bool operator !=(DbTableName? left, DbTableName? right)
+    public static bool operator !=(DbTableName3? left, DbTableName3? right)
     {
         return !Equals(left, right);
     }
@@ -81,9 +81,9 @@ public class DbTableName : IEquatable<DbTableName>
     public string Schema { get; set; }
     public string Name   { get; set; }
 
-    public DbTableName() { }
+    public DbTableName3() { }
 
-    public DbTableName(string fullName)
+    public DbTableName3(string fullName)
     {
         var names = fullName.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
         names.Length.Should().BeGreaterOrEqualTo(2);
@@ -94,7 +94,7 @@ public class DbTableName : IEquatable<DbTableName>
         Name   = table.Debracketize();
     }
 
-    public DbTableName(string schema, string name)
+    public DbTableName3(string schema, string name)
     {
         Schema = schema.Debracketize();
         Name   = name.Debracketize();

@@ -12,7 +12,7 @@ public static class CSharpPropertyFactoryFromSqlColumn
         cSharpProperty.IsNullable        = sqlColumn.IsNullable;
 
         cSharpProperty.DataType = SqlTypes.IsSystemType(sqlColumn.SqlDataType.TypeName)
-            ? SqlTypeStringToClrTypeStringConverter.GetClrDataType(sqlColumn.SqlDataType.TypeName)
+            ? SqlToClrTypeConverter.GetClrTypeName(sqlColumn.SqlDataType.TypeName)
             : sqlColumn.SqlDataType.TypeName;
                 
             

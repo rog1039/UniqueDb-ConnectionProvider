@@ -54,7 +54,7 @@ public class SqlColumnToCSharpPropertyGeneratorTests
                 foreach (var sqlType in sqlDataTypeList)
                 {
                     var clrType =
-                        SqlTypeStringToClrTypeStringConverter.GetClrDataType(sqlType);
+                        SqlToClrTypeConverter.GetClrTypeName(sqlType);
 
                 }
             });
