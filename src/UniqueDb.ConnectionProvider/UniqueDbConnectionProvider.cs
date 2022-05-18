@@ -18,7 +18,7 @@ public class UniqueDbConnectionProvider : BaseSqlConnectionProvider
     {
         Options                     = options;
         ServerName                  = Options.SqlServerName;
-        DatabaseNameFormatString    = "{0}-({1})-{2:n}";
+        DatabaseNameFormatString    = "{0}-({1})-{2}";
         DatabaseName                = GenerateDbName();
         UserName                    = options.UserName;
         Password                    = options.Password;
@@ -29,7 +29,7 @@ public class UniqueDbConnectionProvider : BaseSqlConnectionProvider
     {
         var prefix    = Options.DatabaseNamePrefix;
         var timestamp = Options.IncludeTimeStamp ? DateTime.Now.ToString(Options.TimeStampFormat) : string.Empty;
-        var guid      = Guid.NewGuid();
+        var guid      = Nanoid.Nanoid.Generate(size: 5);
 
         var generatedName = string.Format(DatabaseNameFormatString,
                                           prefix,
