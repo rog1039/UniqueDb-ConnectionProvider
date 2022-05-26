@@ -1,3 +1,5 @@
+using UniqueDb.ConnectionProvider.Converters;
+
 namespace UniqueDb.ConnectionProvider.DataGeneration;
 
 public static class ClrTypeToSqlTypeConverter
@@ -5,9 +7,9 @@ public static class ClrTypeToSqlTypeConverter
     public static IDictionary<string, SqlType> DefaultClrToSqlTypeMap { get; set; } = new Dictionary<string, SqlType>()
     {
         //Text
-        { "char", SqlTypeFactory.NVarChar(new SqlTextualDataTypeOptions(1))},
-        { "string", SqlTypeFactory.NVarChar(new SqlTextualDataTypeOptions(4000)) },
-        { "char[]", SqlTypeFactory.NVarChar(new SqlTextualDataTypeOptions(4000)) },
+        { "char", SqlTypeFactory.NVarChar(new SqlTextLength(1))},
+        { "string", SqlTypeFactory.NVarChar(new SqlTextLength(4000)) },
+        { "char[]", SqlTypeFactory.NVarChar(new SqlTextLength(4000)) },
 
         //Numeric
         { "boolean", SqlTypeFactory.Bit() },

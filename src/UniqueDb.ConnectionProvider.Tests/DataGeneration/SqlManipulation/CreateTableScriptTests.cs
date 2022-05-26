@@ -13,16 +13,16 @@ public class SchemaTableDefCreateTableScriptTests : UnitTestBaseWithConsoleRedir
     {
         var tableDef = InformationSchemaTableDefinitionFromJson.SampleTable();
         var createAnywayScript =
-            InfSchemaToSqlDmlCreateStatementGenerator.GenerateCreateTableScript(
+            SISToSqlDmlCreateStatementGenerator.GenerateCreateTableScript(
                 tableDef, CreateIfExistsModification.CreateAnyway);
             
         var dropAndRecreateScript =
-            InfSchemaToSqlDmlCreateStatementGenerator.GenerateCreateTableScript(
+            SISToSqlDmlCreateStatementGenerator.GenerateCreateTableScript(
                 tableDef, CreateIfExistsModification.DropAndRecreate);
 
         var createOnlyIfNotExistsScript =
-            InfSchemaToSqlDmlCreateStatementGenerator.GenerateCreateTableScript(
-                tableDef, CreateIfExistsModification.PreventCreation);
+            SISToSqlDmlCreateStatementGenerator.GenerateCreateTableScript(
+                tableDef, CreateIfExistsModification.CreateIfNotExists);
 
         Console.WriteLine(createAnywayScript);
         Console.WriteLine(dropAndRecreateScript);

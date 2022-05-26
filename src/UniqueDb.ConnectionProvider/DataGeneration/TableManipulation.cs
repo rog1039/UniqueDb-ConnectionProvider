@@ -4,10 +4,10 @@ namespace UniqueDb.ConnectionProvider.DataGeneration;
 
 public static class TableManipulation
 {
-    public static void CopyTable(SqlTableReference sourceTable, SqlTableReference targetTable)
+    public static void CopyTableStructure(SqlTableReference sourceTable, SqlTableReference targetTable)
     {
-        var infschTable       = InformationSchemaMetadataExplorer.GetInformationSchemaTableDefinition(sourceTable);
-        var createTableScript = InfSchemaToSqlDmlCreateStatementGenerator.GenerateCreateTableScript(infschTable);
+        var sisTable       = InformationSchemaMetadataExplorer.GetInformationSchemaTableDefinition(sourceTable);
+        var createTableScript = SISToSqlDmlCreateStatementGenerator.GenerateCreateTableScript(sisTable);
         targetTable.SqlConnectionProvider.Execute(createTableScript);
     }
 

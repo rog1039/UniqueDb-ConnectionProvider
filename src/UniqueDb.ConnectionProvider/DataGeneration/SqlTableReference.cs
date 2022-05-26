@@ -15,9 +15,10 @@ public class SqlTableReference
         if (string.IsNullOrWhiteSpace(qualifiedTableName))
             throw new ArgumentException("Value cannot be null or whitespace.", nameof(qualifiedTableName));
 
-        var fullTableName = FullTableNameParser.ParseFullTableName(qualifiedTableName);
-        if (fullTableName.SchemaName == null) throw new Exception("Schema name must be provided.");
-        (SchemaName, TableName) = fullTableName;
+        var fullTableName = DbTableNameWithNullableSchemaParser.ParseFullTableName(qualifiedTableName);
+        
+        SchemaName = fullTableName.SchemaName ?? throw new Exception("Schema name must be provided.");
+        TableName  = fullTableName.TableName;
 
     }
 

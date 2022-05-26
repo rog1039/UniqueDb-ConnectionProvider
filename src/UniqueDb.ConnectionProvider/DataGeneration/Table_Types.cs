@@ -2,6 +2,6 @@ namespace UniqueDb.ConnectionProvider.DataGeneration;
 
 public static class TableTypes
 {
-    public static string BaseTable = "BASE TABLE";
-    public static string View      = "VIEW";
+    public const string BaseTable = "BASE TABLE";
+    public const string View      = "VIEW";
 }

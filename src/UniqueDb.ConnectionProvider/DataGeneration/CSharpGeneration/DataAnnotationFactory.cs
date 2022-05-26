@@ -1,6 +1,6 @@
 namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 
-public class DataAnnotationFactory
+public static class DataAnnotationFactory
 {
     public static IEnumerable<DataAnnotationDefinitionBase> CreateDataAnnotations(SqlColumn sqlColumn)
     {

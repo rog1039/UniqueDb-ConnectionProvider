@@ -44,7 +44,7 @@ public class TableManipulationTests
                 {
                     targetSqlTableReference = new SqlTableReference(
                         targetSqlConnectionProvider, "dbo.Person");
-                    TableManipulation.CopyTable(sourceSqlTableReference, targetSqlTableReference);
+                    TableManipulation.CopyTableStructure(sourceSqlTableReference, targetSqlTableReference);
                 });
 
             "Then there should be a copy of the table at the target DB"
@@ -80,7 +80,7 @@ public class TableManipulationTests
                     sourceSqlConnectionProvider, "Person.Person");
                 targetSqlTableReference = new SqlTableReference(
                     targetSqlConnectionProvider, "dbo.Person");
-                TableManipulation.CopyTable(sourceSqlTableReference, targetSqlTableReference);
+                TableManipulation.CopyTableStructure(sourceSqlTableReference, targetSqlTableReference);
                 var tableSchemas =
                     InformationSchemaMetadataExplorer.GetInformationSchemaTablesOnly(targetSqlConnectionProvider);
                 tableSchemas.Count.Should().Be(1);

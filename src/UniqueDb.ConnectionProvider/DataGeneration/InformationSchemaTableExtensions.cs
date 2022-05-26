@@ -4,12 +4,12 @@ namespace UniqueDb.ConnectionProvider.DataGeneration;
 
 public static class InformationSchemaTableExtensions
 {
-    public static SqlTableReference ToSqlTableReference(this InformationSchemaTable informationSchemaTable,
+    public static SqlTableReference ToSqlTableReference(this SISTable sisTable,
                                                         ISqlConnectionProvider      sqlConnectionProvider)
     {
         var sqlTableReference = new SqlTableReference(sqlConnectionProvider,
-                                                      informationSchemaTable.TABLE_SCHEMA, 
-                                                      informationSchemaTable.TABLE_NAME);
+                                                      sisTable.TABLE_SCHEMA, 
+                                                      sisTable.TABLE_NAME);
         return sqlTableReference;
     }
 }

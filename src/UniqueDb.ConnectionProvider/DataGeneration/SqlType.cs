@@ -1,14 +1,14 @@
-﻿using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
-
-namespace UniqueDb.ConnectionProvider.DataGeneration;
+﻿namespace UniqueDb.ConnectionProvider.DataGeneration;
 
 public class SqlType
 {
     public string TypeName          { get; set; }
+    
     public int?   MaximumCharLength { get; set; }
-    public string MaximumCharLengthString => MaximumCharLength == null 
+    public string? MaximumCharLengthString => MaximumCharLength == null 
         ? null 
         : ((MaximumCharLength.Value == -1) ? "Max" : MaximumCharLength.ToString());
+    
     public int? NumericPrecision           { get; set; }
     public int? NumericScale               { get; set; }
     public int? FractionalSecondsPrecision { get; set; }
@@ -47,6 +47,75 @@ public class SqlType
 
     public override string ToString()
     {
+        switch (TypeName.ToLower())
+        {
+            /*
+             * Exact numerics
+             */
+            case "numeric":
+            case "decimal": return $"{TypeName}({NumericPrecision},{NumericScale})";
+
+            
+            /*
+             * Approximate Numerics
+             */
+            case "real":
+            case "float": return $"{TypeName}({Mantissa})";
+
+            
+            /*
+             * Just the type names
+             */
+            case "bit":
+            case "tinyint":
+            case "smallint":
+            case "int":
+            case "bigint":
+
+            case "date":
+            case "datetime":
+            case "smalldatetime":
+                
+            case "xml":
+            case "uniqueidentifier":
+            case "timestamp":
+            case "rowversion":
+                return TypeName;
+
+            
+            /*
+             * Date/Time...
+             */
+            case "datetime2":
+            case "datetimeoffset":
+            case "time":
+                return $"{TypeName}({FractionalSecondsPrecision})";
+
+            
+            /*
+             * With char lengths...
+             */
+            case "binary":
+            case "varbinary":
+                
+            case "char":
+            case "varchar":
+            case "nchar":
+            case "nvarchar":
+            {
+                var length = MaximumCharLength == -1 ? "MAX" : MaximumCharLength.ToString();
+                return $"{TypeName}({length})";
+            }
+            
+
+            default:
+                throw new InvalidDataException($"No cases defined to translate data type: {TypeName}.");
+        }
+    }
+
+    [Obsolete]
+    public string ToStringObsolete()
+    {
         if (SqlTypes.IsCharType(TypeName))
         {
             var charLength = MaximumCharLength.HasValue && MaximumCharLength.Value > 0
@@ -79,39 +148,5 @@ public class SqlType
         }
         return TypeName;
         throw new ArgumentException($"Conversion for the type {TypeName} is not defined.");
-    }
-}
-
-public class SqlTypeConverter
-{
-    public static SqlType FromInformationSchemaColumn(InformationSchemaColumn col)
-    {
-        if (SqlTypes.IsDateTime(col.DATA_TYPE))
-        {
-            return SqlType.DateTime(col.DATA_TYPE, col.DATETIME_PRECISION);
-        }
-        if (SqlTypes.IsApproximateNumeric(col.DATA_TYPE))
-        {
-            if (col.DATA_TYPE == "float") return SqlTypeFactory.Float(col.NUMERIC_PRECISION.Value);
-            if (col.DATA_TYPE == "real") return SqlTypeFactory.Real();
-        }
-        if (SqlTypes.IsExactNumeric(col.DATA_TYPE))
-        {
-            return SqlType.ExactNumericType(col.DATA_TYPE, col.NUMERIC_PRECISION, col.NUMERIC_PRECISION_RADIX);
-        }
-        if (SqlTypes.IsCharType(col.DATA_TYPE))
-        {
-            return SqlType.TextType(col.DATA_TYPE, col.CHARACTER_MAXIMUM_LENGTH);
-        }
-
-        if (col.DATA_TYPE.Equals("uniqueidentifier", StringComparison.InvariantCultureIgnoreCase))
-        {
-            return SqlType.Type(col.DATA_TYPE);
-        }
-        if (col.DATA_TYPE.Equals("varbinary", StringComparison.InvariantCultureIgnoreCase))
-        {
-            return SqlType.Type(col.DATA_TYPE);
-        }
-        throw new NotImplementedException($"Unknown type {col.DATA_TYPE}");
     }
 }

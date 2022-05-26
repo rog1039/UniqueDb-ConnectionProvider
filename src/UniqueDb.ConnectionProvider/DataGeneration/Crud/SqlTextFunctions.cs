@@ -13,8 +13,8 @@ public static class SqlTextFunctions
     public static string GetColumnNameFromPropertyInfo(PropertyInfo propertyInfo)
     {
         return UnUnderscoreColumnNames
-            ? propertyInfo.Name.Replace("_",        " ").Replace("Property", String.Empty).Bracketize()
-            : propertyInfo.Name.Replace("Property", String.Empty).Bracketize();
+            ? propertyInfo.Name.Replace("_",        " ").Replace("Property", String.Empty).BracketizeSafe()
+            : propertyInfo.Name.Replace("Property", String.Empty).BracketizeSafe();
     }
     public static string GetSetClauseParameterName(PropertyInfo   propertyInfo) => ("@sc" + propertyInfo.Name);
     public static string GetWhereClauseParameterName(PropertyInfo propertyInfo) => ("@wc" + propertyInfo.Name);

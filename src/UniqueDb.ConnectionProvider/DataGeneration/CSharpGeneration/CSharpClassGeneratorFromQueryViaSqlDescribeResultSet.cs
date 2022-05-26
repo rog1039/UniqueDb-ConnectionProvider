@@ -40,24 +40,17 @@ public static class CSharpClassGeneratorFromQueryViaSqlDescribeResultSet
 
                 try
                 {
-                    try
+                    if (SqlTypes.IsSpecialSystemType(describeResultSetRow.user_type_name))
                     {
-                        if (SqlTypes.IsSpecialSystemType(describeResultSetRow.user_type_name))
-                        {
-                            systemType = sqlTypeList
-                                .Single(x => x.system_type_id == describeResultSetRow.system_type_id
-                                          && x.user_type_id == describeResultSetRow.user_type_id);
-                        }
-                        else
-                        {
-                            systemType = sqlTypeList
-                                .Single(x => x.system_type_id == describeResultSetRow.system_type_id
-                                          && x.user_type_id == describeResultSetRow.system_type_id);
-                        }
+                        systemType = sqlTypeList
+                            .Single(x => x.system_type_id == describeResultSetRow.system_type_id
+                                      && x.user_type_id == describeResultSetRow.user_type_id);
                     }
-                    catch (Exception e)
+                    else
                     {
-                        Console.WriteLine(e);
+                        systemType = sqlTypeList
+                            .Single(x => x.system_type_id == describeResultSetRow.system_type_id
+                                      && x.user_type_id == describeResultSetRow.system_type_id);
                     }
                 }
                 catch (Exception e)
@@ -102,25 +95,4 @@ public static class CSharpClassGeneratorFromQueryViaSqlDescribeResultSet
     }
 
     private const string DescribeResultSetStoredProcedureName = "sp_describe_first_result_set";
-}
-
-public class DescribeResultSetContainer
-{
-    public DescribeResultSetContainer(DescribeResultSetRow describeResultSetRow, SqlSysType systemType)
-    {
-        DescribeResultSetRow = describeResultSetRow;
-        SystemType           = systemType;
-    }
-
-    public DescribeResultSetContainer(DescribeResultSetRow describeResultSetRow, SqlSysType userDefinedType, SqlSysType systemType)
-    {
-        DescribeResultSetRow = describeResultSetRow;
-        UserDefinedType      = userDefinedType;
-        SystemType           = systemType;
-    }
-
-    public DescribeResultSetRow DescribeResultSetRow { get; set; }
-    public SqlSysType           UserDefinedType      { get; set; }
-    public SqlSysType           SystemType           { get; set; }
-        
 }

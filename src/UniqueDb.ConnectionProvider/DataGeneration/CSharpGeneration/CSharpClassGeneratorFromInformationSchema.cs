@@ -12,7 +12,7 @@ public static class CSharpClassGeneratorFromInformationSchema
         return CreateCSharpClass(schemaColumns, tableName, CSharpClassTextGeneratorOptions.Default);
     }
 
-    public static string CreateCSharpClass(IEnumerable<InformationSchemaColumn> schemaColumns, 
+    public static string CreateCSharpClass(IEnumerable<SISColumn> schemaColumns, 
                                            string tableName,
                                            CSharpClassTextGeneratorOptions generatorOptions)
     {
@@ -28,7 +28,7 @@ public static class CSharpClassGeneratorFromInformationSchema
         return classText.Trim();
     }
 
-    public static SqlColumn InformationSchemaColumnToSqlColumn(InformationSchemaColumn column)
+    public static SqlColumn InformationSchemaColumnToSqlColumn(SISColumn column)
     {
         var sqlColumn = new SqlColumn()
         {
@@ -39,13 +39,13 @@ public static class CSharpClassGeneratorFromInformationSchema
         };
 
         var ambigiousSqlType = FromInformationSchemaColumn(column);
-        sqlColumn.SqlDataType = AmbigiousSqlTypeToSqlTypeConverter.Convert(ambigiousSqlType);
+        sqlColumn.SqlDataType = AmbiguousSqlTypeToSqlTypeConverter.Convert(ambigiousSqlType);
         return sqlColumn;
     }
 
-    private static AmbigiousSqlType FromInformationSchemaColumn(InformationSchemaColumn column)
+    private static AmbiguousSqlType FromInformationSchemaColumn(SISColumn column)
     {
-        var ambigiousSqlType = new AmbigiousSqlType()
+        var ambigiousSqlType = new AmbiguousSqlType()
         {
             TypeName                   = column.DATA_TYPE,
             NumericPrecision           = column.NUMERIC_PRECISION,

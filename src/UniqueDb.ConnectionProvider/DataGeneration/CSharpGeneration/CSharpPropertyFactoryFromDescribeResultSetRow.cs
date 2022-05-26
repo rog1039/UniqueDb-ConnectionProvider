@@ -1,3 +1,5 @@
+using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
+
 namespace UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 
 public static class CSharpPropertyFactoryFromDescribeResultSetRow

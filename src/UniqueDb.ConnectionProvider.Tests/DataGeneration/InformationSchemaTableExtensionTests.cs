@@ -1,4 +1,5 @@
 using FluentAssertions;
+using UniqueDb.ConnectionProvider.Converters;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 using Xunit;
@@ -11,19 +12,19 @@ public class InformationSchemaTableExtensionTests
     [Trait("Category", "Instant")]
     public void CreateSqlTableReferenceFromInformationSchemaTable_ShouldWork()
     {
-        InformationSchemaTable informationSchemaTable = null;
+        SISTable sisTable = null;
         var                    sqlConnectionProvider  = new StaticSqlConnectionProvider("", "");
 
         "Given a InformationSchemaTable"
             ._(() =>
             {
-                informationSchemaTable = InformationSchemaTableDefinitionFromJson.SampleTable().InformationSchemaTable;
+                sisTable = InformationSchemaTableDefinitionFromJson.SampleTable().InformationSchemaTable;
             });
 
         "Then we should be able to create a SqlTableReference from it"
             ._(() =>
             {
-                var sqlTableReference = informationSchemaTable.ToSqlTableReference(sqlConnectionProvider);
+                var sqlTableReference = sisTable.ToSqlTableReference(sqlConnectionProvider);
                 sqlTableReference.SchemaName.Should().Be("HumanResources");
                 sqlTableReference.TableName.Should().Be("Employee");
                 sqlTableReference.SqlConnectionProvider.GetSqlConnectionString()

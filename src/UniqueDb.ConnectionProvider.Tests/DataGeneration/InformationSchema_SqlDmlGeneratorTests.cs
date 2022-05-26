@@ -31,7 +31,7 @@ public class InformationSchema_SqlDmlGeneratorTests
     public void TestSampleCreateTableScript()
     {
         var tableDefinition = InformationSchemaTableDefinitionFromJson.SampleTable();
-        var script          = InfSchemaToSqlDmlCreateStatementGenerator.GenerateCreateTableScript(tableDefinition);
+        var script          = SISToSqlDmlCreateStatementGenerator.GenerateCreateTableScript(tableDefinition);
         Console.WriteLine(script);
     }
 }

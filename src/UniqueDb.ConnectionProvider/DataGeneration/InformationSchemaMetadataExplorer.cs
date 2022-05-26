@@ -4,7 +4,7 @@ namespace UniqueDb.ConnectionProvider.DataGeneration;
 
 public static class InformationSchemaMetadataExplorer
 {
-    public static (List<InformationSchemaTable> schemaTables, List<InformationSchemaColumn> schemaColumns)
+    public static (List<SISTable> schemaTables, List<SISColumn> schemaColumns)
         GetAllTableAndColumnInfoForDatabase(ISqlConnectionProvider sqlConnectionProvider)
     {
         var informationSchemaTables  = GetAllTables(sqlConnectionProvider);
@@ -12,29 +12,29 @@ public static class InformationSchemaMetadataExplorer
         return (informationSchemaTables, informationSchemaColumns);
     }
 
-    private static List<InformationSchemaTable> GetAllTables(ISqlConnectionProvider sqlConnectionProvider)
+    private static List<SISTable> GetAllTables(ISqlConnectionProvider sqlConnectionProvider)
     {
         var informationSchemaTables = sqlConnectionProvider
-            .Query<InformationSchemaTable>(
+            .Query<SISTable>(
                 "SELECT * FROM INFORMATION_SCHEMA.TABLES ORDER BY TABLE_SCHEMA, TABLE_NAME")
             .ToList();
         return informationSchemaTables;
     }
 
-    private static List<InformationSchemaColumn> GetAllColumns(ISqlConnectionProvider sqlConnectionProvider)
+    private static List<SISColumn> GetAllColumns(ISqlConnectionProvider sqlConnectionProvider)
     {
         var informationSchemaColumns = sqlConnectionProvider
-            .Query<InformationSchemaColumn>(
+            .Query<SISColumn>(
                 "SELECT * FROM INFORMATION_SCHEMA.COLUMNS ORDER BY TABLE_NAME, ORDINAL_POSITION")
             .ToList();
         return informationSchemaColumns;
     }
 
-    public static IList<InformationSchemaTable> GetInformationSchemaTablesOnly(
+    public static IList<SISTable> GetInformationSchemaTablesOnly(
         ISqlConnectionProvider sqlConnectionProvider)
     {
         var informationSchemaTables = sqlConnectionProvider
-            .Query<InformationSchemaTable>("SELECT * FROM INFORMATION_SCHEMA.TABLES")
+            .Query<SISTable>("SELECT * FROM INFORMATION_SCHEMA.TABLES")
             .ToList();
         return informationSchemaTables;
     }
@@ -49,17 +49,17 @@ public static class InformationSchemaMetadataExplorer
         return definition;
     }
 
-    public static InformationSchemaTable GetInformationSchemaTable(SqlTableReference sqlTableReference)
+    public static SISTable GetInformationSchemaTable(SqlTableReference sqlTableReference)
     {
         var sqlQuery =
             InformationSchemaMetadataSqlQueryGenerator.GetInformationSchemaTableSqlQuery(sqlTableReference);
-        var tables = sqlTableReference.SqlConnectionProvider.Query<InformationSchemaTable>(sqlQuery).ToList();
+        var tables = sqlTableReference.SqlConnectionProvider.Query<SISTable>(sqlQuery).ToList();
 
         CheckOnlyOneTableWasReturned(tables);
         return tables.SingleOrDefault();
     }
 
-    private static void CheckOnlyOneTableWasReturned(List<InformationSchemaTable> infSchTable)
+    private static void CheckOnlyOneTableWasReturned(List<SISTable> infSchTable)
     {
         if (infSchTable.Count > 1)
         {
@@ -68,11 +68,11 @@ public static class InformationSchemaMetadataExplorer
         }
     }
 
-    public static IList<InformationSchemaColumn> GetInformationSchemaColumns(SqlTableReference sqlTableReference)
+    public static IList<SISColumn> GetInformationSchemaColumns(SqlTableReference sqlTableReference)
     {
         var sqlQuery =
             InformationSchemaMetadataSqlQueryGenerator.GetInformationSchemaColumnsSqlQuery(sqlTableReference);
-        var tableColumns = sqlTableReference.SqlConnectionProvider.Query<InformationSchemaColumn>(sqlQuery)
+        var tableColumns = sqlTableReference.SqlConnectionProvider.Query<SISColumn>(sqlQuery)
             .ToList();
         return tableColumns;
     }
@@ -111,7 +111,7 @@ public static class InformationSchemaMetadataExplorer
             var tableDef = new InformationSchemaTableDefinition()
             {
                 InformationSchemaTable   = table,
-                InformationSchemaColumns = columns.Value ?? new List<InformationSchemaColumn>(),
+                InformationSchemaColumns = columns.Value ?? new List<SISColumn>(),
                 TableConstraints         = constraints.Value ?? new List<TableConstraintInfoDto>()
             };
             results.Add(tableDef);

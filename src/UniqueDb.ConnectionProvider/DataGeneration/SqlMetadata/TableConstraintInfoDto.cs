@@ -2,20 +2,23 @@ namespace UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 
 public class TableConstraintInfoDto
 {
-    public string TABLE_CATALOG      { get; set; }
-    public string TABLE_SCHEMA       { get; set; }
-    public string TABLE_NAME         { get; set; }
-    public string CONSTRAINT_TYPE    { get; set; }
-    public string IS_DEFERRABLE      { get; set; }
-    public string INITIALLY_DEFERRED { get; set; }
-    public string CONSTRAINT_NAME    { get; set; }
-    public string COLUMN_NAME        { get; set; }
-    public int    ORDINAL_POSITION   { get; set; }
-    public string DATA_TYPE          { get; set; }
+   public int Id          { get; set; }
+   public int SchemaDefId { get; set; }
 
-    public const string PrimaryKeyConstraintType = @"PRIMARY KEY";
+   public string TABLE_CATALOG      { get; set; }
+   public string TABLE_SCHEMA       { get; set; }
+   public string TABLE_NAME         { get; set; }
+   public string CONSTRAINT_TYPE    { get; set; }
+   public string IS_DEFERRABLE      { get; set; }
+   public string INITIALLY_DEFERRED { get; set; }
+   public string CONSTRAINT_NAME    { get; set; }
+   public string COLUMN_NAME        { get; set; }
+   public int    ORDINAL_POSITION   { get; set; }
+   public string DATA_TYPE          { get; set; }
 
-    public const string SqlQuery = @"
+   public const string PrimaryKeyConstraintType = @"PRIMARY KEY";
+
+   public const string SqlQuery = @"
 SELECT
     --tableConstraint.CONSTRAINT_CATALOG,
     --tableConstraint.CONSTRAINT_SCHEMA,
