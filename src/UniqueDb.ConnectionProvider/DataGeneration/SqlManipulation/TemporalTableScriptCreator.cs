@@ -1,3 +1,6 @@
+using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
+using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
+
 namespace UniqueDb.ConnectionProvider.DataGeneration;
 
 public class SqlTableForTemporal
@@ -5,9 +8,11 @@ public class SqlTableForTemporal
    public string Schema { get; set; }
    public string Name   { get; set; }
 
-   public IList<SqlColumnForTemporal> Columns { get; set; }
+   public IList<SqlColumnForTemporal> Columns { get; set; } = new List<SqlColumnForTemporal>();
 
    public bool HasPrimaryKey() => Columns.Any(z => z.IsPrimaryKey == true);
+
+   public IList<IndexAnnotation> IndexAnnotations { get; set; } = new List<IndexAnnotation>();
 }
 
 public class SqlColumnForTemporal
@@ -48,6 +53,7 @@ PERIOD FOR SYSTEM_TIME (ValidFrom,ValidTo),";
       var temporalColumns      = GetTemporalColumns(sqlTable);
       var primaryKeyConstraint = CreatePrimaryKeyConstraint(sqlTable, tableName);
       var historyTableLink     = CreateHistoryTableLink(sqlTable, schemaName, tableName);
+      var indexCreation        = CreateIndexText(sqlTable, dbTableName);
 
       /*
        * A SQL temporal table is made up of:
@@ -61,9 +67,22 @@ CREATE TABLE {dbTableName} (
 {regularColumns}{temporalColumns}
 {primaryKeyConstraint}
 )
-{historyTableLink};"
+{historyTableLink};
+
+{indexCreation}"
          .RemoveEmptyLines();
       return script;
+   }
+
+   private static string CreateIndexText(SqlTableForTemporal sqlTableForTemporal, DbTableName dbTableName)
+   {
+      if(sqlTableForTemporal.IndexAnnotations.Count == 0) return String.Empty;
+      
+      var newIndexStatements = sqlTableForTemporal
+         .IndexAnnotations
+         .Select(ia => IndexDmlScriptCreator.GetScript(ia))
+         .StringJoin(Environment.NewLine);
+      return $"{newIndexStatements}";
    }
 
    /// <summary>
