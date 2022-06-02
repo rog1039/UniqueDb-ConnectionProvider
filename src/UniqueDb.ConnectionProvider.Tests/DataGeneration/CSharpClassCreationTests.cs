@@ -92,7 +92,7 @@ public class CSharpClassCreationTests
     [Trait("Category", "Integration")]
     public void CreateClassFromSqlTableReferenceForActualUseWhenNeedingToGenerateCSharpClasses()
     {
-        var sqlTableReference = new SqlTableReference(SqlConnectionProviders.PbsiCopy, "dbo.MTDINV_LINE");
+        var sqlTableReference = new SqlTableReference(SqlConnectionProviders.PbsiCopy, "PbsiWM.MTDINV_LINE");
         var sqlTable          = SqlTableFactory.Create(sqlTableReference);
         var cSharpClass       = CSharpClassGeneratorFromSqlTable.GenerateClass(sqlTable);
         Console.WriteLine(cSharpClass);

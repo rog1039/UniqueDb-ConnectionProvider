@@ -103,7 +103,9 @@ public class SqlType
             case "nchar":
             case "nvarchar":
             {
-                var length = MaximumCharLength == -1 ? "MAX" : MaximumCharLength.ToString();
+                var length = MaximumCharLength is -1 or int.MaxValue 
+                    ? "MAX" 
+                    : MaximumCharLength.ToString();
                 return $"{TypeName}({length})";
             }
             
