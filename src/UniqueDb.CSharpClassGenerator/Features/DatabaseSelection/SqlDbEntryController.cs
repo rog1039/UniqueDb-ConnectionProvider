@@ -89,6 +89,7 @@ public class SqlDbEntryController
         builder.ConnectTimeout = connectionTimeout.Seconds;
         builder.DataSource     = ServerName.Value;
         builder.InitialCatalog = DatabaseName.Value;
+        builder.Encrypt        = false;
         if (UseIntegratedAuth.Value)
         {
             builder.IntegratedSecurity = true;
