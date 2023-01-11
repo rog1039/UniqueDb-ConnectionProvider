@@ -76,8 +76,9 @@ public static class SettingsPersistencePathProvider
 
     public static string GetNetworkPath()
     {
-        var docsPath = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        var filePath = $"{docsPath}\\{_connectionsFileName}";
+        var docsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        var filePath = Path.Combine(docsPath, _connectionsFileName);
+        filePath = @"\\woebermustard.com\files\Redirection\paulrogero\My Documents\connections.json";
         return filePath;
     }
 

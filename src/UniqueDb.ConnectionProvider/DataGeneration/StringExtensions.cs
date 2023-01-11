@@ -14,7 +14,7 @@ public static class StringExtensions
 
    public static string BracketizeSafe(this string input)
    {
-      if (input[0] == '[' && input[input.Length - 1] == ']') return input;
+      if (input[0] == '[' && input[^1] == ']') return input;
       return "[" + input + "]";
    }
 

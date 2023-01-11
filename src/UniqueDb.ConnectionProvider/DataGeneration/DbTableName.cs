@@ -55,6 +55,13 @@ public record DbTableName
       Name   = name.Debracketize();
    }
 
+   public string ToStringQuoted()
+   {
+      return string.IsNullOrWhiteSpace(Schema)
+         ? $"\"{Name}\""
+         : $"\"[{Schema}]\".\"[{Name}]\"";
+   }
+   
    public override string ToString()
    {
       return string.IsNullOrWhiteSpace(Schema)

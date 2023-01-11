@@ -65,9 +65,20 @@ public class CSharpPropertyTextGenerator
 
     private string AccessModifier => Property.ClrAccessModifier.ToString().ToLower();
 
-    public string DataTypeString => Property.IsNullable && TypesThatCanBeNullable.Contains(Property.DataType.ToLower())
-        ? ConvertToCSharpTypeIfRequired(Property.DataType) + "?"
-        : ConvertToCSharpTypeIfRequired(Property.DataType);
+    public string DataTypeString
+    {
+       get
+       {
+          //Old code that didn't support nullable reference types:
+          // return Property.IsNullable && TypesThatCanBeNullable.Contains(Property.DataType.ToLower())
+          //    ? ConvertToCSharpTypeIfRequired(Property.DataType) + "?"
+          //    : ConvertToCSharpTypeIfRequired(Property.DataType);
+
+          return Property.IsNullable
+             ? ConvertToCSharpTypeIfRequired(Property.DataType) + "?"
+             : ConvertToCSharpTypeIfRequired(Property.DataType);
+       }
+    }
 
     public string ConvertToCSharpTypeIfRequired(string dataType)
     {
