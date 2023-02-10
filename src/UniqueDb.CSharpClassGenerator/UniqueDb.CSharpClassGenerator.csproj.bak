@@ -1,18 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <RootNamespace>UniqueDb.CSharpClassGenerator</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-  
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
   <ItemGroup>
-<!--    Remove conflicting WinForms usings-->
+    <!--    Remove conflicting WinForms usings-->
     <Using Remove="System.Windows.Forms" />
   </ItemGroup>
-
   <ItemGroup>
     <Page Update="Features\CodeGen\CodeGenView.xaml">
       <SubType>Designer</SubType>
@@ -33,16 +34,13 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="DevExpress.Mvvm" Version="21.2.3"/>
-    <PackageReference Include="DevExpress.Wpf.Grid" Version="21.2.3"/>
-    <PackageReference Include="DevExpress.Wpf.LayoutControl" Version="21.2.3"/>
-    <PackageReference Include="ReactiveProperty" Version="8.0.0"/>
+    <PackageReference Include="DevExpress.Mvvm" Version="22.1.5" />
+    <PackageReference Include="DevExpress.Wpf.Grid" Version="22.1.5" />
+    <PackageReference Include="DevExpress.Wpf.LayoutControl" Version="22.1.5" />
+    <PackageReference Include="ReactiveProperty" Version="8.2.0" />
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\UniqueDb.ConnectionProvider\UniqueDb.ConnectionProvider.csproj"/>
+    <ProjectReference Include="..\UniqueDb.ConnectionProvider\UniqueDb.ConnectionProvider.csproj" />
   </ItemGroup>
-
 </Project>
