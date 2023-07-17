@@ -4,6 +4,12 @@ using System.Text.RegularExpressions;
 
 namespace UniqueDb.ConnectionProvider.Tracing;
 
+public enum ShouldAutoStart
+{
+    Yes,
+    No
+}
+
 public sealed class SqlClientEventSourceListener : EventListener
 {
     public event Action<QueryExecutionRecord> NewQueryExecutionRecord;
@@ -43,9 +49,9 @@ public sealed class SqlClientEventSourceListener : EventListener
         CloseSqlConnectionRegex = new Regex(CloseSqlConnectionRegexPattern, RegexOptions.Singleline);
     }
 
-    public SqlClientEventSourceListener(bool shouldAutoStart = true)
+    public SqlClientEventSourceListener(ShouldAutoStart autostart = ShouldAutoStart.Yes)
     {
-        if (shouldAutoStart) Start();
+        if (autostart == ShouldAutoStart.Yes) Start();
     }
 
     /// <summary>
