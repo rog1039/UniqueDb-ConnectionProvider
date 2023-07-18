@@ -1,3 +1,5 @@
+using System.Data;
+using UniqueDb.ConnectionProvider.DataGeneration.DesignTimeDataGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration;
@@ -77,7 +79,7 @@ public static class InformationSchemaMetadataExplorer
         return tableColumns;
     }
 
-    private static List<TableConstraintInfoDto> GetTableConstraints(SqlTableReference sqlTableReference)
+    public static List<TableConstraintInfoDto> GetTableConstraints(SqlTableReference sqlTableReference)
     {
         var whereclause =
             $"WHERE tableConstraint.TABLE_SCHEMA = @schemaName AND tableConstraint.TABLE_NAME = @tableName ";
@@ -88,6 +90,19 @@ public static class InformationSchemaMetadataExplorer
         return result;
     }
 
+    public static List<IndexColumnQueryDto> GetIndexColumnDtos(SqlTableReference sqlTableReference)
+    {
+        var sqlQuery = IndexColumnQueryDto.GetSqlQuery(sqlTableReference);
+        var result   = sqlTableReference.SqlConnectionProvider.Query<IndexColumnQueryDto>(sqlQuery).ToList();
+        return result;
+    }
+    public static List<FkConstraintColumnDto> GetForeignKeyColumnDtos(SqlTableReference sqlTableReference)
+    {
+        var sqlQuery = FkConstraintColumnDto.GetSqlQuery(sqlTableReference);
+        sqlQuery.ToConsole();
+        var result   = sqlTableReference.SqlConnectionProvider.Query<FkConstraintColumnDto>(sqlQuery).ToList();
+        return result;
+    }
 
     #region Get All TableDefinitions
 
