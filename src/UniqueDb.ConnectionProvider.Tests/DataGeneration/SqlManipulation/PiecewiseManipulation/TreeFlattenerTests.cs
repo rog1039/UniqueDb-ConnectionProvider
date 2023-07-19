@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
+using UniqueDb.ConnectionProvider.DataGeneration;
+using UniqueDb.ConnectionProvider.DataGeneration.DesignTimeDataGeneration;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration.SqlManipulation.PiecewiseManipulation;
 
@@ -66,6 +68,26 @@ public class TreeFlattenerTests
       results[2].Should().HaveCount(2);
       results[2].Should().Equal(new List<Node>(){node, child2});
    }
+   
+   [Test]
+   public async Task TestMoreChildren()
+   {
+      var node = new Node("root");
+      var child1 = new Node("a");
+      node.Children.Add(child1);
+      var child2 = new Node("b");
+      node.Children.Add(child2);
+      var grandchild1 = new Node("d");
+      child2.Children.Add(grandchild1);
+
+      var child3 = new Node("c");
+      node.Children.Add(child3);
+
+      var results = Flattener.FlattenViaStack(node, x => x.Children);
+      results.Select(x => x.Select(x => x.Name).StringJoin(">"))
+         .StringJoinCommaNewLine()
+         .ToConsole();
+   }
 }
 
 public static class Flattener
@@ -99,6 +121,39 @@ public static class Flattener
 
       return output;
    }
+   
+   /// <summary>
+   /// This is a DFS.
+   /// </summary>
+   /// <param name="item"></param>
+   /// <param name="childFunc"></param>
+   /// <typeparam name="T"></typeparam>
+   /// <returns></returns>
+   public static List<List<T>> FlattenViaStack<T>(T item, Func<T, List<T>> childFunc)
+   {
+      var queue = new Stack<List<T>>();
+      queue.Push(new List<T>(){item});
+      var output = new List<List<T>>();
+
+      while (queue.Count > 0)
+      {
+         var list = queue.Pop();
+         output.Add(list);
+         var children = childFunc(list.Last());
+         children.Reverse();
+         foreach (var child in children)
+         {
+            var newlist = new List<T>();
+            newlist.AddRange(list);
+            newlist.Add(child);
+            queue.Push(newlist);
+         }
+      }
+
+      return output;
+   }
+   
+   
 }
 
 public class Node

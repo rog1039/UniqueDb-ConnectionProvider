@@ -40,13 +40,13 @@ public class SqlCraftingTests
    public async Task EndToEndTestOfScript2()
    {
       var result    = await BuildAlterTableOutput();
-      var flattened = Flattener.Flatten(result, result => result.Children);
+      var flattened = Flattener.FlattenViaStack(result, result => result.Children);
 
       foreach (var flat in flattened)
       {
          var last = flat.Last();
          var path = flat.Select(x => x.GeneratorType).StringJoin(".");
-         Console.WriteLine(path);
+         Console.WriteLine("-- " + path);
          Console.WriteLine(last.SqlText);
       }
    }
