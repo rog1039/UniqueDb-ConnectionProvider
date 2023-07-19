@@ -16,12 +16,42 @@ public class SqlCraftingTests
       var enableSql  = EnableTemporalTable.GenerateSql(input);
       var disableSql = DisableTemporalTable.GenerateSql(input);
 
-      enableSql.ToConsole();
-      disableSql.ToConsole();
+      enableSql.ToString().ToConsole();
+      disableSql.ToString().ToConsole();
    }
 
    [Test]
    public async Task EndToEndAddColumnToTemporalTableAtIndex()
+   {
+      var result = await BuildAlterTableOutput();
+
+      result.ToString().ToConsoleWriteLine();
+   }
+
+   [Test]
+   public async Task EndToEndTestOfScript1()
+   {
+      var result = await BuildAlterTableOutput();
+      var output = SqlOutputTextGenerator1.GetScript(result);
+      output.ToConsole();
+   }
+
+   [Test]
+   public async Task EndToEndTestOfScript2()
+   {
+      var result    = await BuildAlterTableOutput();
+      var flattened = Flattener.Flatten(result, result => result.Children);
+
+      foreach (var flat in flattened)
+      {
+         var last = flat.Last();
+         var path = flat.Select(x => x.GeneratorType).StringJoin(".");
+         Console.WriteLine(path);
+         Console.WriteLine(last.SqlText);
+      }
+   }
+
+   private static async Task<SqlOutputNode> BuildAlterTableOutput()
    {
       var input = new AlterTable_AddColumnInput()
       {
@@ -48,8 +78,7 @@ public class SqlCraftingTests
       };
 
       var result = await AddColumnToTemporalAtIndex.GenerateSql(fakeSchema, input);
-
-      result.ToConsoleWriteLine();
+      return result;
    }
 }
 

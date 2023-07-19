@@ -1,4 +1,6 @@
-﻿using UniqueDb.ConnectionProvider.DataGeneration;
+﻿using System.Text;
+using NUnit.Framework;
+using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
 using Woeber.Logistics.FluentDbMigrations.Tests;
 
@@ -6,9 +8,153 @@ namespace UniqueDb.ConnectionProvider.Tests.DataGeneration.SqlManipulation.Piece
 
 public class SqlOutputNode
 {
-   public string               GeneratorType { get; set; }
-   public string               SqlText       { get; set; }
-   public IList<SqlOutputNode> Children      { get; set; }
+   public string              GeneratorType { get; set; }
+   public List<SqlOutputNode> Children      { get; set; } = new();
+   public string              SqlText       => _stringBuilder.ToString();
+
+   private StringBuilder _stringBuilder = new();
+
+   public SqlOutputNode(string creator, string text = null)
+   {
+      GeneratorType = creator;
+
+      if (!string.IsNullOrWhiteSpace(text)) _stringBuilder.AppendLine(text);
+   }
+
+   public SqlOutputNode AddLine(string line)
+   {
+      _stringBuilder.AppendLine(line);
+      return this;
+   }
+
+   public void AddChild(SqlOutputNode child) => Children.Add(child);
+
+   public string GetScript1()
+   {
+      string output = String.Empty;
+      output.AddLine($"-- GenType: {GeneratorType}");
+      output.AddLine(_stringBuilder.ToString());
+      foreach (var child in Children)
+      {
+         output.AddLine(child.GetScript1());
+      }
+
+      return output;
+   }
+
+   public override string ToString()
+   {
+      var output = new StringBuilder();
+      output.Append(_stringBuilder);
+      foreach (var child in Children)
+      {
+         output.AppendLine(child.ToString());
+      }
+
+      return output.ToString();
+   }
+}
+
+public class SqlOutputTextGenerator1
+{
+   public static string GetScript(SqlOutputNode node)
+   {
+      var stack = new AncestorStack<SqlOutputNode>();
+      stack.Push(node);
+
+      var sb    = new StringBuilder();
+      var level = -1;
+
+      while (stack.Count > 0)
+      {
+         var n = stack.Peek();
+
+         sb.AppendLine($"-- ({stack.Count})" + GetPath(stack));
+         sb.AppendLine(n.SqlText);
+         stack.Pop();
+
+         foreach (var child in ((IEnumerable<SqlOutputNode>) n.Children).Reverse())
+         {
+            stack.Push(child);
+         }
+      }
+
+      return sb.ToString();
+   }
+
+   public static string GetPath(AncestorStack<SqlOutputNode> stack)
+   {
+      var text = stack.Select(x => x.GeneratorType).StringJoin(".");
+      return text;
+   }
+}
+
+public class SqlOutputTextGenerator2
+{
+   public static string GetScript2(SqlOutputNode node)
+   {
+      var ancestorStack = new AncestorStack<SqlOutputNode>();
+      ancestorStack.Push(node);
+      var sb = new StringBuilder();
+      while (true)
+      {
+         var n = ancestorStack.Peek();
+         sb.AppendLine($"-- {SqlOutputTextGenerator1.GetPath(ancestorStack)}");
+         sb.AppendLine(n.SqlText);
+
+         throw new NotImplementedException();
+      }
+
+      throw new NotImplementedException();
+   }
+}
+
+public static class TreeFlattener
+{
+   public static List<List<T>> Flatten<T>(T item, Func<T,List<T>> childFunc)
+   {
+      var output = new List<List<T>>();
+      var stack  = new Stack<T>();
+      stack.Push(item);
+      
+      while (true)
+      {
+         var path = new List<T>();
+         path.AddRange(stack);
+         throw new NotImplementedException();
+      }
+   }
+   
+   public static List<List<T>> Flatten<T>(IList<T> item, Func<T,List<T>> childFunc)
+   {
+      var output = new List<List<T>>();
+      var stack  = new Stack<T>();
+      
+      while (true)
+      {
+         output.Add(new List<T>(item));
+      }
+   }
+}
+
+public class AncestorStack<T> : List<T>
+{
+   public void Push(T obj)
+   {
+      Add(obj);
+   }
+
+   public T Pop()
+   {
+      var obj = this[Count - 1];
+      RemoveAt(Count - 1);
+      return obj;
+   }
+
+   public T Peek()
+   {
+      return this[Count - 1];
+   }
 }
 
 public class AlterTable_AddColumnInput
@@ -62,8 +208,8 @@ public interface ISchemaInformationProvider
 
 public class AddColumnToTemporalAtIndex
 {
-   public static async Task<string> GenerateSql(ISchemaInformationProvider schemaInformationProvider,
-                                                AlterTable_AddColumnInput  input)
+   public static async Task<SqlOutputNode> GenerateSql(ISchemaInformationProvider schemaInformationProvider,
+                                                       AlterTable_AddColumnInput  input)
    {
       /*
        * Disable temporal table
@@ -82,9 +228,9 @@ public class AddColumnToTemporalAtIndex
 
       // var temporalInput = new TemporalTableInput()
 
-      string sql = String.Empty;
+      var output = new SqlOutputNode(nameof(AddColumnToTemporalAtIndex));
 
-      sql = sql.AddLine(BeginTransaction.GenerateSql());
+      output.AddChild(BeginTransaction.GenerateSql());
 
       var temporalInfo = schemaInformationProvider.TemporalTableInfo(input.SqlTableReference);
       TemporalTableInput? temporalTableInput = temporalInfo is not null
@@ -96,35 +242,35 @@ public class AddColumnToTemporalAtIndex
          : null;
       if (temporalTableInput is not null)
       {
-         sql = sql.AddLine(DisableTemporalTable.GenerateSql(temporalTableInput));
+         output.AddChild(DisableTemporalTable.GenerateSql(temporalTableInput));
       }
 
-      sql = sql.AddLine(AlterTable_AddColumn.GenerateSql(schemaInformationProvider, input)); //main table
+      output.AddChild(AlterTable_AddColumn.GenerateSql(schemaInformationProvider, input)); //main table
 
       // sql.AddLine(AlterTable_AddColumn.GenerateSql(null)); //history table
       if (temporalTableInput is not null)
       {
-         sql = sql.AddLine(EnableTemporalTable.GenerateSql(temporalTableInput));
+         output.AddChild(EnableTemporalTable.GenerateSql(temporalTableInput));
       }
 
-      sql = sql.AddLine(CommitTransaction.GenerateSql());
-      return sql;
+      output.AddChild(CommitTransaction.GenerateSql());
+      return output;
    }
 }
 
 public class CommitTransaction
 {
-   public static string GenerateSql()
+   public static SqlOutputNode GenerateSql()
    {
-      return "--CommitTransaction\r\nCOMMIT TRANSACTION";
+      return new SqlOutputNode(nameof(CommitTransaction), "COMMIT TRANSACTION");
    }
 }
 
 public class BeginTransaction
 {
-   public static string GenerateSql()
+   public static SqlOutputNode GenerateSql()
    {
-      return "--BeginTransaction\r\nBEGIN TRANSACTION";
+      return new SqlOutputNode(nameof(BeginTransaction), "BEGIN TRANSACTION");
    }
 }
 
@@ -135,42 +281,41 @@ public record TemporalTableInput(string MainSchema,
 
 public class EnableTemporalTable
 {
-   public static string GenerateSql(TemporalTableInput input)
+   public static SqlOutputNode GenerateSql(TemporalTableInput input)
    {
-      return """
-             ---EnableTemporalTable
-             ALTER TABLE [$mainSchema].[$mainTable] SET
-             (
-               SYSTEM_VERSIONING = ON
-               (HISTORY_TABLE = [$historySchema].[$historyTable])
-             );
-             """
-            .MyReplace2("mainSchema",    input.MainSchema)
-            .MyReplace2("mainTable",     input.MainTable)
-            .MyReplace2("historySchema", input.HistorySchema)
-            .MyReplace2("historyTable",  input.HistoryTable)
+      return new(nameof(EnableTemporalTable),
+                 """
+                    ALTER TABLE [$mainSchema].[$mainTable] SET
+                    (
+                      SYSTEM_VERSIONING = ON
+                      (HISTORY_TABLE = [$historySchema].[$historyTable])
+                    );
+                    """
+                    .MyReplace2("mainSchema",    input.MainSchema)
+                    .MyReplace2("mainTable",     input.MainTable)
+                    .MyReplace2("historySchema", input.HistorySchema)
+                    .MyReplace2("historyTable",  input.HistoryTable))
          ;
    }
 }
 
 public class DisableTemporalTable
 {
-   public static string GenerateSql(TemporalTableInput input)
+   public static SqlOutputNode GenerateSql(TemporalTableInput input)
    {
-      return """
-             ---DisableTemporalTable
-             ALTER TABLE [$schema].[$table] SET (SYSTEM_VERSIONING = OFF);
-             """
-            .MyReplace2("schema", input.MainSchema)
-            .MyReplace2("table",  input.MainTable)
-         ;
+      return new(nameof(DisableTemporalTable),
+                 """
+                    ALTER TABLE [$schema].[$table] SET (SYSTEM_VERSIONING = OFF);
+                    """
+                    .MyReplace2("schema", input.MainSchema)
+                    .MyReplace2("table",  input.MainTable));
    }
 }
 
 public class AlterTable_AddColumn
 {
-   public static string GenerateSql(ISchemaInformationProvider schemaInformationProvider,
-                                    AlterTable_AddColumnInput  input)
+   public static SqlOutputNode GenerateSql(ISchemaInformationProvider schemaInformationProvider,
+                                           AlterTable_AddColumnInput  input)
    {
       /*
        * Steps:
@@ -181,8 +326,6 @@ public class AlterTable_AddColumn
        *    * Rename Temp -> Source table
        *    * Add PK/FK/Indices to table
        */
-      var sql = "---AlterTable";
-
       if (!input.ColumnType.Nullable)
          throw new NotImplementedException("No support for NOT NULL columns since we would then need to add" +
                                            "support for default constraints");
@@ -233,30 +376,28 @@ public class AlterTable_AddColumn
       var renameTableSql = RenameTable.GenerateSql(tempTableName, sourceTableName);
 
 
-      sql = sql.AddLine("-- --Create Temp Table:");
-      sql = sql.AddLine(createTempTableSql);
-      sql = sql.AddLine("-- --Insert Into SQL:");
-      sql = sql.AddLine(insertIntoSql);
-      sql = sql.AddLine("-- --Drop Table SQL:");
-      sql = sql.AddLine(dropTableSql);
-      sql = sql.AddLine("-- --Rename Temp to Source Table SQL:");
-      sql = sql.AddLine(renameTableSql);
+      var output = new SqlOutputNode(nameof(AlterTable_AddColumn));
 
-      return sql;
+      output.Children.Add(createTempTableSql);
+      output.Children.Add(insertIntoSql);
+      output.Children.Add(dropTableSql);
+      output.Children.Add(renameTableSql);
+
+      return output;
    }
 }
 
 public class RenameTable
 {
-   public static string GenerateSql(TableName sourceTable, TableName targetTable)
+   public static SqlOutputNode GenerateSql(TableName sourceTable, TableName targetTable)
    {
-      return $"EXEC sp_rename '{sourceTable}', '{targetTable.Table}';";
+      return new SqlOutputNode(nameof(RenameTable), $"EXEC sp_rename '{sourceTable}', '{targetTable.Table}';");
    }
 }
 
 public class DropTable
 {
-   public static string GenerateSql(TableName tableName) => $"DROP TABLE {tableName}";
+   public static SqlOutputNode GenerateSql(TableName tableName) => new(nameof(DropTable), $"DROP TABLE {tableName}");
 }
 
 public class CreateTableInput
@@ -302,22 +443,21 @@ public class ColumnInfo
 
 public class CreateTable
 {
-   public static string GenerateSql(ISchemaInformationProvider schemaInformationProvider, CreateTableInput input)
+   public static SqlOutputNode GenerateSql(ISchemaInformationProvider schemaInformationProvider, CreateTableInput input)
    {
-      string sql = "--Create Table";
-
-
       var tableName = new TableName(input.SchemaName, input.TableName);
       var columnText = input.ColumnInfos
          .Select(x => x.ToString())
          .StringJoin(",\r\n");
 
-      sql = sql.AddLine($"CREATE TABLE {tableName}");
-      sql = sql.AddLine($"(");
-      sql = sql.AddLine(columnText);
-      sql = sql.AddLine($")");
+      var output = new SqlOutputNode(nameof(CreateTable));
 
-      return sql;
+      output.AddLine($"CREATE TABLE {tableName}");
+      output.AddLine($"(");
+      output.AddLine(columnText);
+      output.AddLine($")");
+
+      return output;
    }
 }
 
@@ -330,21 +470,20 @@ public class InsertIntoInput
 
 public class InsertInto
 {
-   public static string GenerateSql(InsertIntoInput input)
+   public static SqlOutputNode GenerateSql(InsertIntoInput input)
    {
-      string sql = String.Empty;
-
+      var output     = new SqlOutputNode(nameof(InsertInto));
       var columnList = input.ColumnNames.StringJoinCommaNewLine();
 
-      sql = sql.AddLine($"SET IDENTITY_INSERT {input.TargetTable} ON");
-      sql = sql.AddLine($"INSERT INTO {input.TargetTable} WITH (TABLOCK) (");
-      sql = sql.AddLine(columnList);
-      sql = sql.AddLine(")");
-      sql = sql.AddLine("SELECT ");
-      sql = sql.AddLine(columnList);
-      sql = sql.AddLine($"FROM {input.SourceTable}");
-      sql = sql.AddLine($"SET IDENTITY_INSERT {input.TargetTable} OFF");
+      output.AddLine($"SET IDENTITY_INSERT {input.TargetTable} ON");
+      output.AddLine($"INSERT INTO {input.TargetTable} WITH (TABLOCK) (");
+      output.AddLine(columnList);
+      output.AddLine(")");
+      output.AddLine("SELECT ");
+      output.AddLine(columnList);
+      output.AddLine($"FROM {input.SourceTable}");
+      output.AddLine($"SET IDENTITY_INSERT {input.TargetTable} OFF");
 
-      return sql;
+      return output;
    }
 }
