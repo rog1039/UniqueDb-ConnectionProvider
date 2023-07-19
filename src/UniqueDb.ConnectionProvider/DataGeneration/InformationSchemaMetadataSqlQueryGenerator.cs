@@ -29,5 +29,4 @@ public static class InformationSchemaMetadataSqlQueryGenerator
         sql = AddSchemaWhereClauseIfNecessary(sql, sqlTableReference);
         return sql;
     }
-
 }

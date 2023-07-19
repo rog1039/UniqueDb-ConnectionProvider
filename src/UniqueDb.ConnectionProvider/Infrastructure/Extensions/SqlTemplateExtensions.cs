@@ -6,4 +6,8 @@ public static class SqlTemplateExtensions
    {
       return template.Replace($"${key}$", input);
    }
+   public static string MyReplace2(this string template, string key, string input)
+   {
+      return template.Replace($"${key}", input);
+   }
 }

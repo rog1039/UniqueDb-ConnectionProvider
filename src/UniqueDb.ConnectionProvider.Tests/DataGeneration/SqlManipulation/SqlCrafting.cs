@@ -6,10 +6,10 @@ namespace Woeber.Logistics.FluentDbMigrations.Tests;
 
 public class TestSqlTables
 {
-   public static ISqlConnectionProvider Logistics  = new StaticSqlConnectionProvider("WS2016Sql", "WoeberLogisticsDb");
-   
-   public static SqlTableReference      Order_Head = new SqlTableReference(Logistics, "PbsiWM", "Order_Head");
-   public static SqlTableReference      JobActivity = new SqlTableReference(Logistics, "dbo", "Production.JobActivity");
+   public static ISqlConnectionProvider Logistics = new StaticSqlConnectionProvider("WS2016Sql", "WoeberLogisticsDb");
+
+   public static SqlTableReference Order_Head  = new SqlTableReference(Logistics, "PbsiWM", "Order_Head");
+   public static SqlTableReference JobActivity = new SqlTableReference(Logistics, "dbo",    "Production.JobActivity");
 }
 
 [TestFixture]
@@ -22,7 +22,7 @@ public class SqlCrafting
       index1.PrintStringTable();
       InformationSchemaMetadataExplorer.GetIndexColumnDtos(TestSqlTables.JobActivity).PrintStringTable();
    }
-   
+
    [Test]
    public async Task SchemaExploreConstraints1()
    {
@@ -30,7 +30,7 @@ public class SqlCrafting
       index1.PrintStringTable();
       InformationSchemaMetadataExplorer.GetTableConstraints(TestSqlTables.JobActivity).PrintStringTable();
    }
-   
+
    [Test]
    public async Task SchemaExploreForeignKeys()
    {
@@ -38,8 +38,8 @@ public class SqlCrafting
       index1.PrintStringTable();
       InformationSchemaMetadataExplorer.GetTableConstraints(TestSqlTables.JobActivity).PrintStringTable();
    }
-   
-   
+
+
    [Test]
    public async Task SchemaExploration()
    {
@@ -70,17 +70,17 @@ public class SqlCrafting
    {
       var script = GenerateScript(new AddColumnVariables()
       {
-         TableName  = "Production.JobActivity",
-         ColumnName = "TankInfo",
-         ColumnType = "nvarchar(max)",
-         Nullable = Nullable.NotNull,
+         TableName      = "Production.JobActivity",
+         ColumnName     = "TankInfo",
+         ColumnType     = "nvarchar(max)",
+         Nullability    = Nullability.NotNull,
          NewColumnIndex = 3,
          TableColumns = new List<Column>
          {
-            new("Id", "int", Nullable.NotNull),
-            new("FirstName", "nvarchar(20)", Nullable.NotNull),
-            new("LastName", "nvarchar(200)", Nullable.NotNull),
-            new("Age", "short", Nullable.Null),
+            new("Id", "int", Nullability.NotNull),
+            new("FirstName", "nvarchar(20)", Nullability.NotNull),
+            new("LastName", "nvarchar(200)", Nullability.NotNull),
+            new("Age", "short", Nullability.Null),
          },
       });
 
@@ -103,19 +103,19 @@ public class SqlCrafting
          .MyReplace("tableName",     variables.TableName)
          .MyReplace("newColumnList", variables.ColumnListWithNew())
          .MyReplace("insertIntoSql", insertInto);
-         ;
+      ;
 
       return script;
    }
 
    public class AddColumnVariables
    {
-      public string   Schema         { get; set; } = "dbo";
-      public string   TableName      { get; set; }
-      public string   ColumnName     { get; set; }
-      public string   ColumnType     { get; set; }
-      public Nullable Nullable       {get;  set; }
-      public int      NewColumnIndex { get; set; }
+      public string      Schema         { get; set; } = "dbo";
+      public string      TableName      { get; set; }
+      public string      ColumnName     { get; set; }
+      public string      ColumnType     { get; set; }
+      public Nullability Nullability    { get; set; }
+      public int         NewColumnIndex { get; set; }
 
       public List<IndexColumn> IndexColumns { get; set; }
       public List<Column>      TableColumns { get; set; }
@@ -129,22 +129,23 @@ public class SqlCrafting
       public string ColumnListPre()
       {
          var allColumnsList = TableColumns
-            .Select(x => $"{x.ColumnName} {x.ColumnType}" + (x.Nullable == Nullable.Null ? "NULL" : " NOT NULL"))
+            .Select(x => $"{x.ColumnName} {x.ColumnType}" + (x.Nullability == Nullability.Null ? "NULL" : " NOT NULL"))
             .StringJoin(",\r\n");
          return allColumnsList;
       }
+
       public string ColumnListWithNew()
       {
          var columnsIncludingNew = TableColumns.ToList();
-         columnsIncludingNew.Insert(NewColumnIndex,new Column(ColumnName, ColumnType, Nullable));
+         columnsIncludingNew.Insert(NewColumnIndex, new Column(ColumnName, ColumnType, Nullability));
          var allColumnsList = columnsIncludingNew
-            .Select(x => $"{x.ColumnName} {x.ColumnType}" + (x.Nullable == Nullable.Null ? " NULL" : " NOT NULL"))
+            .Select(x => $"{x.ColumnName} {x.ColumnType}" + (x.Nullability == Nullability.Null ? " NULL" : " NOT NULL"))
             .StringJoin(",\r\n");
          return allColumnsList;
       }
    }
 
-   public record Column(string ColumnName, string ColumnType, Nullable Nullable);
+   public record Column(string ColumnName, string ColumnType, Nullability Nullability);
 
    public record IndexColumn(string Name, SortDirection SortDirection);
 
@@ -154,54 +155,54 @@ public class SqlCrafting
       Desc
    }
 
-   public enum Nullable
-   {
-      Unknown,
-      Null,
-      NotNull
-   }
-   
    private static string InsertIntoTemplate = """
-INSERT INTO $schema$.[$tmpTableName$] ($columnList$)
-    SELECT $columnList$ FROM $schema$.[$tableName$] WITH(HOLDLOCK TABLOCKX)
-""";
+                                              INSERT INTO $schema$.[$tmpTableName$] ($columnList$)
+                                                  SELECT $columnList$ FROM $schema$.[$tableName$] WITH(HOLDLOCK TABLOCKX)
+                                              """;
 
    private static string SqlTemplate = """
-BEGIN TRANSACTION
-GO
-CREATE TABLE $schema$.[$tmpTableName$]
-(
-$newColumnList$
-)
-ALTER TABLE $schema$.[$tmpTableName$]
-   SET (Lock_Escalation = TABLE)
-SET IDENTITY_INSERT $schema$.[$tmpTableName$] ON
+                                       BEGIN TRANSACTION
+                                       GO
+                                       CREATE TABLE $schema$.[$tmpTableName$]
+                                       (
+                                       $newColumnList$
+                                       )
+                                       ALTER TABLE $schema$.[$tmpTableName$]
+                                          SET (Lock_Escalation = TABLE)
+                                       SET IDENTITY_INSERT $schema$.[$tmpTableName$] ON
 
-IF EXISTS(SELECT *
-          FROM $schema$.[$tableName$])
-EXEC ('$insertIntoSql$')
-GO
-SET IDENTITY_INSERT $schema$.[$tmpTableName$] OFF
-GO
+                                       IF EXISTS(SELECT *
+                                                 FROM $schema$.[$tableName$])
+                                       EXEC ('$insertIntoSql$')
+                                       GO
+                                       SET IDENTITY_INSERT $schema$.[$tmpTableName$] OFF
+                                       GO
 
-DROP TABLE $schema$.[$tableName$]
-GO
+                                       DROP TABLE $schema$.[$tableName$]
+                                       GO
 
-EXECUTE sp_rename N'$schema$.[$tmpTableName$]', N'$tableName$', 'OBJECT'
-GO
+                                       EXECUTE sp_rename N'$schema$.[$tmpTableName$]', N'$tableName$', 'OBJECT'
+                                       GO
 
--- Add back the primary key information here:
-ALTER TABLE $schema$.[$tableName$]
-   ADD CONSTRAINT
-      [$primaryKeyConstraintName$] PRIMARY KEY CLUSTERED
-         (
-            $primaryKeyColumns$
-         )
+                                       -- Add back the primary key information here:
+                                       ALTER TABLE $schema$.[$tableName$]
+                                          ADD CONSTRAINT
+                                             [$primaryKeyConstraintName$] PRIMARY KEY CLUSTERED
+                                                (
+                                                   $primaryKeyColumns$
+                                                )
 
-GO
-COMMIT
+                                       GO
+                                       COMMIT
 
-""";
+                                       """;
+}
+
+public enum Nullability
+{
+   Unknown,
+   Null,
+   NotNull
 }
 
 public static class ConsoleExtensions
