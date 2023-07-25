@@ -1,6 +1,6 @@
 using System.Data;
 using UniqueDb.ConnectionProvider.DataGeneration;
-using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
+using UniqueDb.ConnectionProvider.SqlMetadata.InformationSchema;
 
 namespace UniqueDb.ConnectionProvider.Converters;
 
@@ -8,7 +8,7 @@ public static class SqlDbTypeConverter
 {
     public static SqlDbType ConvertInformationSchemaColumnToSqlDbType(SISColumn col)
     {
-        var sqlType = SqlTypeConverter.FromInformationSchemaColumn(col);
+        var sqlType = SqlTypeFromSISColumn.FromInformationSchemaColumn(col);
         return ConvertSqlTypeToSqlDbType(sqlType);
     }
 

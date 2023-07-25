@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
-using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
+using UniqueDb.ConnectionProvider.SqlMetadata.DescribeResultSet;
+using UniqueDb.ConnectionProvider.SqlScripting;
 using Xunit;
 using Xunit.Abstractions;
 

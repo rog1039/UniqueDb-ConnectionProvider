@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.DesignTimeDataGeneration;
+using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration.SqlManipulation.PiecewiseManipulation;
 
@@ -152,8 +153,6 @@ public static class Flattener
 
       return output;
    }
-   
-   
 }
 
 public class Node

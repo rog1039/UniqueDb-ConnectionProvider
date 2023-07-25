@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
 using UniqueDb.ConnectionProvider;
 using UniqueDb.ConnectionProvider.DataGeneration;
+using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
+using UniqueDb.ConnectionProvider.SqlMetadata;
 
 namespace Woeber.Logistics.FluentDbMigrations.Tests;
 
@@ -59,9 +61,9 @@ public class SqlCrafting
       indexColumns.PrintStringTable();
       constraints.PrintStringTable();
 
-      tableDef.MakeList().PrintStringTable();
+      ListExtensionMethods.MakeList(tableDef).PrintStringTable();
       tableDef.TableConstraints.PrintStringTable();
-      isTable.MakeList().PrintStringTable();
+      ListExtensionMethods.MakeList(isTable).PrintStringTable();
       columns.PrintStringTable();
    }
 

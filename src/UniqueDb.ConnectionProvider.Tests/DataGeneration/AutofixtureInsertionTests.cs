@@ -6,6 +6,7 @@ using AutoFixture.Kernel;
 using Microsoft.SqlServer.Types;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.Crud;
+using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 using UniqueDb.ConnectionProvider.Tests.DataGeneration.AdventureWorks;
 using Xunit;
 

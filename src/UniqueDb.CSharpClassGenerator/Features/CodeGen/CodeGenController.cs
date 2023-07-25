@@ -3,7 +3,7 @@ using System.Windows;
 using DevExpress.Mvvm;
 using Reactive.Bindings;
 using UniqueDb.ConnectionProvider;
-using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
+using UniqueDb.ConnectionProvider.CSharpGeneration;
 
 namespace UniqueDb.CSharpClassGenerator.Features.CodeGen;
 

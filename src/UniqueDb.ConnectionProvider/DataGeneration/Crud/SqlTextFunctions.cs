@@ -3,6 +3,8 @@ using System.Data.SqlTypes;
 using System.Reflection;
 using System.Xml.Linq;
 using Microsoft.Data.SqlClient;
+using UniqueDb.ConnectionProvider.Infrastructure;
+using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration.Crud;
 
@@ -27,7 +29,7 @@ public static class SqlTextFunctions
         var sqlParameter    = new SqlParameter(parameterName, propertyInfo.GetValue(obj, null));
         var typeOfParameter = GetParameterType(propertyInfo);
 
-        if (!SqlTypes.IsClrTypeASqlSystemType(typeOfParameter))
+        if (!SqlTypeLists.IsClrTypeASqlSystemType(typeOfParameter))
         {
             LoggerHelper.Log($"*****UDT Type: {obj.GetType()} - {propertyInfo} - {propertyInfo.Name} ");
             sqlParameter.UdtTypeName = propertyInfo.PropertyType.Name;

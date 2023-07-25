@@ -1,4 +1,5 @@
 using FluentAssertions;
+using UniqueDb.ConnectionProvider.CSharpGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using Xunit;
 

@@ -1,5 +1,6 @@
+using UniqueDb.ConnectionProvider.CSharpGeneration.ServiceLayerGen;
 using UniqueDb.ConnectionProvider.DataGeneration;
-using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration.ServiceLayerGen;
+using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 using Xunit;
 using Xunit.Abstractions;
 

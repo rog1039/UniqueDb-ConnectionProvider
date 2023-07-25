@@ -1,4 +1,4 @@
-using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
+using UniqueDb.ConnectionProvider.SqlScripting;
 using Xunit;
 using Xunit.Abstractions;
 

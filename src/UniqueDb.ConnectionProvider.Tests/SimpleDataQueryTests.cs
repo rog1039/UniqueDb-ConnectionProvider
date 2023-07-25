@@ -1,6 +1,7 @@
 using Dapper;
 using NUnit.Framework;
 using UniqueDb.ConnectionProvider.DataGeneration;
+using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 
 namespace UniqueDb.ConnectionProvider.Tests;
 

@@ -1,7 +1,10 @@
 ﻿using NUnit.Framework;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.DesignTimeDataGeneration;
-using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
+using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
+using UniqueDb.ConnectionProvider.SqlMetadata;
+using UniqueDb.ConnectionProvider.SqlMetadata.InformationSchema;
+using UniqueDb.ConnectionProvider.SqlMetadata.SysTables;
 using Woeber.Logistics.FluentDbMigrations.Tests;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration.SqlManipulation.PiecewiseManipulation;
@@ -39,15 +42,20 @@ public class SqlCraftingTests
    [Test]
    public async Task EndToEndTestOfScript2()
    {
-      var result    = await BuildAlterTableOutput();
-      var flattened = Flattener.FlattenViaStack(result, result => result.Children);
+      var result = await BuildAlterTableOutput();
+      PrettyPrintSqlOutput(result);
+   }
 
-      foreach (var flat in flattened)
+   private static void PrettyPrintSqlOutput(SqlOutputNode result)
+   {
+      var allSteps = Flattener.FlattenViaStack(result, result => result.Children);
+
+      foreach (var step in allSteps)
       {
-         var last = flat.Last();
-         var path = flat.Select(x => x.GeneratorType).StringJoin(".");
-         Console.WriteLine("-- " + path);
-         Console.WriteLine(last.SqlText);
+         var last = step.Last();
+         var path = step.Select(x => x.GeneratorType).StringJoin(" |> ", (s, i) => $"[{i}] {s}");
+         Console.WriteLine($"-- [{step.Count}] " + path);
+         Console.WriteLine(last.SqlText.IndentWithTabs(step.Count * 1));
       }
    }
 
@@ -80,29 +88,45 @@ public class SqlCraftingTests
       var result = await AddColumnToTemporalAtIndex.GenerateSql(fakeSchema, input);
       return result;
    }
+
+   [Test]
+   public async Task TestAgainstActualDb()
+   {
+      var input = new AlterTable_AddColumnInput()
+      {
+         SqlTableReference = new(SqlConnectionProviders.WideWorldImporters, "Warehouse.StockItems"),
+         ColumnName        = "MyNameColumn",
+         ColumnType        = new SqlDataType("decimal(32,18)", true),
+         ColumnIndex       = 9
+      };
+      var schemaProvider = new RealSchemaProvider();
+
+      var result = await AddColumnToTemporalAtIndex.GenerateSql(schemaProvider, input);
+      PrettyPrintSqlOutput(result);
+   }
 }
 
 public class FakeSchemaInformationProvider : ISchemaInformationProvider
 {
    public MainToHistoryTableLink       _mainToHistoryTableLink { get; set; }
-   public List<FkConstraintColumnDto>  _fkConstraintColumns    { get; set; } = new();
-   public List<IndexColumnQueryDto>    _indexColumns           { get; set; } = new();
-   public List<TableConstraintInfoDto> _constraintInfos        { get; set; } = new();
+   public List<SysForeignKey>  _fkConstraintColumns    { get; set; } = new();
+   public List<SysIndexColumn>    _indexColumns           { get; set; } = new();
+   public List<SISTableConstraint> _constraintInfos        { get; set; } = new();
    public List<SISColumn>              _sisColumns             { get; set; } = new();
    public SISTable                     _sisTable               { get; set; }
    public List<string>                 _temporalList           { get; set; } = new();
 
-   public IList<FkConstraintColumnDto> GetForeignKeyDtos(SqlTableReference table)
+   public IList<SysForeignKey> GetForeignKeyDtos(SqlTableReference table)
    {
       return _fkConstraintColumns;
    }
 
-   public IList<IndexColumnQueryDto> GetIndices(SqlTableReference table)
+   public IList<SysIndexColumn> GetIndices(SqlTableReference table)
    {
       return _indexColumns;
    }
 
-   public IList<TableConstraintInfoDto> GetConstraints(SqlTableReference table)
+   public IList<SISTableConstraint> GetConstraints(SqlTableReference table)
    {
       return _constraintInfos;
    }
@@ -117,13 +141,51 @@ public class FakeSchemaInformationProvider : ISchemaInformationProvider
       return _sisTable;
    }
 
-   public Task<bool> IsTemporal(SqlTableReference table)
+   public bool IsTemporal(SqlTableReference table)
    {
-      return Task.FromResult(_temporalList.Contains(table.FullTableName()));
+      return _temporalList.Contains(table.FullTableName());
    }
 
    public MainToHistoryTableLink TemporalTableInfo(SqlTableReference table)
    {
       return _mainToHistoryTableLink;
+   }
+}
+
+public class RealSchemaProvider : ISchemaInformationProvider
+{
+   public IList<SysForeignKey> GetForeignKeyDtos(SqlTableReference table)
+   {
+      return InformationSchemaMetadataExplorer.GetForeignKeyColumnDtos(table);
+   }
+
+   public IList<SysIndexColumn> GetIndices(SqlTableReference table)
+   {
+      return InformationSchemaMetadataExplorer.GetIndexColumnDtos(table);
+   }
+
+   public IList<SISTableConstraint> GetConstraints(SqlTableReference table)
+   {
+      return InformationSchemaMetadataExplorer.GetTableConstraints(table);
+   }
+
+   public IList<SISColumn> GetColumns(SqlTableReference table)
+   {
+      return InformationSchemaMetadataExplorer.GetInformationSchemaColumns(table);
+   }
+
+   public SISTable GetTable(SqlTableReference table)
+   {
+      return InformationSchemaMetadataExplorer.GetInformationSchemaTable(table);
+   }
+
+   public bool IsTemporal(SqlTableReference table)
+   {
+      return InformationSchemaMetadataExplorer.GetTemporalTableInfo(table) is not null;
+   }
+
+   public MainToHistoryTableLink TemporalTableInfo(SqlTableReference table)
+   {
+      return InformationSchemaMetadataExplorer.GetTemporalTableInfo(table);
    }
 }

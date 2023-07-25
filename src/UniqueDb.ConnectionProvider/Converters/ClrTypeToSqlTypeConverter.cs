@@ -1,6 +1,6 @@
-using UniqueDb.ConnectionProvider.Converters;
+using UniqueDb.ConnectionProvider.DataGeneration;
 
-namespace UniqueDb.ConnectionProvider.DataGeneration;
+namespace UniqueDb.ConnectionProvider.Converters;
 
 public static class ClrTypeToSqlTypeConverter
 {

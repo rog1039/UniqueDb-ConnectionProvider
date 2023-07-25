@@ -1,5 +1,8 @@
 ﻿using FluentAssertions;
 using UniqueDb.ConnectionProvider.DataGeneration;
+using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
+using UniqueDb.ConnectionProvider.SqlMetadata;
+using UniqueDb.ConnectionProvider.SqlScripting;
 using Xunit;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration;

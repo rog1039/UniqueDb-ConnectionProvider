@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
+using UniqueDb.ConnectionProvider.CSharpGeneration;
 using Xunit;
-using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
 
 namespace UniqueDb.ConnectionProvider.Tests;
 

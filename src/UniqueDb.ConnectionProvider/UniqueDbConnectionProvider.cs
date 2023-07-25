@@ -1,62 +1,38 @@
-﻿using Microsoft.Data.SqlClient;
-
-namespace UniqueDb.ConnectionProvider;
+﻿namespace UniqueDb.ConnectionProvider;
 
 /// <summary>
 /// A class that provides a connection string to a brand-new database.
 /// </summary>
 public class UniqueDbConnectionProvider : BaseSqlConnectionProvider
 {
-    public readonly UniqueDbConnectionProviderOptions Options;
+   public readonly UniqueDbConnectionProviderOptions UniqueDbOptions;
 
-    /// <summary>
-    /// The string format used to created the database name.
-    /// </summary>
-    public string DatabaseNameFormatString { get; set; }
+   /// <summary>
+   /// The string format used to created the database name.
+   /// </summary>
+   public string DatabaseNameFormatString { get; } = "{0}-({1})-{2}";
 
-    public UniqueDbConnectionProvider(UniqueDbConnectionProviderOptions options)
-    {
-        Options                     = options;
-        ServerName                  = Options.SqlServerName;
-        DatabaseNameFormatString    = "{0}-({1})-{2}";
-        DatabaseName                = GenerateDbName();
-        UserName                    = options.UserName;
-        Password                    = options.Password;
-        UseIntegratedAuthentication = string.IsNullOrWhiteSpace(options.Password);
-    }
+   public UniqueDbConnectionProvider(UniqueDbConnectionProviderOptions uniqueDbOptions)
+   {
+      UniqueDbOptions             = uniqueDbOptions;
+      ServerName                  = UniqueDbOptions.SqlServerName;
+      DatabaseName                = GenerateDbName(uniqueDbOptions, DatabaseNameFormatString);
+      UserName                    = uniqueDbOptions.UserName;
+      Password                    = uniqueDbOptions.Password;
+      UseIntegratedAuthentication = string.IsNullOrWhiteSpace(uniqueDbOptions.Password);
+   }
 
-    private string GenerateDbName()
-    {
-        var prefix    = Options.DatabaseNamePrefix;
-        var timestamp = Options.IncludeTimeStamp ? DateTime.Now.ToString(Options.TimeStampFormat) : string.Empty;
-        var guid      = Nanoid.Nanoid.Generate(size: 5);
+   private static string GenerateDbName(UniqueDbConnectionProviderOptions options,
+                                        string                            databaseNameFormatString)
+   {
+      var prefix    = options.DatabaseNamePrefix;
+      var timestamp = options.IncludeTimeStamp ? DateTime.Now.ToString(options.TimeStampFormat) : string.Empty;
+      var nanoId    = Nanoid.Nanoid.Generate(size: 5);
 
-        var generatedName = string.Format(DatabaseNameFormatString,
-                                          prefix,
-                                          timestamp,
-                                          guid);
-
-        return generatedName;
-    }
-
-    // /// <summary>
-    // /// Returns the SqlConnectionStringBuilder for this unique Db.
-    // /// </summary>
-    // /// <returns></returns>
-    // public override SqlConnectionStringBuilder GetSqlConnectionStringBuilder()
-    // {
-    //     var connString = new SqlConnectionStringBuilder();
-    //     connString.DataSource     = Options.SqlServerName;
-    //     connString.InitialCatalog = DatabaseName;
-    //     if (Options.UseIntegratedSecurity)
-    //     {
-    //         connString.IntegratedSecurity = true;
-    //     }
-    //     else
-    //     {
-    //         connString.UserID   = Options.UserName;
-    //         connString.Password = Options.Password.ToString();
-    //     }
-    //     return connString;
-    // }
+      var generatedName = string.Format(databaseNameFormatString,
+                                        prefix,
+                                        timestamp,
+                                        nanoId);
+      return generatedName;
+   }
 }

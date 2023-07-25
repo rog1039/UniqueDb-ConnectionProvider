@@ -8,12 +8,12 @@ public static class DbTableNameWithNullableSchemaParser
    {
       var chars = input.AsSpan();
 
-      bool insideBrackets  = false,
-         seenSeparatingDot = false;
+      bool insideBrackets    = false,
+           seenSeparatingDot = false;
 
-      string schemaName = String.Empty,
-         tableName      = String.Empty,
-         currentName    = String.Empty;
+      string schemaName  = String.Empty,
+             tableName   = String.Empty,
+             currentName = String.Empty;
 
       for (var i = 0; i < chars.Length; i++)
       {

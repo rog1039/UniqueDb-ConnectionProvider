@@ -1,4 +1,5 @@
 using Microsoft.Data.SqlClient;
+using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 
 
 namespace UniqueDb.ConnectionProvider.DataGeneration.Crud;

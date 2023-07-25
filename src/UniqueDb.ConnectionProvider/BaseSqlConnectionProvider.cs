@@ -1,5 +1,6 @@
 ﻿using System.Data.Common;
 using Microsoft.Data.SqlClient;
+using UniqueDb.ConnectionProvider.Infrastructure;
 
 namespace UniqueDb.ConnectionProvider;
 

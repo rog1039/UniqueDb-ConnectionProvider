@@ -1,5 +1,8 @@
 using System.Globalization;
 using Dapper;
+using UniqueDb.ConnectionProvider.Infrastructure;
+using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
+using UniqueDb.ConnectionProvider.SqlScripting;
 
 namespace UniqueDb.ConnectionProvider;
 
@@ -25,10 +28,10 @@ public static class OldDatabaseDeleter
         var connection = uniqueDbConnectionProvider.ConnectionAsMaster();
         var databases = connection
             .Query<string>("SELECT NAME FROM SYSDATABASES")
-            .Where(x => x.StartsWith(uniqueDbConnectionProvider.Options.DatabaseNamePrefix))
+            .Where(x => x.StartsWith(uniqueDbConnectionProvider.UniqueDbOptions.DatabaseNamePrefix))
             .ToList();
 
-        var dateTimeFormat        = uniqueDbConnectionProvider.Options.TimeStampFormat;
+        var dateTimeFormat        = uniqueDbConnectionProvider.UniqueDbOptions.TimeStampFormat;
         var databases1HourOrOlder = SelectDatabaseNamesOlderThan(databases, dateTimeFormat, olderThan);
 
         return databases1HourOrOlder.ToList();

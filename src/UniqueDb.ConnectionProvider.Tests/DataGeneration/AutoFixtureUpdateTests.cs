@@ -2,6 +2,7 @@
 using FluentAssertions;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.Crud;
+using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 using UniqueDb.ConnectionProvider.Tests.DataGeneration.AdventureWorks;
 using Xunit;
 
@@ -65,8 +66,8 @@ public class AutoFixtureUpdateTests
         if (PrintDebug)
         {
             buildVersionFromDb.Should().NotBeNull();
-            buildVersion.MakeList().PrintStringTable();
-            buildVersionFromDb.MakeList().PrintStringTable();
+            ListExtensionMethods.MakeList(buildVersion).PrintStringTable();
+            ListExtensionMethods.MakeList(buildVersionFromDb).PrintStringTable();
         }
     }
 }

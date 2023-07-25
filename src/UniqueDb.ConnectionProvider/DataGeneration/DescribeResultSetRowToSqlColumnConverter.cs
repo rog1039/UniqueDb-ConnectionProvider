@@ -1,4 +1,5 @@
-using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
+using UniqueDb.ConnectionProvider.Converters;
+using UniqueDb.ConnectionProvider.SqlMetadata.DescribeResultSet;
 
 namespace UniqueDb.ConnectionProvider.DataGeneration;
 
@@ -22,17 +23,17 @@ public static class DescribeResultSetRowToSqlColumnConverter
 
    private static SqlType GetSqlType(DescribeResultSetContainer resultSetColumn)
    {
-      var ambiguousType = GetAmbiguousSqlType(resultSetColumn);
-      var sqlType       = AmbiguousSqlTypeToSqlTypeConverter.Convert(ambiguousType);
+      var ambiguousType = GetSqlTypeSpecification(resultSetColumn);
+      var sqlType       = SqlTypeFromSpecification.Convert(ambiguousType);
       return sqlType;
    }
 
-   private static AmbiguousSqlType GetAmbiguousSqlType(DescribeResultSetContainer resultSetContainer)
+   private static SqlTypeSpecification GetSqlTypeSpecification(DescribeResultSetContainer resultSetContainer)
    {
       var describeResultSetRow = resultSetContainer.DescribeResultSetRow;
       var userType             = resultSetContainer.UserDefinedType;
       var systemType           = resultSetContainer.SystemType;
-      var ambigiousType = new AmbiguousSqlType()
+      var ambigiousType = new SqlTypeSpecification()
       {
          TypeName                   = systemType.name,
          NumericPrecision           = describeResultSetRow.precision,
@@ -50,18 +51,4 @@ public static class DescribeResultSetRowToSqlColumnConverter
 
       return ambigiousType;
    }
-}
-
-/// <summary>
-/// Just a copy of values from the DescribeResultSet. Further analysis can narrow this type into
-/// the more defined SqlType.
-/// </summary>
-public class AmbiguousSqlType
-{
-   public string TypeName                   { get; set; }
-   public int?   NumericPrecision           { get; set; }
-   public int?   NumericScale               { get; set; }
-   public int?   MaxCharacterLength         { get; set; }
-   public string MaxCharacterText           { get; set; }
-   public int?   FractionalSecondsPrecision { get; set; }
 }

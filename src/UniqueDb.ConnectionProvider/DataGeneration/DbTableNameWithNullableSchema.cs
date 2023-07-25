@@ -1,3 +1,5 @@
+using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
+
 namespace UniqueDb.ConnectionProvider.DataGeneration;
 
 public record DbTableNameWithNullableSchema

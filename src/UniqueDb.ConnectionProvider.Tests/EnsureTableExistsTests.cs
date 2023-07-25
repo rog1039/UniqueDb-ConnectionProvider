@@ -1,5 +1,6 @@
 using FluentAssertions;
-using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
+using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
+using UniqueDb.ConnectionProvider.SqlScripting;
 using Xbehave;
 
 namespace UniqueDb.ConnectionProvider.Tests;

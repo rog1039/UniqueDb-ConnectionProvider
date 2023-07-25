@@ -1,5 +1,6 @@
 using AutoFixture;
 using FluentAssertions;
+using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 using Xbehave;
 using Xunit;
 

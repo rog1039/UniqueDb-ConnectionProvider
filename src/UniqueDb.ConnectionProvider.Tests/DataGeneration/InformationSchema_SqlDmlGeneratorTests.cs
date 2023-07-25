@@ -1,6 +1,9 @@
 ﻿using Newtonsoft.Json;
 using UniqueDb.ConnectionProvider.DataGeneration;
-using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
+using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
+using UniqueDb.ConnectionProvider.SqlMetadata;
+using UniqueDb.ConnectionProvider.SqlMetadata.InformationSchema;
+using UniqueDb.ConnectionProvider.SqlScripting;
 using Xunit;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration;
@@ -23,7 +26,7 @@ public class InformationSchema_SqlDmlGeneratorTests
     public void GetSampleTableDefinition()
     {
         var tableDefinition = InformationSchemaTableDefinitionFromJson.SampleTable();
-        Console.WriteLine(tableDefinition.MakeList().ToStringTable());
+        Console.WriteLine(ListExtensionMethods.MakeList(tableDefinition).ToStringTable());
     }
 
     [Fact()]

@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using Newtonsoft.Json;
 using UniqueDb.ConnectionProvider;
+using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 
 namespace UniqueDb.CSharpClassGenerator.Features.DatabaseSelection;
 

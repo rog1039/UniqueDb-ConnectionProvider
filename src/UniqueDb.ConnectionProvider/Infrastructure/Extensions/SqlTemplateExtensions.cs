@@ -1,4 +1,4 @@
-﻿namespace Woeber.Logistics.FluentDbMigrations.Tests;
+﻿namespace UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 
 public static class SqlTemplateExtensions
 {

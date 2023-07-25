@@ -1,4 +1,4 @@
-using UniqueDb.ConnectionProvider.DataGeneration.CSharpGeneration;
+using UniqueDb.ConnectionProvider.CSharpGeneration;
 using Xunit;
 using Xunit.Abstractions;
 

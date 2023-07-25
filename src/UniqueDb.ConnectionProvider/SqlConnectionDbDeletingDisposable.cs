@@ -1,4 +1,6 @@
-﻿namespace UniqueDb.ConnectionProvider;
+﻿using UniqueDb.ConnectionProvider.SqlScripting;
+
+namespace UniqueDb.ConnectionProvider;
 
 public class SqlConnectionDbDeletingDisposable : IDisposable
 {

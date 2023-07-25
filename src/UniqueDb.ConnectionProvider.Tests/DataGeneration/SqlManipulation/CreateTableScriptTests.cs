@@ -1,5 +1,6 @@
 using UniqueDb.ConnectionProvider.DataGeneration;
-using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
+using UniqueDb.ConnectionProvider.SqlMetadata.InformationSchema;
+using UniqueDb.ConnectionProvider.SqlScripting;
 using Xunit;
 using Xunit.Abstractions;
 

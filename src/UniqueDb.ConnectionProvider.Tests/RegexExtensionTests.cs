@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using UniqueDb.ConnectionProvider.DataGeneration;
+using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 using Xunit;
 
 namespace UniqueDb.ConnectionProvider.Tests;
@@ -13,8 +14,7 @@ public class RegexExtensionTests
         var regex = @"(?<WeightLb>\d+)\s{0,4}(?<UoM>(LB|OZ|kg))";
         var input = @"18LB";
 
-        var result = input
-            .MakeList()
+        var result = ListExtensionMethods.MakeList(input)
             .MatchRegex(regex, new {WeightLb = "", UoM = ""})
             .Single();
             

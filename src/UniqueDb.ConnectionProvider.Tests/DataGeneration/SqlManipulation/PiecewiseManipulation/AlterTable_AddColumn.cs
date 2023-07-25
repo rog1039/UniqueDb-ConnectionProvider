@@ -1,7 +1,10 @@
 ﻿using System.Text;
 using NUnit.Framework;
 using UniqueDb.ConnectionProvider.DataGeneration;
-using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
+using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
+using UniqueDb.ConnectionProvider.SqlMetadata;
+using UniqueDb.ConnectionProvider.SqlMetadata.InformationSchema;
+using UniqueDb.ConnectionProvider.SqlMetadata.SysTables;
 using Woeber.Logistics.FluentDbMigrations.Tests;
 
 namespace UniqueDb.ConnectionProvider.Tests.DataGeneration.SqlManipulation.PiecewiseManipulation;
@@ -111,12 +114,12 @@ public class SqlOutputTextGenerator2
 
 public static class TreeFlattener
 {
-   public static List<List<T>> Flatten<T>(T item, Func<T,List<T>> childFunc)
+   public static List<List<T>> Flatten<T>(T item, Func<T, List<T>> childFunc)
    {
       var output = new List<List<T>>();
       var stack  = new Stack<T>();
       stack.Push(item);
-      
+
       while (true)
       {
          var path = new List<T>();
@@ -124,12 +127,12 @@ public static class TreeFlattener
          throw new NotImplementedException();
       }
    }
-   
-   public static List<List<T>> Flatten<T>(IList<T> item, Func<T,List<T>> childFunc)
+
+   public static List<List<T>> Flatten<T>(IList<T> item, Func<T, List<T>> childFunc)
    {
       var output = new List<List<T>>();
       var stack  = new Stack<T>();
-      
+
       while (true)
       {
          output.Add(new List<T>(item));
@@ -180,7 +183,7 @@ public class SqlDataType
 
    public SqlDataType(SISColumn column)
    {
-      Nullable = column.IS_NULLABLE == "true" ? true : false;
+      Nullable = column.IS_NULLABLE.InsensitiveEquals("TRUE") || column.IS_NULLABLE.InsensitiveEquals("YES");
       SqlType  = column.GetSqlDataTypeString();
    }
 }
@@ -197,12 +200,12 @@ public static class StringExtesions
 
 public interface ISchemaInformationProvider
 {
-   public IList<FkConstraintColumnDto>  GetForeignKeyDtos(SqlTableReference table);
-   public IList<IndexColumnQueryDto>    GetIndices(SqlTableReference        table);
-   public IList<TableConstraintInfoDto> GetConstraints(SqlTableReference    table);
+   public IList<SysForeignKey>  GetForeignKeyDtos(SqlTableReference table);
+   public IList<SysIndexColumn>    GetIndices(SqlTableReference        table);
+   public IList<SISTableConstraint> GetConstraints(SqlTableReference    table);
    public IList<SISColumn>              GetColumns(SqlTableReference        table);
    public SISTable                      GetTable(SqlTableReference          table);
-   public Task<bool>                    IsTemporal(SqlTableReference        table);
+   public bool                          IsTemporal(SqlTableReference        table);
    public MainToHistoryTableLink        TemporalTableInfo(SqlTableReference table);
 }
 
@@ -234,11 +237,7 @@ public class AddColumnToTemporalAtIndex
 
       var temporalInfo = schemaInformationProvider.TemporalTableInfo(input.SqlTableReference);
       TemporalTableInput? temporalTableInput = temporalInfo is not null
-         ? new TemporalTableInput(
-            temporalInfo.MainSchemaName,
-            temporalInfo.MainTableName,
-            temporalInfo.HistorySchemaName,
-            temporalInfo.HistoryTableName)
+         ? new TemporalTableInput(temporalInfo)
          : null;
       if (temporalTableInput is not null)
       {
@@ -246,8 +245,23 @@ public class AddColumnToTemporalAtIndex
       }
 
       output.AddChild(AlterTable_AddColumn.GenerateSql(schemaInformationProvider, input)); //main table
+      if (temporalInfo is not null)
+      {
+         var historyTableAlterColumnInput = new AlterTable_AddColumnInput()
+         {
+            ColumnName  = input.ColumnName,
+            ColumnType  = input.ColumnType,
+            ColumnIndex = input.ColumnIndex,
+            SqlTableReference = new SqlTableReference(input.SqlTableReference.SqlConnectionProvider,
+                                                      temporalInfo.HistorySchemaName,
+                                                      temporalInfo.HistoryTableName)
+         };
+         var alterHistoryTableNode = new SqlOutputNode("Alter History Table Node");
+         alterHistoryTableNode.AddChild(
+            AlterTable_AddColumn.GenerateSql(schemaInformationProvider, historyTableAlterColumnInput)); //main table
+         output.AddChild(alterHistoryTableNode);
+      }
 
-      // sql.AddLine(AlterTable_AddColumn.GenerateSql(null)); //history table
       if (temporalTableInput is not null)
       {
          output.AddChild(EnableTemporalTable.GenerateSql(temporalTableInput));
@@ -277,7 +291,14 @@ public class BeginTransaction
 public record TemporalTableInput(string MainSchema,
                                  string MainTable,
                                  string HistorySchema,
-                                 string HistoryTable);
+                                 string HistoryTable)
+{
+   public TemporalTableInput(MainToHistoryTableLink link) :
+      this(link.MainSchemaName,
+           link.MainTableName,
+           link.HistorySchemaName,
+           link.HistoryTableName) { }
+};
 
 public class EnableTemporalTable
 {

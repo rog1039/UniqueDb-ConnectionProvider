@@ -1,4 +1,5 @@
 using FluentAssertions;
+using UniqueDb.ConnectionProvider.Converters;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using Xunit;
 using Xunit.Abstractions;

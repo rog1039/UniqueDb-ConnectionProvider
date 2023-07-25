@@ -1,8 +1,8 @@
 using NUnit.Framework;
 using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.DataGeneration.DesignTimeDataGeneration;
-using UniqueDb.ConnectionProvider.DataGeneration.SqlManipulation;
-using UniqueDb.ConnectionProvider.DataGeneration.SqlMetadata;
+using UniqueDb.ConnectionProvider.SqlMetadata;
+using UniqueDb.ConnectionProvider.SqlScripting;
 
 [TestFixture]
 public class IndexDmlScriptCreatorTests

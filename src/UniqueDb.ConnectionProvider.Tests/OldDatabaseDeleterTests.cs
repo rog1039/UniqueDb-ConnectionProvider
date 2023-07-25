@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 using Xbehave;
 
 namespace UniqueDb.ConnectionProvider.Tests;
