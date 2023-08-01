@@ -1,4 +1,6 @@
-﻿namespace UniqueDb.ConnectionProvider.DataGeneration;
+﻿using UniqueDb.ConnectionProvider.SqlMetadata.SysTables.VeryNiceCopies;
+
+namespace UniqueDb.ConnectionProvider.CoreTypes;
 
 public class SqlType
 {
@@ -16,11 +18,11 @@ public class SqlType
          : MaximumCharLength.ToString();
 
 
-   protected SqlType(string typeName)
+   protected internal SqlType(string typeName)
    {
       TypeName = typeName;
    }
-
+   
    public static SqlType Type(string typeName)
    {
       return new SqlType(typeName);
@@ -50,21 +52,25 @@ public class SqlType
    {
       switch (TypeName.ToLower())
       {
-         /*
+         /* *************************************************************************
           * Exact numerics
           */
          case "numeric":
-         case "decimal": return $"{TypeName}({NumericPrecision},{NumericScale})";
+         case "decimal": 
+            
+            return $"{TypeName}({NumericPrecision},{NumericScale})";
 
 
-         /*
+         /* *************************************************************************
           * Approximate Numerics
           */
          case "real":
-         case "float": return $"{TypeName}({Mantissa})";
+         case "float": 
+            
+            return $"{TypeName}({Mantissa})";
 
 
-         /*
+         /* *************************************************************************
           * Just the type names
           */
          case "bit":
@@ -81,19 +87,21 @@ public class SqlType
          case "uniqueidentifier":
          case "timestamp":
          case "rowversion":
+            
             return TypeName;
 
 
-         /*
+         /* *************************************************************************
           * Date/Time...
           */
          case "datetime2":
          case "datetimeoffset":
          case "time":
+            
             return $"{TypeName}({FractionalSecondsPrecision})";
 
 
-         /*
+         /* *************************************************************************
           * With char lengths...
           */
          case "binary":
@@ -103,6 +111,7 @@ public class SqlType
          case "varchar":
          case "nchar":
          case "nvarchar":
+            
             return $"{TypeName}({MaximumCharLengthString})";
 
 

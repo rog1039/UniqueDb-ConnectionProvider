@@ -1,6 +1,6 @@
 using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 
-namespace UniqueDb.ConnectionProvider.DataGeneration;
+namespace UniqueDb.ConnectionProvider.CoreTypes;
 
 public class SqlTableReference
 {
@@ -42,6 +42,13 @@ public class SqlTableReference
       var tableName = new TableName(SchemaName, TableName);
       return tableName.ToString();
    }
+
+   public object ToAnonymousSqlParamObject()
+   {
+      return new { SchemaName, TableName };
+   }
+
+   public TableName ToTableName() => new TableName(this);
 }
 
 public class TableName
@@ -63,6 +70,7 @@ public class TableName
 
    public string Schema { get; init; }
    public string Table  { get; init; }
+   
    public void Deconstruct(out string Schema, out string Table)
    {
       Schema = this.Schema;

@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using UniqueDb.ConnectionProvider.Converters;
-using UniqueDb.ConnectionProvider.DataGeneration;
+using UniqueDb.ConnectionProvider.CoreTypes;
 using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 using UniqueDb.ConnectionProvider.SqlMetadata.InformationSchema;
 

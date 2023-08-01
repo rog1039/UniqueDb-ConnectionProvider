@@ -1,5 +1,5 @@
 using UniqueDb.ConnectionProvider.Converters;
-using UniqueDb.ConnectionProvider.DataGeneration;
+using UniqueDb.ConnectionProvider.CoreTypes;
 
 namespace UniqueDb.ConnectionProvider.SqlMetadata.InformationSchema;
 

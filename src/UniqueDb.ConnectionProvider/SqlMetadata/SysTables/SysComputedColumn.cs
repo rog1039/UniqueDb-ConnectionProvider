@@ -2,10 +2,10 @@
 
 public class SysComputedColumn
 {
-   public int     object_id                           { get; set; }
    public string? SchemaName                          { get; set; }
    public string? TableName                           { get; set; }
    public string? ColumnName                          { get; set; }
+   public int     object_id                           { get; set; }
    public bool?   is_computed                         { get; set; }
    public string? definition                          { get; set; }
    public int     column_id                           { get; set; }

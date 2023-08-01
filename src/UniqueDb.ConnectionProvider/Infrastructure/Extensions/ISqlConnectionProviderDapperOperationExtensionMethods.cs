@@ -1,6 +1,6 @@
 using Dapper;
 using Microsoft.Data.SqlClient;
-using UniqueDb.ConnectionProvider.DataGeneration;
+using UniqueDb.ConnectionProvider.CoreTypes;
 using UniqueDb.ConnectionProvider.SqlScripting;
 
 namespace UniqueDb.ConnectionProvider.Infrastructure.Extensions;

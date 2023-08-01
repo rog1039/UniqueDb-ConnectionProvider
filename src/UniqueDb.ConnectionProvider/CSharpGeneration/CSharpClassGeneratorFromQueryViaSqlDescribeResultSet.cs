@@ -1,6 +1,6 @@
 using System.Data;
 using Dapper;
-using UniqueDb.ConnectionProvider.DataGeneration;
+using UniqueDb.ConnectionProvider.CoreTypes;
 using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 using UniqueDb.ConnectionProvider.SqlMetadata.DescribeResultSet;
 using UniqueDb.ConnectionProvider.SqlMetadata.SysTables;

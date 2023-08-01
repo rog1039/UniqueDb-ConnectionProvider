@@ -1,8 +1,7 @@
 using System.ComponentModel;
-using FluentAssertions;
 using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 
-namespace UniqueDb.ConnectionProvider.DataGeneration;
+namespace UniqueDb.ConnectionProvider.CoreTypes;
 
 [TypeConverter(typeof(DbTableNameTypeConverter))]
 public record DbTableName
@@ -14,7 +13,7 @@ public record DbTableName
    {
       var tableName = DbTableNameWithNullableSchemaParser.ParseFullTableName(fullName);
 
-      Schema = tableName?.SchemaName ??
+      Schema = tableName.SchemaName ??
                throw new InvalidOperationException($"Provided fullname, {fullName}, did not contain a schema.");
       Name = tableName.TableName;
    }
@@ -42,5 +41,9 @@ public record DbTableName
    public static implicit operator DbTableName(string input)
    {
       return new DbTableName(input);
+   }
+   public static implicit operator DbTableName(SqlTableReference sqlTableReference)
+   {
+      return new DbTableName(sqlTableReference.SchemaName, sqlTableReference.TableName);
    }
 }

@@ -1,4 +1,4 @@
-﻿using UniqueDb.ConnectionProvider.DataGeneration;
+﻿using UniqueDb.ConnectionProvider.CoreTypes;
 using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 
 namespace UniqueDb.ConnectionProvider.SqlMetadata.SysTables;
@@ -8,8 +8,9 @@ public class SysIndexColumn
    public int     index_id             { get; set; }
    public int     column_id            { get; set; }
    public int     index_column_id      { get; set; }
-   public string? Index_Name           { get; set; }
+   public string? SchemaName           { get; set; }
    public string? TableName            { get; set; }
+   public string? Index_Name           { get; set; }
    public string? Column_Name          { get; set; }
    public bool?   is_descending_key    { get; set; }
    public byte    key_ordinal          { get; set; }
@@ -39,35 +40,34 @@ public class SysIndexColumn
          ;
    }
 
-   public const string SqlQuery = 
+   public const string SqlQuery =
       """
-      SELECT b.index_id,
-             b.column_id,
-             b.index_column_id,
-             a.name                             AS Index_Name,
-             OBJECT_NAME(a.object_id)           as TableName,
-             COL_NAME(b.object_id, b.column_id) AS Column_Name,
-             b.is_descending_key,
-             b.key_ordinal,
-             b.is_included_column,
-             a.type IndexType,
-             a.type_desc IndexTypeDesc,
-             a.is_unique,
-             a.data_space_id,
-             a.ignore_dup_key,
-             a.is_primary_key,
-             a.is_unique_constraint,
-             a.fill_factor,
-             a.is_padded,
-             a.is_disabled,
-             a.auto_created
-      FROM
-       sys.indexes AS a
-      INNER JOIN
-       sys.index_columns AS b
-             ON a.object_id = b.object_id AND a.index_id = b.index_id
-      WHERE
-              a.is_hypothetical = 0 AND
-       a.object_id = OBJECT_ID('$schema$.[$tableName$]');
+        SELECT
+            ic.index_id,
+            ic.column_id,
+            ic.index_column_id,
+            SCHEMA_NAME(o.schema_id)             AS SchemaName,
+            OBJECT_NAME(i.object_id)             AS TableName,
+            i.name                               AS Index_Name,
+            COL_NAME(ic.object_id, ic.column_id) AS Column_Name,
+            ic.is_descending_key,
+            ic.key_ordinal,
+            ic.is_included_column,
+            i.type                                  IndexType,
+            i.type_desc                             IndexTypeDesc,
+            i.is_unique,
+            i.data_space_id,
+            i.ignore_dup_key,
+            i.is_primary_key,
+            i.is_unique_constraint,
+            i.fill_factor,
+            i.is_padded,
+            i.is_disabled,
+            i.auto_created
+        FROM sys.indexes                AS i
+                 JOIN sys.index_columns AS ic ON i.object_id = ic.object_id AND i.index_id = ic.index_id
+                 JOIN sys.objects       AS o ON i.object_id = o.object_id
+        WHERE i.is_hypothetical = 0
+          AND i.object_id = OBJECT_ID('Warehouse.StockItems');
       """;
 }

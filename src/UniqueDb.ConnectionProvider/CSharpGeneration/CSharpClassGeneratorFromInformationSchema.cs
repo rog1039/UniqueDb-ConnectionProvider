@@ -1,5 +1,5 @@
 ﻿using UniqueDb.ConnectionProvider.Converters;
-using UniqueDb.ConnectionProvider.DataGeneration;
+using UniqueDb.ConnectionProvider.CoreTypes;
 using UniqueDb.ConnectionProvider.SqlMetadata;
 using UniqueDb.ConnectionProvider.SqlMetadata.InformationSchema;
 
@@ -10,7 +10,7 @@ public static class CSharpClassGeneratorFromInformationSchema
     public static string CreateCSharpClass(SqlTableReference sqlTableReference, string? className = default(string))
     {
         var tableName = className ?? sqlTableReference.TableName;
-        var schemaColumns    = InformationSchemaMetadataExplorer.GetInformationSchemaColumns(sqlTableReference);
+        var schemaColumns    = InformationSchemaExplorer.GetSisColumns(sqlTableReference);
         
         return CreateCSharpClass(schemaColumns, tableName, CSharpClassTextGeneratorOptions.Default);
     }

@@ -1,4 +1,4 @@
-namespace UniqueDb.ConnectionProvider.DataGeneration;
+namespace UniqueDb.ConnectionProvider.CoreTypes;
 
 public class SqlColumnDeclaration
 {

@@ -1,7 +1,7 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
 
-namespace UniqueDb.ConnectionProvider.SqlMetadata;
+namespace UniqueDb.ConnectionProvider.SqlMetadata.AdoSchema;
 
 public static class AdoSchemaTableHelper
 {

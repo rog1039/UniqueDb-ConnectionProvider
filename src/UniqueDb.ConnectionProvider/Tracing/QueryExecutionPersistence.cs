@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 using Serilog;
-using UniqueDb.ConnectionProvider.DataGeneration.Crud;
+using UniqueDb.ConnectionProvider.Crud;
 
 namespace UniqueDb.ConnectionProvider.Tracing;
 

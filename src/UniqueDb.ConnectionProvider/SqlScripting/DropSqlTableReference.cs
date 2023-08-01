@@ -1,4 +1,4 @@
-using UniqueDb.ConnectionProvider.DataGeneration;
+using UniqueDb.ConnectionProvider.CoreTypes;
 
 namespace UniqueDb.ConnectionProvider.SqlScripting;
 

@@ -1,6 +1,6 @@
 using System.Xml.Linq;
 
-namespace UniqueDb.ConnectionProvider.DataGeneration;
+namespace UniqueDb.ConnectionProvider.CoreTypes;
 
 public static class SqlTypeLists
 {

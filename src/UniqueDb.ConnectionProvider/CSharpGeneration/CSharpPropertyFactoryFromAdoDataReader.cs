@@ -2,7 +2,6 @@ using System.Data;
 using System.Data.Common;
 using System.Data.Odbc;
 using Microsoft.Data.SqlClient;
-using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 
 namespace UniqueDb.ConnectionProvider.CSharpGeneration;

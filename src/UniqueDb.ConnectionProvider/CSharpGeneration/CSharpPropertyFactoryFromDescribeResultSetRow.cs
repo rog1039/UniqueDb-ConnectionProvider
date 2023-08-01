@@ -1,4 +1,3 @@
-using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.SqlMetadata.DescribeResultSet;
 
 namespace UniqueDb.ConnectionProvider.CSharpGeneration;

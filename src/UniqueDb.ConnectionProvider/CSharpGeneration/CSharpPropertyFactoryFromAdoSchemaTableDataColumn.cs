@@ -1,5 +1,4 @@
 using System.Data;
-using UniqueDb.ConnectionProvider.DataGeneration;
 using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 
 namespace UniqueDb.ConnectionProvider.CSharpGeneration;

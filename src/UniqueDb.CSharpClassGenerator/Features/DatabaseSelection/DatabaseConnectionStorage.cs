@@ -55,7 +55,7 @@ public class DatabaseConnectionStorage
             var obj  = JsonConvert.DeserializeObject<DatabaseConnectionStorage>(json);
             this.SqlRecordDtos.Clear();
             this.OdbcDsnDtos.Clear();
-            SqlRecordDtos.AddRange(obj.SqlRecordDtos);
+            SqlRecordDtos.AddRange(obj.SqlRecordDtos.OrderBy(x => x.ServerName).ThenBy(x => x.DatabaseName));
             OdbcDsnDtos.AddRange(obj.OdbcDsnDtos);
         }
         catch (Exception e)

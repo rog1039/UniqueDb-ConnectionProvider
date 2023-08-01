@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="UniqueDb.ConnectionProvider.SqlMetadata.SysTables.ExactCopies.SysObjects_Exact">
+    <Position X="0.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>ABAAAACAAIAAACAAAAABAAAEAAANAAAAAAAAAAAAwAA=</HashCode>
+      <FileName>SqlMetadata\SysTables\ExactCopies\a.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.SqlMetadata.SysTables.ExactCopies.SysTables_Exact">
+    <Position X="3.25" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>CBAIIACACYo4BCAAAAABAIAcAEJNgQDgMCAIIQQB6QA=</HashCode>
+      <FileName>SqlMetadata\SysTables\ExactCopies\a.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.SqlMetadata.SysTables.ExactCopies.SysIndexes_Exact">
+    <Position X="1" Y="12" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAgEAICAiIAABAAAAKAAAAAyAABVAAAABAAAIAAQCAE=</HashCode>
+      <FileName>SqlMetadata\SysTables\ExactCopies\a.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.SqlMetadata.SysTables.ExactCopies.SysIndex_Columns">
+    <Position X="1" Y="17.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAECABAAAAAAAAQAAAAAAAAAAAAABAAQCAAAACAQ=</HashCode>
+      <FileName>SqlMetadata\SysTables\ExactCopies\a.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.SqlMetadata.SysTables.ExactCopies.SysCheck_Constraints_Exact">
+    <Position X="5.25" Y="20.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>ABAACACIAIAEgCAAAAABAAAGAAANAAgBAAAAAAAAwAA=</HashCode>
+      <FileName>SqlMetadata\SysTables\ExactCopies\a.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.SqlMetadata.SysTables.ExactCopies.SysDefault_Constaints_Exact">
+    <Position X="9.5" Y="20.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>ABAAAACIAIAEACAAAAABAAAEAAANAAABAAAAAAAAwAA=</HashCode>
+      <FileName>SqlMetadata\SysTables\ExactCopies\a.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.SqlMetadata.SysTables.ExactCopies.SysForeign_Keys_Exact">
+    <Position X="3.5" Y="12" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>ABAACQCAAIAEgCAAAAwBAAAGAAANAAAAABAAAIAAwAA=</HashCode>
+      <FileName>SqlMetadata\SysTables\ExactCopies\a.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.SqlMetadata.SysTables.ExactCopies.SysForeign_Key_Columns_Exact">
+    <Position X="3.5" Y="17.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAASAAAAAAAAAAAABAAAAAAAAAAABIBAAAAAAAAA=</HashCode>
+      <FileName>SqlMetadata\SysTables\ExactCopies\a.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.SqlMetadata.SysTables.ExactCopies.SysKey_Constraints_Exact">
+    <Position X="7.5" Y="20.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ABAAAACCAIAEACAAAAABAAAEAAANAAAAABAAAAAAwAA=</HashCode>
+      <FileName>SqlMetadata\SysTables\ExactCopies\a.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.SqlMetadata.SysTables.ExactCopies.SysSequences_Exact">
+    <Position X="8.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>ABBAAACAAIAAEDAAAAAFACAGAAAPAAQABAAQQAUAwAA=</HashCode>
+      <FileName>SqlMetadata\SysTables\ExactCopies\a.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.SqlMetadata.SysTables.ExactCopies.SysTriggers_Exact">
+    <Position X="1.25" Y="7.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAACACACYAAACAAAAAAAAQCAAAFAAAAAAAAACAAwAA=</HashCode>
+      <FileName>SqlMetadata\SysTables\ExactCopies\a.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UniqueDb.ConnectionProvider.SqlMetadata.SysTables.ExactCopies.SysViews_Exact">
+    <Position X="6" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>CBAAKACAQIAIACAAAAABAAAkAAINAADAAAAAAEAA4AA=</HashCode>
+      <FileName>SqlMetadata\SysTables\ExactCopies\a.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

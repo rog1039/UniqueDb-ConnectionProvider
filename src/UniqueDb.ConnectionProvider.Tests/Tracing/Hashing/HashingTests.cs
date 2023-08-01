@@ -49,7 +49,7 @@ public class HashingTests : UnitTestBaseWithConsoleRedirection
         PrintBytes(utf16Bytes,   "utf16");
         PrintBytes(utf32Bytes,   "utf32");
 
-        Console.WriteLine("\r\n");
+        Console.WriteLine("\r\nMD5 Bytes:");
 
         PrintMd5Bytes(defaultBytes, "default");
         PrintMd5Bytes(asciiBytes,   "ascii");

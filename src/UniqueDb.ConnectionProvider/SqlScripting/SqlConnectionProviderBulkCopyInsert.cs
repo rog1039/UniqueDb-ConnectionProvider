@@ -1,8 +1,8 @@
 using System.Data;
 using System.Reflection;
 using Microsoft.Data.SqlClient;
-using UniqueDb.ConnectionProvider.DataGeneration;
-using UniqueDb.ConnectionProvider.DataGeneration.Crud;
+using UniqueDb.ConnectionProvider.CoreTypes;
+using UniqueDb.ConnectionProvider.CSharpGeneration;
 using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 using UniqueDb.ConnectionProvider.SqlMetadata;
 
@@ -97,7 +97,7 @@ public static class SqlConnectionProviderBulkCopyInsert
                                                                 DataTable              dataTable)
    {
       var dbTableColumns =
-         InformationSchemaMetadataExplorer.GetInformationSchemaColumns(
+         InformationSchemaExplorer.GetSisColumns(
             new SqlTableReference(sqlConnectionProvider, schemaName, tableName));
       var columnsFromDbDict = dbTableColumns.ToDictionary(z => z.COLUMN_NAME);
 

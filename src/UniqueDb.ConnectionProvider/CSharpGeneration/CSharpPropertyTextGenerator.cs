@@ -1,5 +1,3 @@
-using UniqueDb.ConnectionProvider.DataGeneration;
-
 namespace UniqueDb.ConnectionProvider.CSharpGeneration;
 
 public class CSharpPropertyTextGenerator

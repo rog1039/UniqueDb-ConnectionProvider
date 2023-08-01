@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
-using UniqueDb.ConnectionProvider.DataGeneration.Crud;
+using UniqueDb.ConnectionProvider.CSharpGeneration;
 using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 
 namespace UniqueDb.ConnectionProvider.SqlScripting;

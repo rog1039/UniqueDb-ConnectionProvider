@@ -1,8 +1,7 @@
-using FluentAssertions;
 using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 using UniqueDb.ConnectionProvider.SqlMetadata.InformationSchema;
 
-namespace UniqueDb.ConnectionProvider.DataGeneration;
+namespace UniqueDb.ConnectionProvider.CoreTypes;
 
 public class SqlTypeFactory
 {
@@ -138,6 +137,79 @@ public class SqlTypeFactory
    {
       return SqlType.Type("xml");
    }
+
+   public static SqlType Create(string typeName, 
+                                int precision, 
+                                int scale, 
+                                int maxCharLength)
+   {
+      switch (typeName)
+      {
+         /* *************************************************************************
+          * Exact numerics
+          */
+         case "numeric":
+         case "decimal":
+            return SqlTypeFactory.Numeric(precision, scale);
+
+
+         /* *************************************************************************
+          * Approximate Numerics
+          */
+         case "real":
+         case "float":
+            throw new NotImplementedException();
+
+         /* *************************************************************************
+          * Just the type names
+          */
+         case "bit":
+         case "tinyint":
+         case "smallint":
+         case "int":
+         case "bigint":
+            return new SqlType(typeName);
+
+         case "date":
+         case "datetime":
+         case "smalldatetime":
+
+         case "xml":
+         case "uniqueidentifier":
+         case "timestamp":
+         case "rowversion":
+
+            return new SqlType(typeName);
+
+
+         /* *************************************************************************
+          * Date/Time...
+          */
+         case "datetime2":
+         case "datetimeoffset":
+         case "time":
+
+            return SqlType.DateTime(typeName, scale);
+
+
+         /* *************************************************************************
+          * With char lengths...
+          */
+         case "binary":
+         case "varbinary":
+
+         case "char":
+         case "varchar":
+         case "nchar":
+         case "nvarchar":
+
+            return SqlType.TextType(typeName, maxCharLength);
+
+
+         default:
+            throw new InvalidDataException($"No cases defined to translate data type: {typeName}."); 
+      }
+   }
 }
 
 public class SqlTextLength
@@ -150,6 +222,11 @@ public class SqlTextLength
    }
 
    public static SqlTextLength Max => new SqlTextLength(int.MaxValue);
+
+   public static implicit operator SqlTextLength(int maxLength)
+   {
+      return new SqlTextLength(maxLength);
+   }
 }
 
 public static class SqlTextLengthFactory

@@ -1,6 +1,6 @@
 using UniqueDb.ConnectionProvider.Converters;
+using UniqueDb.ConnectionProvider.CoreTypes;
 using UniqueDb.ConnectionProvider.CSharpGeneration;
-using UniqueDb.ConnectionProvider.DataGeneration;
 
 namespace UniqueDb.ConnectionProvider.SqlScripting;
 

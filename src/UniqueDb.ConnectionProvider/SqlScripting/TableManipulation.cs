@@ -1,4 +1,4 @@
-using UniqueDb.ConnectionProvider.DataGeneration;
+using UniqueDb.ConnectionProvider.CoreTypes;
 using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 using UniqueDb.ConnectionProvider.SqlMetadata;
 
@@ -8,7 +8,7 @@ public static class TableManipulation
 {
     public static void CopyTableStructure(SqlTableReference sourceTable, SqlTableReference targetTable)
     {
-        var sisTable       = InformationSchemaMetadataExplorer.GetInformationSchemaTableDefinition(sourceTable);
+        var sisTable       = InformationSchemaExplorer.GetSisTableDefinition(sourceTable);
         var createTableScript = SISToSqlDmlCreateStatementGenerator.GenerateCreateTableScript(sisTable);
         targetTable.SqlConnectionProvider.Execute(createTableScript);
     }

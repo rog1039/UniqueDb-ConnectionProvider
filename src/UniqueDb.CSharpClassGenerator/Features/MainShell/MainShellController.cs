@@ -8,7 +8,7 @@ using DevExpress.Mvvm;
 using Newtonsoft.Json;
 using Reactive.Bindings;
 using UniqueDb.ConnectionProvider.CSharpGeneration;
-using UniqueDb.ConnectionProvider.DataGeneration.DesignTimeDataGeneration;
+using UniqueDb.ConnectionProvider.CSharpGeneration.DesignTimeDataGeneration;
 using UniqueDb.CSharpClassGenerator.Features.DatabaseSelection;
 
 namespace UniqueDb.CSharpClassGenerator.Features.MainShell;

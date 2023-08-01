@@ -60,7 +60,7 @@ public static class RegexExtensions
    public static IEnumerable<T> MatchRegex<T>(this string inputString, string regexPattern,
                                               T           regexResultDataStructure)
    {
-      return GenericExtensionMethods.MakeList(inputString).MatchRegex(regexPattern, regexResultDataStructure);
+      return inputString.MakeList().MatchRegex(regexPattern, regexResultDataStructure);
    }
 
    public static IEnumerable<T> MatchRegex<T>(this IEnumerable<string> inputStrings,

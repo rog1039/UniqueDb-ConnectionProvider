@@ -1,7 +1,7 @@
 using UniqueDb.ConnectionProvider.CSharpGeneration;
 using UniqueDb.ConnectionProvider.Infrastructure.Extensions;
 
-namespace UniqueDb.ConnectionProvider.DataGeneration;
+namespace UniqueDb.ConnectionProvider.CoreTypes;
 
 public class SqlTypeNumberBase : SqlType
 {
