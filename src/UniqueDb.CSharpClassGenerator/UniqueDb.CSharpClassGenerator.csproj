@@ -35,9 +35,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DevExpress.Mvvm" Version="22.2.3" />
-    <PackageReference Include="DevExpress.Wpf.Grid" Version="22.2.3" />
-    <PackageReference Include="DevExpress.Wpf.LayoutControl" Version="22.2.3" />
+    <PackageReference Include="DevExpress.Mvvm" Version="23.1.4" />
+    <PackageReference Include="DevExpress.Wpf.Grid" Version="23.1.4" />
+    <PackageReference Include="DevExpress.Wpf.LayoutControl" Version="23.1.4" />
     <PackageReference Include="ReactiveProperty" Version="8.2.0" />
   </ItemGroup>
   <ItemGroup>
