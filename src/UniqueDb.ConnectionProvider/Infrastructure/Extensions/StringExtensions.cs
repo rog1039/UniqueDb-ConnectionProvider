@@ -126,5 +126,5 @@ public static class StringExtensions
       return text.Split(splitChar, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
    }
 
-   public static void ToConsole(this string s) => Console.WriteLine(s);
+   public static void ToConsole(this string? s) => Console.WriteLine(s);
 }

@@ -131,7 +131,7 @@ public abstract class BaseSqlConnectionProvider : ISqlConnectionProvider, IEquat
             Pooling     = true,
             MinPoolSize = 10,
             // CommandTimeout = 3,
-            Encrypt = false
+            Encrypt = false,
         };
 
         if (UseIntegratedAuthentication) return builder;
