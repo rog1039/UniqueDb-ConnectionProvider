@@ -1,4 +1,6 @@
-﻿namespace UniqueDb.ConnectionProvider;
+﻿using NanoidDotNet;
+
+namespace UniqueDb.ConnectionProvider;
 
 /// <summary>
 /// A class that provides a connection string to a brand-new database.
@@ -27,7 +29,7 @@ public class UniqueDbConnectionProvider : BaseSqlConnectionProvider
    {
       var prefix    = options.DatabaseNamePrefix;
       var timestamp = options.IncludeTimeStamp ? DateTime.Now.ToString(options.TimeStampFormat) : string.Empty;
-      var nanoId    = Nanoid.Nanoid.Generate(size: 5);
+      var nanoId    = Nanoid.Generate(size: 5);
 
       var generatedName = string.Format(databaseNameFormatString,
                                         prefix,
