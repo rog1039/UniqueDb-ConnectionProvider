@@ -2,13 +2,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <RootNamespace>UniqueDb.CSharpClassGenerator</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <!--    Remove conflicting WinForms usings-->
@@ -35,9 +35,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DevExpress.Mvvm" Version="22.1.5" />
-    <PackageReference Include="DevExpress.Wpf.Grid" Version="22.1.5" />
-    <PackageReference Include="DevExpress.Wpf.LayoutControl" Version="22.1.5" />
+    <PackageReference Include="DevExpress.Mvvm" Version="23.2.3" />
+    <PackageReference Include="DevExpress.Wpf.Grid" Version="23.2.3" />
+    <PackageReference Include="DevExpress.Wpf.LayoutControl" Version="23.2.3" />
     <PackageReference Include="ReactiveProperty" Version="8.2.0" />
   </ItemGroup>
   <ItemGroup>
