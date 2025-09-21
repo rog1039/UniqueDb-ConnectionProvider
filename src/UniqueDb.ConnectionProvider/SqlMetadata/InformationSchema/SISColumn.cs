@@ -3,6 +3,10 @@ using UniqueDb.ConnectionProvider.CoreTypes;
 
 namespace UniqueDb.ConnectionProvider.SqlMetadata.InformationSchema;
 
+/// <summary>
+/// Represents a column within a SQL Information Schema, providing metadata
+/// about the column and methods to retrieve its SQL type information.
+/// </summary>
 public class SISColumn : IEquatable<SISColumn>
 {
    public int      Id                        { get; set; }
@@ -44,6 +48,12 @@ public class SISColumn : IEquatable<SISColumn>
       return sqlType.ToString();
    }
 
+   /// Retrieves the SQL type of the column based on its metadata.
+   /// The method utilizes the `SqlTypeFromSISColumn` utility to infer the
+   /// corresponding SQL data type from the properties of the current `SISColumn` instance.
+   /// <returns>
+   /// An instance of the `SqlType` class representing the SQL data type of the column.
+   /// </returns>
    public SqlType GetSqlType() => SqlTypeFromSISColumn.FromInformationSchemaColumn(this);
 
    #region Equals Implementation

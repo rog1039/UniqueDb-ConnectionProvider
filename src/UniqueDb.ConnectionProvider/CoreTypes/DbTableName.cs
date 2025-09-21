@@ -46,4 +46,19 @@ public record DbTableName
    {
       return new DbTableName(sqlTableReference.SchemaName, sqlTableReference.TableName);
    }
+
+   public virtual bool Equals(DbTableName? other)
+   {
+      if (other is null) return false;
+      if (ReferenceEquals(this, other)) return true;
+      return string.Equals(Schema, other.Schema, StringComparison.OrdinalIgnoreCase) && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
+   }
+
+   public override int GetHashCode()
+   {
+      var hashCode = new HashCode();
+      hashCode.Add(Schema, StringComparer.OrdinalIgnoreCase);
+      hashCode.Add(Name,   StringComparer.OrdinalIgnoreCase);
+      return hashCode.ToHashCode();
+   }
 }

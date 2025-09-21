@@ -17,7 +17,6 @@ public class SISTableDefinition
          .ToList();
    }
 
-
    public bool IsColumnPrimaryKey(SISColumn col)
    {
       if (col.TABLE_SCHEMA != InformationSchemaTable.TABLE_SCHEMA ||

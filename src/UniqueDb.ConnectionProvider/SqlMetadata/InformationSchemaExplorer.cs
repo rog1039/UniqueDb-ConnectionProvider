@@ -71,6 +71,11 @@ public static class InformationSchemaExplorer
       }
    }
 
+   /// <summary>
+   /// Retrieves the list of columns for a given SQL table reference from the information schema.
+   /// </summary>
+   /// <param name="sqlTableReference">The reference to the SQL table whose columns are to be fetched.</param>
+   /// <returns>A list of <see cref="SISColumn"/> objects representing the columns of the specified table.</returns>
    public static IList<SISColumn> GetSisColumns(SqlTableReference sqlTableReference)
    {
       var sqlQuery =
