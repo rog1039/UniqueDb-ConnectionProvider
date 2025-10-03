@@ -361,8 +361,8 @@ public class AlterTable_AddColumn
       };
       allColumnInfos.Insert(input.ColumnIndex - 1, newColumnInfo);
 
-      var sourceTableName = new TableName(input.SqlTableReference);
-      var tempTableName = new TableName(input.SqlTableReference.SchemaName, $"tmp_{input.SqlTableReference.TableName}");
+      var sourceTableName = new TableIdentifier(input.SqlTableReference.SchemaName, input.SqlTableReference.TableName);
+      var tempTableName = new TableIdentifier(input.SqlTableReference.SchemaName, $"tmp_{input.SqlTableReference.TableName}");
       var createTempTableInput = new CreateTableInput()
       {
          TableName   = $"tmp_{input.SqlTableReference.TableName}",
@@ -408,7 +408,7 @@ public class AlterTable_AddColumn
 
 public class RenameTable
 {
-   public static SqlOutputNode GenerateSql(TableName sourceTable, TableName targetTable)
+   public static SqlOutputNode GenerateSql(TableIdentifier sourceTable, TableIdentifier targetTable)
    {
       return new SqlOutputNode(nameof(RenameTable), $"EXEC sp_rename '{sourceTable}', '{targetTable.Table}';");
    }
@@ -416,7 +416,7 @@ public class RenameTable
 
 public class DropTable
 {
-   public static SqlOutputNode GenerateSql(TableName tableName) => new(nameof(DropTable), $"DROP TABLE {tableName}");
+   public static SqlOutputNode GenerateSql(TableIdentifier tableName) => new(nameof(DropTable), $"DROP TABLE {tableName}");
 }
 
 public class CreateTableInput
@@ -464,7 +464,7 @@ public class CreateTable
 {
    public static SqlOutputNode GenerateSql(ISchemaInformationProvider schemaInformationProvider, CreateTableInput input)
    {
-      var tableName = new TableName(input.SchemaName, input.TableName);
+      var tableName = new TableIdentifier(input.SchemaName, input.TableName);
       var columnText = input.ColumnInfos
          .Select(x => x.ToString())
          .StringJoin(",\r\n");
@@ -482,8 +482,8 @@ public class CreateTable
 
 public class InsertIntoInput
 {
-   public TableName    SourceTable { get; set; }
-   public TableName    TargetTable { get; set; }
+   public TableIdentifier    SourceTable { get; set; }
+   public TableIdentifier    TargetTable { get; set; }
    public List<string> ColumnNames { get; set; }
 }
 

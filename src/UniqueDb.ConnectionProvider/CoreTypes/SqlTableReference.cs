@@ -4,76 +4,54 @@ namespace UniqueDb.ConnectionProvider.CoreTypes;
 
 public class SqlTableReference
 {
-   public ISqlConnectionProvider SqlConnectionProvider { get; set; }
-   public string                 TableName             { get; set; }
-   public string                 SchemaName            { get; set; }
+  public ISqlConnectionProvider SqlConnectionProvider { get; set; }
+  public string                 TableName             { get; set; }
+  public string                 SchemaName            { get; set; }
 
-   private const string TableNameLengthMessage =
-      "a schema and table name is expected -- use form similar to Schema.Table";
+  private const string TableNameLengthMessage =
+    "a schema and table name is expected -- use form similar to Schema.Table";
 
-   public SqlTableReference(ISqlConnectionProvider sqlConnectionProvider, string qualifiedTableName)
-   {
-      SqlConnectionProvider = sqlConnectionProvider ?? throw new ArgumentNullException(nameof(sqlConnectionProvider));
+  public SqlTableReference(ISqlConnectionProvider sqlConnectionProvider, string qualifiedTableName)
+  {
+    SqlConnectionProvider = sqlConnectionProvider ?? throw new ArgumentNullException(nameof(sqlConnectionProvider));
 
-      if (string.IsNullOrWhiteSpace(qualifiedTableName))
-         throw new ArgumentException("Value cannot be null or whitespace.", nameof(qualifiedTableName));
+    if (string.IsNullOrWhiteSpace(qualifiedTableName))
+      throw new ArgumentException("Value cannot be null or whitespace.", nameof(qualifiedTableName));
 
-      var fullTableName = DbTableNameWithNullableSchemaParser.ParseFullTableName(qualifiedTableName);
+    var fullTableName = DbTableNameWithNullableSchemaParser.ParseFullTableName(qualifiedTableName);
 
-      SchemaName = fullTableName.SchemaName ?? throw new Exception("Schema name must be provided.");
-      TableName  = fullTableName.TableName;
-   }
+    SchemaName = fullTableName.SchemaName ?? throw new Exception("Schema name must be provided.");
+    TableName  = fullTableName.TableName;
+  }
 
-   public SqlTableReference(ISqlConnectionProvider sqlConnectionProvider, string schemaName, string tableName)
-   {
-      SqlConnectionProvider = sqlConnectionProvider;
-      SchemaName            = schemaName.Debracketize();
-      TableName             = tableName.Debracketize();
-   }
+  public SqlTableReference(ISqlConnectionProvider sqlConnectionProvider, string schemaName, string tableName)
+  {
+    SqlConnectionProvider = sqlConnectionProvider;
+    SchemaName            = schemaName.Debracketize();
+    TableName             = tableName.Debracketize();
+  }
 
-   public override string ToString()
-   {
-      var text      = $"{SqlConnectionProvider.ServerName}.{SqlConnectionProvider.DatabaseName}.{FullTableName()}";
-      return text;
-   }
+  public SqlTableReference(StaticSqlConnectionProvider sqlConnectionProvider, TableIdentifier tableName)
+    : this(sqlConnectionProvider, tableName.Schema, tableName.Table)
+  {
+  }
 
-   public string FullTableName()
-   {
-      var tableName = new TableName(SchemaName, TableName);
-      return tableName.ToString();
-   }
+  public override string ToString()
+  {
+    var text = $"{SqlConnectionProvider.ServerName}.{SqlConnectionProvider.DatabaseName}.{FullTableName()}";
+    return text;
+  }
 
-   public object ToAnonymousSqlParamObject()
-   {
-      return new { SchemaName, TableName };
-   }
+  public string FullTableName()
+  {
+    var tableName = new TableIdentifier(SchemaName, TableName);
+    return tableName.ToString();
+  }
 
-   public TableName ToTableName() => new TableName(this);
-}
+  public object ToAnonymousSqlParamObject()
+  {
+    return new { SchemaName, TableName };
+  }
 
-public class TableName
-{
-   public TableName(SqlTableReference sqlTableRef) :this(sqlTableRef.SchemaName, sqlTableRef.TableName)
-   {
-      
-   }
-   public TableName(string Schema, string Table)
-   {
-      this.Schema = Schema;
-      this.Table  = Table;
-   }
-
-   public override string ToString()
-   {
-      return $"{Schema}.{Table}";
-   }
-
-   public string Schema { get; init; }
-   public string Table  { get; init; }
-   
-   public void Deconstruct(out string Schema, out string Table)
-   {
-      Schema = this.Schema;
-      Table  = this.Table;
-   }
+  public TableIdentifier ToTableName() => new TableIdentifier(SchemaName, TableName);
 }

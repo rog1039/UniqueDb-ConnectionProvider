@@ -1,21 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>UniqueDb.ConnectionProvider.Tests</RootNamespace>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="AutoFixture" Version="4.18.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
-    <PackageReference Include="Microsoft.SqlServer.Types" Version="160.1000.6" />
-    <PackageReference Include="NUnit" Version="4.3.1" />
-    <PackageReference Include="Serilog" Version="4.3.0" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
-    <PackageReference Include="Xbehave" Version="2.4.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\UniqueDb.ConnectionProvider\UniqueDb.ConnectionProvider.csproj" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <LangVersion>12</LangVersion>
+        <RootNamespace>UniqueDb.ConnectionProvider.Tests</RootNamespace>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="AutoFixture" Version="4.18.1"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0"/>
+        <PackageReference Include="Microsoft.SqlServer.Types" Version="160.1000.6"/>
+        <PackageReference Include="NUnit" Version="4.3.1"/>
+        <PackageReference Include="Serilog" Version="4.3.0"/>
+        <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0"/>
+        <PackageReference Include="System.Data.SqlClient" Version="4.9.0"/>
+        <PackageReference Include="Xbehave" Version="2.4.1"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\UniqueDb.ConnectionProvider\UniqueDb.ConnectionProvider.csproj"/>
+    </ItemGroup>
 </Project>

@@ -23,7 +23,7 @@ public record DbTableName
       Schema = schema.Debracketize();
       Name   = name.Debracketize();
    }
-
+   
    public string ToStringQuoted()
    {
       return string.IsNullOrWhiteSpace(Schema)
