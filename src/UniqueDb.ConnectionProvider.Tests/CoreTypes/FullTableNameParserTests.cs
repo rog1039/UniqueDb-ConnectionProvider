@@ -25,6 +25,11 @@ public class FullTableNameParserTests : UnitTestBaseWithConsoleRedirection
         
         var parseFail  = () => DbTableNameWithNullableSchemaParser.ParseFullTableName("d.bo.[A.B]");
         parseFail.Should().Throw<Exception>();
+        
+        //No special case for this type of three part name. Could possibly make the first part the schema and the subsequent parts 
+        //the table name but have not written the parser that way. Currently throws an exception.
+        var parse5 = () => DbTableNameWithNullableSchemaParser.ParseFullTableName("dbo.Production.LotNumbers");
+        parse5.Should().Throw<Exception>();
     } 
 
     public FullTableNameParserTests(ITestOutputHelper outputHelperHelper) : base(outputHelperHelper) { }
