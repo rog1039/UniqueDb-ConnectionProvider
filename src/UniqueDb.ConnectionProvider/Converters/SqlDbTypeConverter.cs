@@ -46,6 +46,8 @@ public static class SqlDbTypeConverter
             "text"             => SqlDbType.Text,
             "time"             => SqlDbType.Time,
             "timestamp"        => SqlDbType.Timestamp,
+            // Modern synonym for timestamp. Normalize to SqlDbType.Timestamp
+            "rowversion"       => SqlDbType.Timestamp,
             "tinyint"          => SqlDbType.TinyInt,
             "udt"              => SqlDbType.Udt,
             "uniqueidentifier" => SqlDbType.UniqueIdentifier,

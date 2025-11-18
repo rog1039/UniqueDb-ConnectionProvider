@@ -29,6 +29,13 @@ public static class SqlTypeFromSISColumn
       {
          return SqlType.Type(col.DATA_TYPE);
       }
+      // SQL Server 2008 information_schema reports ROWVERSION as TIMESTAMP
+      if (col.DATA_TYPE.Equals("timestamp", StringComparison.InvariantCultureIgnoreCase)
+       || col.DATA_TYPE.Equals("rowversion", StringComparison.InvariantCultureIgnoreCase))
+      {
+         // Normalize to rowversion for modern name
+         return SqlType.Type("rowversion");
+      }
       if (col.DATA_TYPE.Equals("varbinary", StringComparison.InvariantCultureIgnoreCase))
       {
          return SqlType.TextType(col.DATA_TYPE, col.CHARACTER_MAXIMUM_LENGTH);
