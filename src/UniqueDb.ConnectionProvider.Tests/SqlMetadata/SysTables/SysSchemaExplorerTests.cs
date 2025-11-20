@@ -33,8 +33,8 @@ public class InformationSchemaExplorerTests
 [TestFixture]
 public class SysSchemaExplorerTests
 {
-    private readonly SqlTableReference _sqlTableForStockItems = new(SqlConnectionProviders.WideWorldImporters,
-                                                                    "Warehouse.StockItems");
+    private readonly SqlTableReference _sqlTableForStockItems = new(SqlConnectionProviders.EpicorTest905,
+                                                                    "dbo.Memo");
                                                                     
     [Test]
     public async Task GetComputedColumns()

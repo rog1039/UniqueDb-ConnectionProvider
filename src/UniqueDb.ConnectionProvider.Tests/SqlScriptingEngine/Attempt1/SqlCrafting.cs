@@ -10,9 +10,11 @@ namespace Woeber.Logistics.FluentDbMigrations.Tests;
 public class TestSqlTables
 {
    public static ISqlConnectionProvider Logistics = new StaticSqlConnectionProvider("WS2016Sql", "WoeberLogisticsDb");
+   public static ISqlConnectionProvider Epicor905 = new StaticSqlConnectionProvider("Epicor905", "EpicorTest905");
 
    public static SqlTableReference Order_Head  = new SqlTableReference(Logistics, "PbsiWM", "Order_Head");
    public static SqlTableReference JobActivity = new SqlTableReference(Logistics, "dbo",    "Production.JobActivity");
+   public static SqlTableReference Epicor905Memo = new SqlTableReference(Epicor905, "dbo",    "Memo");
 }
 
 [TestFixture]
@@ -21,9 +23,9 @@ public class SqlCrafting
    [Test]
    public async Task SchemaExploreIndex1()
    {
-      var index1 = SysSchemaExplorer.GetIndexColumnDtos(TestSqlTables.Order_Head);
+      var index1 = SysSchemaExplorer.GetIndexColumnDtos(TestSqlTables.Epicor905Memo);
       index1.PrintStringTable();
-      SysSchemaExplorer.GetIndexColumnDtos(TestSqlTables.JobActivity).PrintStringTable();
+      SysSchemaExplorer.GetIndexColumnDtos(TestSqlTables.Epicor905Memo).PrintStringTable();
    }
 
    [Test]
