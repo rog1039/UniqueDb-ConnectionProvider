@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Data;
-using Microsoft.Data.SqlClient; // or System.Data.SqlClient
+using Microsoft.Data.SqlClient;
 using Dapper;
 
 public sealed class SqlIndex

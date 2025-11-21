@@ -14,6 +14,16 @@ public class SqlTableForTemporal
   public bool HasPrimaryKey() => Columns.Any(z => z.IsPrimaryKey == true);
 
   public IList<IndexAnnotation> IndexAnnotations { get; set; } = new List<IndexAnnotation>();
+
+  /// <summary>
+  /// Provides a way to force a specific primary key ordering. This was not really necessary since
+  /// in Epicor905, the PK columns were in the same order as the columns in the table definition.
+  ///
+  /// However, for the XFileAttch table, the PK columns are in a different order than the columns in the table definition.
+  /// Therefore, I added this property to allow forcing the PK columns to be in a certain specified order.
+  /// To use, just put in the PK column names in the order you want them in.
+  /// </summary>
+  public List<string>? PrimaryKeyColumnOrder { get; set; } = null;
 }
 
 public class SqlColumnForTemporal
@@ -124,6 +134,12 @@ CREATE TABLE {dbTableName} (
   /// <returns></returns>
   private static string CreatePrimaryKeyConstraint(SqlTableForTemporal sqlTable, string tableName)
   {
+    if (sqlTable.PrimaryKeyColumnOrder?.Count > 0)
+    {
+      var pkColumnsText = sqlTable.PrimaryKeyColumnOrder.Select(s => s.BracketizeSafe()).StringJoin(", ");
+      return $"CONSTRAINT PK_{tableName} PRIMARY KEY CLUSTERED ({pkColumnsText})";
+    }
+
     var primaryKeyColumnsText = sqlTable
                                 .Columns
                                 .Where(z => z.IsPrimaryKey == true)
